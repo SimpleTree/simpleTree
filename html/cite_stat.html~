@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello World</title>
+        <style>
+            html, body {
+                width: 391;
+                height: 241;
+                margin: 0;
+                padding: 0;
+                background-color: green;
+            }
+            #container {
+                width: inherit;
+                height: inherit;
+                margin: 0;
+                padding: 0;
+                background-color: pink;
+            }
+            h1 {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+         <p>  @article{rusu2008towards,<br>
+  title={Towards 3D point cloud based object maps for household environments},<br>
+  author={Rusu, Radu Bogdan and Marton, Zoltan Csaba and Blodow, Nico and Dolha, Mihai and Beetz, Michael},<br>
+  journal={Robotics and Autonomous Systems},<br>
+  volume={56},<br>
+  number={11},<br>
+  pages={927--941},<br>
+  year={2008},<br>
+  publisher={Elsevier}<br>
+}</p> 
+
+        </div>
+    </body>
+</html>

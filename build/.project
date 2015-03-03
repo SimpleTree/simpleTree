@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>simpleTree-Release@build</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.makeBuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.append_environment</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>/usr/bin/make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value>-j8</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>/home/hackenberg/simple/build</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.environment</key>
+					<value>VERBOSE=1|CMAKE_NO_VERBOSE=1|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>/home/hackenberg/simple/build</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.make.core.makeNature</nature>
+		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[Source directory]</name>
+			<type>2</type>
+			<location>/home/hackenberg/simple/src</location>
+		</link>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Subprojects]/simpleTree</name>
+			<type>2</type>
+			<location>/home/hackenberg/simple/src</location>
+		</link>
+		<link>
+			<name>[Targets]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//pclviewer.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/pclviewer.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//method_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/method_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//radius_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/radius_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//intensity_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/intensity_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//statistical_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/statistical_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//voxel_grid_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/voxel_grid_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//euclidean_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/euclidean_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//crop_sphere_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/crop_sphere_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//crop_box_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/crop_box_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//reference_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/reference_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/exportply.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/export/exportply.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/writecsv.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/export/writecsv.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/main.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/main.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/controller.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/controller.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/pclviewer.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/gui/pclviewer.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/importpcd.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/import/importpcd.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/SphereFollowing.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/method/SphereFollowing.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/eigenvalueestimator.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/method/eigenvalueestimator.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/StemPointDetection.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/method/StemPointDetection.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/set_coefficients.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/method/set_coefficients.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/crown.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/Model/crown.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/Cylinder.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/Model/Cylinder.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/Segment.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/Model/Segment.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/Tree.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/src/Model/Tree.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_controller.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/moc_controller.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_writecsv.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/export/moc_writecsv.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_exportply.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/export/moc_exportply.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_pclviewer.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/gui/moc_pclviewer.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_importpcd.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/import/moc_importpcd.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_SphereFollowing.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_SphereFollowing.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_set_coefficients.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_set_coefficients.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_eigenvalueestimator.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_eigenvalueestimator.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_StemPointDetection.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_StemPointDetection.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_crown.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_crown.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_Cylinder.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_Cylinder.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_Segment.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_Segment.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_Tree.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_Tree.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_pclviewer.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_pclviewer.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_method_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_method_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_radius_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_radius_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_intensity_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_intensity_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_statistical_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_statistical_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_voxel_grid_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_voxel_grid_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_euclidean_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_euclidean_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_crop_sphere_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_crop_sphere_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_crop_box_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_crop_box_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_reference_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/ui_reference_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_controller.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/moc_controller.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_writecsv.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/export/moc_writecsv.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_exportply.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/export/moc_exportply.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_pclviewer.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/gui/moc_pclviewer.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_importpcd.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/import/moc_importpcd.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_SphereFollowing.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_SphereFollowing.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_set_coefficients.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_set_coefficients.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_eigenvalueestimator.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_eigenvalueestimator.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_StemPointDetection.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/method/moc_StemPointDetection.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_crown.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_crown.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_Cylinder.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_Cylinder.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_Segment.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_Segment.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_Tree.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simple/build/Model/moc_Tree.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Object Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
