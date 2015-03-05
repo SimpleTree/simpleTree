@@ -1,0 +1,5 @@
+/data/*
+/output/*
+/build/*
+simpleTree.kdev4
+.kdev4/
