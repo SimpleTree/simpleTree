@@ -270,7 +270,7 @@ bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 	pcl::console::TicToc tt;
 	cloud_out.points.clear();
 	//std::cout << "Segmenting to clusters...\n", tt.tic ();
-	float minSize = 100000;
+	float minSize = std::numeric_limits< float>::max();
 	for (size_t i = 0; i < cloud_in.points.size(); i++) {
 		if (cloud_in.points[i].z < minSize) {
 			minSize = cloud_in.points[i].z;
@@ -279,7 +279,7 @@ bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 	}
 
 	for (size_t i = 0; i < cloud_in.points.size(); i++) {
-		if (cloud_in.points[i].z < (minSize + 0.03)
+		if (cloud_in.points[i].z < (minSize + 0.06)
 				&& cloud_in.points[i].z >= minSize) {
 			cloud_out.push_back(cloud_in.points[i]);
 		}

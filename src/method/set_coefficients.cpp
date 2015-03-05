@@ -73,6 +73,21 @@ SetCoefficients::init_settings ()
   settings->setValue ("min_radius_sphere_stem", 0.07);
   settings->setValue ("min_radius_sphere_branch", 0.025);
   settings->endGroup ();
+  
+  settings->beginGroup ("Jimmy");
+  settings->setValue ("sphere_radius_multiplier", 3);
+  settings->setValue ("epsilon_cluster_stem", 0.02);
+  settings->setValue ("epsilon_cluster_branch", 0.012);
+  settings->setValue ("epsilon_sphere", 0.02);
+  settings->setValue ("minPts_ransac_stem", 100);
+  settings->setValue ("minPts_ransac_branch", 99999999);
+  settings->setValue ("minPts_cluster_stem", 12);
+  settings->setValue ("minPts_cluster_branch", 3);
+  settings->setValue ("min_radius_sphere_stem", 0.035);
+  settings->setValue ("min_radius_sphere_branch", 0.035);
+  settings->endGroup ();
+  
+  
 }
 
 Method_Coefficients

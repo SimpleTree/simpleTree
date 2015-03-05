@@ -94,8 +94,18 @@ pp_callback ( const pcl::visualization::PointPickingEvent& event,
                 break;
             }
         } else {
-            std::cout << "Error in PCLViewer ::changeTreeColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
+	  float x, y, z;
+            event.getPoint ( x, y, z );
+            pcl::PointXYZ p ( x,y,z );
+            QString str;
+            str.append ( "Selected point : " ).append ( QString::number ( x ) ).append ( " ; " ).append ( QString::number ( y ) ).append ( " ; " ).append ( QString::number ( x ) ).append (
+                "\n" );
+            viewer->writeConsole ( str );
+
         }
+    } else {
+      
+            std::cout << "Error in PCLViewer ::no Point picked \n";
     }
 }
 
@@ -135,12 +145,35 @@ ui ( new Ui::PCLViewer ) {
     ui->qvtkWidget2->update ();
 
     ui->picture_frame->setStyleSheet ( "background-color:white;" );
-
-
-    connect ( ui->file_import_button, SIGNAL ( clicked() ), this, SLOT ( importPCDFile() ) );
-    connect ( ui->file_export_button, SIGNAL ( clicked() ), this, SLOT ( exportPCDFile() ) );
-    connect ( ui->file_export_result_button, SIGNAL ( clicked() ), this, SLOT ( exportResults() ) );
-    connect ( ui->file_export_ply_button, SIGNAL ( clicked() ), this, SLOT ( exportPly() ) );
+    
+    ui->file_import_button->setIconSize(QSize(30, 30));
+    ui->file_export_button->setIconSize(QSize(30, 30));
+    ui->file_export_result_button->setIconSize(QSize(30, 30));;
+    ui->file_export_ply_button->setIconSize(QSize(30, 30));
+    ui->xViewNeg->setIconSize(QSize(30, 30));
+    ui->xViewPos->setIconSize(QSize(30, 30));
+    ui->yViewNeg->setIconSize(QSize(30, 30));
+    ui->yViewPos->setIconSize(QSize(30, 30));
+    ui->zViewNeg->setIconSize(QSize(30, 30));
+    ui->zViewPos->setIconSize(QSize(30, 30));
+    ui->point_color_button->setIconSize(QSize(30, 30));
+    ui->tree_color_button->setIconSize(QSize(30, 30));
+    ui->method_hackenberg->setIconSize(QSize(30, 30));
+    ui->statistical_button->setIconSize(QSize(30, 30));
+    ui->voxelgrid_button->setIconSize(QSize(30, 30));
+    ui->intensity_button->setIconSize(QSize(30, 30));
+    ui->radius_button->setIconSize(QSize(30, 30));
+    ui->cluster_button->setIconSize(QSize(30, 30));
+    ui->compute_normal_button->setIconSize(QSize(30, 30));
+    ui->merge_cloud_button->setIconSize(QSize(30, 30));
+    ui->sphere_deletion_button->setIconSize(QSize(30, 30));
+    ui->box_deletion_button->setIconSize(QSize(30, 30));
+    ui->reference_cloud_button->setIconSize(QSize(30, 30));
+    ui->complete_folder_button->setIconSize(QSize(30, 30));
+    ui->file_import_button->setIconSize(QSize(30, 30));
+    ui->file_export_button->setIconSize(QSize(30, 30));
+    ui->file_export_result_button->setIconSize(QSize(30, 30));
+    ui->file_export_ply_button->setIconSize(QSize(30, 30));
 
     // Connect point size slider
     connect ( ui->point_size_slider, SIGNAL ( valueChanged ( int ) ), this, SLOT ( setPointSize ( int ) ) );
@@ -218,7 +251,7 @@ void PCLViewer::compute_ICP() {
     allign_dialog_ptr->setupUi ( allign_dialog );
 
     connect ( allign_dialog_ptr->spinBox, SIGNAL ( valueChanged ( int ) ), this, SLOT ( switch_point_for_ICP ( int ) ) );
-    allign_dialog->setModal(true);
+    allign_dialog->setModal(false);
     allign_dialog->show();
 //     ImportPCD import_source ( file_source, control );
 //     ImportPCD import_target ( file_target, control );
@@ -393,7 +426,7 @@ void PCLViewer::changeTreeColor() {
                 std::vector<boost::shared_ptr<simpleTree::Segment> > segments = tree_ptr->getSegments();
                 int max = -1;
                 int min = 2;
-                for ( int i = 0 ; i < segments.size(); i++ ) {
+                for ( size_t i = 0 ; i < segments.size(); i++ ) {
                     if ( segments.at ( i )->branchID > max ) {
                         max = segments.at ( i )->branchID ;
                     }
@@ -446,7 +479,7 @@ void PCLViewer::changeTreeColor() {
                 std::vector<boost::shared_ptr<simpleTree::Segment> > segments = tree_ptr->getSegments();
                 int max = -1;
                 int min = 2;
-                for ( int i = 0 ; i < segments.size(); i++ ) {
+                for ( size_t i = 0 ; i < segments.size(); i++ ) {
                     if ( segments.at ( i )->branchOrder > max ) {
                         max = segments.at ( i )->branchOrder ;
                     }
@@ -848,7 +881,7 @@ PCLViewer::crop_box () {
         //      viewer->registerPointPickingCallback (pp_callback,(void*)this);
         // viewer->registerPointPickingCallback (pp_callback, (void*) &*sphere_dialog_ui_ptr);
         crop_box_is_active = true;
-	box_dialog_ptr->setModal(true);
+	box_dialog_ptr->setModal(false);
         box_dialog_ptr->show ();
 
     } else {
@@ -998,7 +1031,7 @@ PCLViewer::cropsphere () {
         //      viewer->registerPointPickingCallback (pp_callback,(void*)this);
 
         crop_sphere_is_active = true;
-	sphere_dialog_ptr->setModal(true);
+	sphere_dialog_ptr->setModal(false);
         sphere_dialog_ptr->show ();
 
     } else {
