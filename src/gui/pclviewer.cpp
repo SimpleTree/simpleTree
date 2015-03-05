@@ -146,10 +146,7 @@ ui ( new Ui::PCLViewer ) {
 
     ui->picture_frame->setStyleSheet ( "background-color:white;" );
     
-    ui->file_import_button->setIconSize(QSize(30, 30));
-    ui->file_export_button->setIconSize(QSize(30, 30));
-    ui->file_export_result_button->setIconSize(QSize(30, 30));;
-    ui->file_export_ply_button->setIconSize(QSize(30, 30));
+
     ui->xViewNeg->setIconSize(QSize(30, 30));
     ui->xViewPos->setIconSize(QSize(30, 30));
     ui->yViewNeg->setIconSize(QSize(30, 30));
@@ -158,24 +155,27 @@ ui ( new Ui::PCLViewer ) {
     ui->zViewPos->setIconSize(QSize(30, 30));
     ui->point_color_button->setIconSize(QSize(30, 30));
     ui->tree_color_button->setIconSize(QSize(30, 30));
-    ui->method_hackenberg->setIconSize(QSize(30, 30));
+    ui->method_hackenberg->setIconSize(QSize(25, 25));
     ui->statistical_button->setIconSize(QSize(30, 30));
     ui->voxelgrid_button->setIconSize(QSize(30, 30));
     ui->intensity_button->setIconSize(QSize(30, 30));
     ui->radius_button->setIconSize(QSize(30, 30));
     ui->cluster_button->setIconSize(QSize(30, 30));
-    ui->compute_normal_button->setIconSize(QSize(30, 30));
-    ui->merge_cloud_button->setIconSize(QSize(30, 30));
-    ui->sphere_deletion_button->setIconSize(QSize(30, 30));
-    ui->box_deletion_button->setIconSize(QSize(30, 30));
+    ui->compute_normal_button->setIconSize(QSize(27, 27));
+    ui->merge_cloud_button->setIconSize(QSize(35, 35));
+    ui->sphere_deletion_button->setIconSize(QSize(24, 24));
+    ui->box_deletion_button->setIconSize(QSize(24, 24));
     ui->reference_cloud_button->setIconSize(QSize(30, 30));
-    ui->complete_folder_button->setIconSize(QSize(30, 30));
-    ui->file_import_button->setIconSize(QSize(30, 30));
-    ui->file_export_button->setIconSize(QSize(30, 30));
-    ui->file_export_result_button->setIconSize(QSize(30, 30));
-    ui->file_export_ply_button->setIconSize(QSize(30, 30));
+    ui->complete_folder_button->setIconSize(QSize(25, 25));
+    ui->file_import_button->setIconSize(QSize(25, 25));
+    ui->file_export_button->setIconSize(QSize(25, 25));
+    ui->file_export_result_button->setIconSize(QSize(25, 25));
+    ui->file_export_ply_button->setIconSize(QSize(25, 25));
 
-    // Connect point size slider
+    connect ( ui->file_import_button, SIGNAL ( clicked() ), this, SLOT ( importPCDFile() ) );
+    connect ( ui->file_export_button, SIGNAL ( clicked() ), this, SLOT ( exportPCDFile() ) );
+    connect ( ui->file_export_result_button, SIGNAL ( clicked() ), this, SLOT ( exportResults() ) );
+    connect ( ui->file_export_ply_button, SIGNAL ( clicked() ), this, SLOT ( exportPly() ) );
     connect ( ui->point_size_slider, SIGNAL ( valueChanged ( int ) ), this, SLOT ( setPointSize ( int ) ) );
     connect ( ui->point_color_slider, SIGNAL ( valueChanged ( int ) ), this, SLOT ( setPointTransparency ( int ) ) );
     connect ( ui->stem_color_slider, SIGNAL ( valueChanged ( int ) ), this, SLOT ( setStemTransparency ( int ) ) );
