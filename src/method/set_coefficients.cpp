@@ -74,7 +74,7 @@ SetCoefficients::init_settings ()
   settings->setValue ("min_radius_sphere_branch", 0.025);
   settings->endGroup ();
   
-  settings->beginGroup ("Jimmy");
+  settings->beginGroup ("French AgroForestry Side");
   settings->setValue ("sphere_radius_multiplier", 3);
   settings->setValue ("epsilon_cluster_stem", 0.02);
   settings->setValue ("epsilon_cluster_branch", 0.012);

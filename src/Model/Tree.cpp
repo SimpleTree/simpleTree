@@ -285,7 +285,10 @@ namespace simpleTree {
         std::vector<boost::shared_ptr<Cylinder> > cylinders;
         for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allCrownSegments.begin (); it != allCrownSegments.end (); it++ ) {
             boost::shared_ptr<Segment> seg = *it;
-            cylinders.insert ( cylinders.end (), seg->getCylinders ().begin (), seg->getCylinders ().end () );
+            if(seg!=getFirstCrownSegment())
+            {
+                cylinders.insert ( cylinders.end (), seg->getCylinders ().begin (), seg->getCylinders ().end () );
+            }
         }
         for ( std::vector<boost::shared_ptr<Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
             boost::shared_ptr<Cylinder> cyl = *it;

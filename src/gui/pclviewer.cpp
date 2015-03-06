@@ -662,6 +662,8 @@ PCLViewer::compute_reference () {
     Eigen::Vector4f max_pt;
     pcl::getMinMax3D ( *cloud, min_pt, max_pt );
     float oldMinHeight = ( min_pt[2] );
+    std::cout << height << "height\n";
+    std::cout << oldMinHeight << "oldheight\n";
     for ( size_t i = 0; i < cloud->points.size (); i++ ) {
 //      PointI p = cloud->points.at(i);
         cloud->points.at ( i ).z = cloud->points.at ( i ).z + height - oldMinHeight;
@@ -1958,7 +1960,15 @@ PCLViewer::setTreePtr ( boost::shared_ptr<simpleTree::Tree> tree_ptr ) {
         viewer->addCylinder ( coeff, ss.str () );
         viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
                                               ss.str () );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 1.0, 0.5, 0, ss.str () );
+    if(coeff.values[2]<=1.3f&&(coeff.values[2]+coeff.values[5])>1.3f)
+	{
+      viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.5, 1.0, 0.5, ss.str () );
+	}
+	else
+	{
+	  viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 1.0, 0.5, 0, ss.str () );
+	}
+        
         viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, ss.str () );
         viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.5, ss.str () );
     }
