@@ -82,6 +82,18 @@ boost::shared_ptr<Controller> Crown::getControl() {
 	return this->control.lock();
 }
 
+void
+Crown::reset_concave_hull(float r)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud_concave (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::ConcaveHull<pcl::PointXYZ> hull_concave;
+    hull_concave.setInputCloud (this->cloud);
+    hull_concave.setAlpha (r);
+    hull_concave.reconstruct (*hull_cloud_concave, polygons_concave);
+
+    this->hull_cloud_concave = hull_cloud_concave;
+}
+
 
 Crown::~Crown ()
 {

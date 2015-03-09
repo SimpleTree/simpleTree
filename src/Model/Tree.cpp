@@ -70,7 +70,7 @@ namespace simpleTree {
         improveByMedianCheck ();
 	
 	//std::cout << "start" << std::endl;
-	reorderTree();
+        reorderTree();
 	//	std::cout << "end" << std::endl;
         setIDforSegments();
 
@@ -86,6 +86,54 @@ namespace simpleTree {
     }
     Tree::Tree () {
 
+    }
+
+    void
+    Tree::reset_crown(float h)
+    {
+        std::vector<boost::shared_ptr<Cylinder> > stemCylinders = getStemCylinders();
+        for(std::vector<boost::shared_ptr<Cylinder> >::iterator it = stemCylinders.begin(); it != stemCylinders.end(); it++)
+        {
+            boost::shared_ptr<Cylinder> cyl = *it;
+            if(cyl->values[2]<=h && (cyl->values[2]+cyl->values[5])>=h)
+            {
+                firstCrownSegment = cyl->getSegment();
+                crown = boost::make_shared<Crown> ( crownPoints (), this->control );
+                getControl()->getGuiPtr()->setTreePtr(getControl()->getTreePtr());
+                QCoreApplication::processEvents ();
+            }
+        }
+    }
+
+    void
+    Tree::reset_stem() {
+        std::vector<boost::shared_ptr<Segment> > allLeaveSegments = getLeaveSegments ();
+        topStemSegment = rootSegment;
+                for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allLeaveSegments.begin (); it != allLeaveSegments.end (); it++ ) {
+            boost::shared_ptr<Segment> leave = *it;
+
+            if ( leave->getEnd().z > topStemSegment->getEnd().z ) {
+                topStemSegment = leave;
+            }
+        }
+        detectCrown ();
+        crown = boost::make_shared<Crown> ( crownPoints (), this->control );
+        improveByMedianCheck ();
+
+    //std::cout << "start" << std::endl;
+        reorderTree();
+    //	std::cout << "end" << std::endl;
+        setIDforSegments();
+
+        QString str = "";
+        str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
+        getControl ()->getGuiPtr ()->writeConsole ( str );
+        QCoreApplication::processEvents ();
+
+        str = "";
+        str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
+        getControl ()->getGuiPtr ()->writeConsole ( str );
+        QCoreApplication::processEvents ();
     }
 
     void Tree::setIDforSegments() {

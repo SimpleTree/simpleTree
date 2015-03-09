@@ -71,6 +71,7 @@ namespace simpleTree
   {
 
     private:
+
       static   bool
       compareChildren(boost::shared_ptr< Segment > child1, boost::shared_ptr< Segment > child2);
        float solidRadius = 0.035f;
@@ -134,7 +135,10 @@ namespace simpleTree
     public:
       void
       reorderTree();
-      
+      void
+      reset_crown(float h);
+      void
+      reset_stem();
       void
       reorderChildren(Segment segment);
       

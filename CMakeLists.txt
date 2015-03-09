@@ -47,7 +47,8 @@ set (project_FORMS   src/gui/pclviewer.ui
 					 src/gui/euclidean_dialog.ui
 					 src/gui/crop_sphere_dialog.ui
 					 src/gui/crop_box_dialog.ui
-					 src/gui/reference_dialog.ui)
+                                         src/gui/reference_dialog.ui
+                                         src/gui/crown_dialog.ui)
 set (VTK_LIBRARIES vtkRendering vtkGraphics vtkHybrid QVTK)
 
 QT4_WRAP_CPP (project_HEADERS_MOC   ${project_HEADERS})

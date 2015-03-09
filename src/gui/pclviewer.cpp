@@ -41,6 +41,13 @@ pp_callback ( const pcl::visualization::PointPickingEvent& event,
             dia->box_x->setValue ( x );
             dia->box_y->setValue ( y );
             dia->box_z->setValue ( z );
+        } else  if (viewer->reset_crown_is_active) {
+
+            float x, y, z;
+            event.getPoint ( x, y, z );
+            viewer->getControl()->getTreePtr()->reset_crown(z);
+            viewer->reset_crown_is_active = false;
+
         } else if ( viewer->allign_clouds_is_active ) {
             // boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ptr = data->box_dialog_ptr;
             // Ui_crop_box_dialog * dia = &*box_dialog_ptr;
@@ -171,6 +178,9 @@ ui ( new Ui::PCLViewer ) {
     ui->file_export_button->setIconSize(QSize(25, 25));
     ui->file_export_result_button->setIconSize(QSize(25, 25));
     ui->file_export_ply_button->setIconSize(QSize(25, 25));
+    ui->reset_stem_button->setIconSize(QSize(25,25));
+    ui->reset_crown_base_button->setIconSize(QSize(25,25));
+    ui->reset_crown_button->setIconSize(QSize(25,25));
 
     connect ( ui->file_import_button, SIGNAL ( clicked() ), this, SLOT ( importPCDFile() ) );
     connect ( ui->file_export_button, SIGNAL ( clicked() ), this, SLOT ( exportPCDFile() ) );
@@ -204,6 +214,9 @@ ui ( new Ui::PCLViewer ) {
     connect ( ui->box_deletion_button, SIGNAL ( clicked() ), this, SLOT ( crop_box() ) );
     connect ( ui->reference_cloud_button, SIGNAL ( clicked() ), this, SLOT ( reference_cloud() ) );
     connect ( ui->complete_folder_button,SIGNAL ( clicked() ),this,SLOT ( compute_complete_folder() ) );
+    connect ( ui->reset_stem_button,SIGNAL(clicked()),this,SLOT(reset_stem()));
+    connect ( ui->reset_crown_base_button,SIGNAL(clicked()),this,SLOT(reset_crown_base()));
+    connect ( ui->reset_crown_button,SIGNAL(clicked()),this,SLOT(reset_crown()));
     
     connect ( ui->icp_button,SIGNAL ( clicked() ),this,SLOT ( compute_ICP() ) );
     viewer->resetCamera ();
@@ -227,6 +240,86 @@ ui ( new Ui::PCLViewer ) {
     cb_args.viewer = this;
     viewer->registerPointPickingCallback ( pp_callback, ( void* ) &cb_args );
 
+}
+
+void
+PCLViewer::reset_crown_base()
+{
+    if ( getControl ()->getTreePtr()  != 0 ) {
+    viewer->removeAllPointClouds ();
+    viewer->removeAllShapes ();
+    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( this->cloud );
+    viewer->addPointCloud<PointD> ( this->cloud, rgba, "cloud" );
+    point_color = 0;
+    xNegView ();
+    viewer->addText ( getControl ()->getTreeID (), 10, 20, 1, 0, 0, "tree_text" );
+    ui->qvtkWidget->update ();
+    reset_crown_is_active = true;
+    crop_box_is_active = false;
+    crop_sphere_is_active = false;
+    allign_clouds_is_active = false;
+    QMessageBox::information(this, tr("Simple Tree"),
+                            tr("Shift Left Click on a Point to set Crown Base."), QMessageBox::Ok);
+    QCoreApplication::processEvents ();
+    }
+ui->qvtkWidget->update ();
+}
+
+void
+PCLViewer::reset_stem()
+{
+    if ( getControl ()->getTreePtr()  != 0 ) {
+    getControl()->getTreePtr()->reset_stem();
+    setTreePtr(getControl()->getTreePtr());
+    QCoreApplication::processEvents ();
+    }
+    ui->qvtkWidget->update ();
+}
+
+void
+PCLViewer::abort_crown()
+{
+    hull_radius = 0.1;
+}
+
+void
+PCLViewer::compute_crown()
+{
+    getControl()->getTreePtr()->crown->reset_concave_hull(hull_radius);
+    setTreePtr(getControl()->getTreePtr());
+    ui->qvtkWidget->update ();
+}
+
+void
+PCLViewer::set_crown_radius(double r)
+{
+    hull_radius = r;
+}
+
+void
+PCLViewer::reset_crown()
+{
+    if ( getControl ()->getTreePtr()  != 0 ) {
+        //    boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
+        QDialog * radius_dialog = new QDialog ( this, 0 );
+        Ui_Dialog_Crown rad;
+        rad.setupUi ( radius_dialog );
+
+        connect ( rad.crown_radius, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crown_radius ( double ) ) );
+//      connect (refer.box_maxIntens, SIGNAL(valueChanged(double)), this, SLOT(set_intensity_outlier_maxIntens(double)));
+
+        connect ( rad.abort, SIGNAL ( clicked() ), this, SLOT (abort_crown() ) );
+        connect ( rad.abort, SIGNAL ( clicked() ), radius_dialog, SLOT (accept() ) );
+        connect ( rad.compute, SIGNAL ( clicked() ), this, SLOT ( compute_crown() ) );
+        connect ( rad.compute, SIGNAL ( clicked() ), radius_dialog, SLOT ( accept() ) );
+    radius_dialog->setModal(true);
+        radius_dialog->show ();
+
+    } else {
+        QMessageBox::warning ( this, tr ( "Simple Tree" ), tr (
+                               "Please compute a Model first " ),
+                               QMessageBox::Ok );
+    }
 }
 
 void
@@ -1899,9 +1992,11 @@ PCLViewer::connectToController ( boost::shared_ptr<Controller> control ) {
 
 void
 PCLViewer::setTreePtr ( boost::shared_ptr<simpleTree::Tree> tree_ptr ) {
+
+    viewer->removeAllPointClouds();
+    viewer->removeAllShapes();
     this->tree_ptr = tree_ptr;
     cylinders = tree_ptr->getAllCylinders();
-    viewer->removeAllShapes ();
     tree_color = 0;
     std::vector<boost::shared_ptr<simpleTree::Segment> > segments = tree_ptr->getSegments();
     for ( size_t i = 0; i < segments.size(); i ++ ) {

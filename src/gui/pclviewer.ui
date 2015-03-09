@@ -93,8 +93,8 @@
       <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
-         <x>-1237</x>
-         <y>0</y>
+         <x>0</x>
+         <y>-289</y>
          <width>1918</width>
          <height>1198</height>
         </rect>
@@ -1972,6 +1972,125 @@ p, li { white-space: pre-wrap; }
               <property name="icon">
                <iconset>
                 <normaloff>../resources/ICP.png</normaloff>../resources/ICP.png</iconset>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="cluster_frame_2">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>460</y>
+              <width>231</width>
+              <height>71</height>
+             </rect>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="statusTip">
+             <string>uio</string>
+            </property>
+            <property name="whatsThis">
+             <string>uio</string>
+            </property>
+            <property name="accessibleName">
+             <string>uio</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>uio</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="lineWidth">
+             <number>2</number>
+            </property>
+            <widget class="QGroupBox" name="cluster_box_2">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>0</y>
+               <width>211</width>
+               <height>71</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>PostProcessing</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <widget class="QPushButton" name="reset_stem_button">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Euclidean clustering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Stem.png</normaloff>../resources/Stem.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="reset_crown_base_button">
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Euclidean clustering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Crown.png</normaloff>../resources/Crown.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="reset_crown_button">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Euclidean clustering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Crown.png</normaloff>../resources/Crown.png</iconset>
               </property>
              </widget>
             </widget>

@@ -46,6 +46,9 @@ class Crown
     std::vector<pcl::Vertices> polygons_concave;
     std::vector<pcl::Vertices> proj_polygons;
 
+    void
+    reset_concave_hull(float r);
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr proj_cloud;
     pcl::PointCloud<pcl::PointXYZ>::Ptr proj_hull_cloud;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;

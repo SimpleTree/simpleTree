@@ -76,6 +76,7 @@
 #include "../../build/ui_reference_dialog.h"
 #include "../../build/ui_method_dialog.h"
 #include "../../build/ui_allign_dialog.h"
+#include "../../build/ui_crown_dialog.h"
 
 typedef pcl::PointXYZRGBA PointD;
 typedef pcl::PointCloud<PointD> PointCloudD;
@@ -134,7 +135,9 @@ private:
 
 	float height = 0.2;
 
-	int radius_outlier_minPts = 3;
+    float hull_radius = 0.1f;
+
+    int radius_outlier_minPts = 3;
 	float radius_outlier_searchradius = 0.015f;
 
 	float intensity_outlier_minIntens = 0.0;
@@ -142,6 +145,9 @@ private:
 
 	int statistical_outlier_knn = 5;
 	float statistical_outlier_stdmult = 5.0;
+
+
+
 
 	float voxel_grid_size = 0.01;
 
@@ -167,8 +173,10 @@ public:
 //   virtual
 //   void resize();
   int point = 1;
-	 void
-	  init();
+    void
+    init();
+
+    bool reset_crown_is_active;
 	bool crop_box_is_active;
 	bool crop_sphere_is_active;
 	bool allign_clouds_is_active;
@@ -195,6 +203,17 @@ public:
 	plotIntensityHist();
 
 public slots:
+    void
+    reset_crown();
+    void
+    reset_crown_base();
+    void
+    reset_stem();
+
+    void set_crown_radius(double r);
+    void compute_crown();
+    void abort_crown();
+
   void
   switch_point_for_ICP(int i);
   void
