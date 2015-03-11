@@ -153,7 +153,7 @@ ui ( new Ui::PCLViewer ) {
     ui->qvtkWidget2->update ();
 
     ui->picture_frame->setStyleSheet ( "background-color:white;" );
-    
+    ui->picture_frame_3->setStyleSheet ( "background-color:white;" );
 
     ui->xViewNeg->setIconSize(QSize(30, 30));
     ui->xViewPos->setIconSize(QSize(30, 30));

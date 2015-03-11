@@ -93,8 +93,8 @@
       <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
-         <x>-1140</x>
-         <y>-204</y>
+         <x>0</x>
+         <y>-184</y>
          <width>1918</width>
          <height>1198</height>
         </rect>
@@ -151,9 +151,9 @@
            <property name="geometry">
             <rect>
              <x>260</x>
-             <y>0</y>
+             <y>10</y>
              <width>1081</width>
-             <height>831</height>
+             <height>751</height>
             </rect>
            </property>
            <property name="cursor">
@@ -163,9 +163,9 @@
           <widget class="QFrame" name="project_frame">
            <property name="geometry">
             <rect>
-             <x>1350</x>
-             <y>840</y>
-             <width>551</width>
+             <x>1360</x>
+             <y>770</y>
+             <width>391</width>
              <height>181</height>
             </rect>
            </property>
@@ -209,28 +209,76 @@
               <bool>true</bool>
              </property>
             </widget>
+            <widget class="QFrame" name="picture_frame_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>171</width>
+               <height>161</height>
+              </rect>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <widget class="QLabel" name="picture_label_2">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>151</width>
+                <height>141</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>../resources/Simpletree.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </widget>
            </widget>
-           <widget class="QTextEdit" name="textEdit">
+           <widget class="QFrame" name="picture_frame_3">
             <property name="geometry">
              <rect>
-              <x>190</x>
+              <x>210</x>
               <y>10</y>
-              <width>351</width>
+              <width>171</width>
               <height>161</height>
              </rect>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-            <property name="html">
-             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;This is title&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-size:10pt; font-weight:600;&quot;&gt;Project Simple Tree&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-size:10pt;&quot;&gt;project home page:&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;http://www.simpletree.uni-freiburg.de/&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.simpletree.uni-freiburg.de/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-size:10pt;&quot;&gt;contact:&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;mailto:jan.hackenberg@iww.uni-freiburg.de&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans'; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;Jan Hackenberg, jan.hackenberg@uni-freiburg.de&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
+            <widget class="QLabel" name="picture_label_3">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>151</width>
+               <height>141</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap>../resources/pcl_large.png</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+            </widget>
            </widget>
           </widget>
           <widget class="QFrame" name="frame">
@@ -238,8 +286,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>1360</x>
              <y>0</y>
-             <width>441</width>
-             <height>831</height>
+             <width>391</width>
+             <height>761</height>
             </rect>
            </property>
            <property name="frameShape">
@@ -1047,8 +1095,8 @@ p, li { white-space: pre-wrap; }
           <widget class="QTextEdit" name="console">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>840</y>
+             <x>10</x>
+             <y>770</y>
              <width>1341</width>
              <height>181</height>
             </rect>
@@ -1069,7 +1117,7 @@ p, li { white-space: pre-wrap; }
              <x>0</x>
              <y>0</y>
              <width>251</width>
-             <height>831</height>
+             <height>761</height>
             </rect>
            </property>
            <property name="palette">
@@ -1573,7 +1621,7 @@ p, li { white-space: pre-wrap; }
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>780</y>
+              <y>710</y>
               <width>231</width>
               <height>41</height>
              </rect>
