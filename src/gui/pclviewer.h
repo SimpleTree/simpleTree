@@ -5,7 +5,7 @@
 
 // Qt
 #include <QMainWindow>
-
+ #include <QColorDialog>
 // Point Cloud Library
 #include <pcl/point_cloud.h>
 #include <pcl/console/time.h>
@@ -203,6 +203,10 @@ public:
 	plotIntensityHist();
 
 public slots:
+    void
+    screenshot();
+    void
+    set_background();
     void
     reset_crown();
     void

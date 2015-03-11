@@ -93,8 +93,8 @@
       <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>-289</y>
+         <x>-1140</x>
+         <y>-204</y>
          <width>1918</width>
          <height>1198</height>
         </rect>
@@ -236,7 +236,7 @@ p, li { white-space: pre-wrap; }
           <widget class="QFrame" name="frame">
            <property name="geometry">
             <rect>
-             <x>1350</x>
+             <x>1360</x>
              <y>0</y>
              <width>441</width>
              <height>831</height>
@@ -867,7 +867,7 @@ p, li { white-space: pre-wrap; }
               <x>200</x>
               <y>230</y>
               <width>181</width>
-              <height>101</height>
+              <height>91</height>
              </rect>
             </property>
             <property name="frameShape">
@@ -960,8 +960,8 @@ p, li { white-space: pre-wrap; }
              <rect>
               <x>10</x>
               <y>400</y>
-              <width>341</width>
-              <height>331</height>
+              <width>371</width>
+              <height>351</height>
              </rect>
             </property>
             <property name="frameShape">
@@ -975,9 +975,71 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>10</x>
                <y>10</y>
-               <width>321</width>
-               <height>311</height>
+               <width>351</width>
+               <height>331</height>
               </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frame_2">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>330</y>
+              <width>181</width>
+              <height>61</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QPushButton" name="screenshotbutton">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save Screenshot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/screen.png</normaloff>../resources/screen.png</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="background_button">
+             <property name="geometry">
+              <rect>
+               <x>60</x>
+               <y>10</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set BackgroundColor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/background.png</normaloff>../resources/background.png</iconset>
              </property>
             </widget>
            </widget>
@@ -2034,7 +2096,7 @@ p, li { white-space: pre-wrap; }
                </rect>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Euclidean clustering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset Stem&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="autoFillBackground">
                <bool>false</bool>
@@ -2057,7 +2119,7 @@ p, li { white-space: pre-wrap; }
                </rect>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Euclidean clustering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset Crown Base&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="autoFillBackground">
                <bool>false</bool>
@@ -2080,7 +2142,7 @@ p, li { white-space: pre-wrap; }
                </rect>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Euclidean clustering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset Crown&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="autoFillBackground">
                <bool>false</bool>

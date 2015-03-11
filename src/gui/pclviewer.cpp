@@ -144,6 +144,7 @@ ui ( new Ui::PCLViewer ) {
     ui->qvtkWidget->SetRenderWindow ( viewer->getRenderWindow () );
     viewer->setupInteractor ( ui->qvtkWidget->GetInteractor (), ui->qvtkWidget->GetRenderWindow () );
    // ui->qvtkWidget->setba
+
     ui->qvtkWidget->update ();
 
     plotter.reset ( new pcl::visualization::PCLPlotter ( "Plotter" ) );
@@ -181,6 +182,9 @@ ui ( new Ui::PCLViewer ) {
     ui->reset_stem_button->setIconSize(QSize(25,25));
     ui->reset_crown_base_button->setIconSize(QSize(25,25));
     ui->reset_crown_button->setIconSize(QSize(25,25));
+    ui->background_button->setIconSize(QSize(25,25));
+    ui->screenshotbutton->setIconSize(QSize(25,25));
+    viewer->setBackgroundColor(1,1,1,0);
 
     connect ( ui->file_import_button, SIGNAL ( clicked() ), this, SLOT ( importPCDFile() ) );
     connect ( ui->file_export_button, SIGNAL ( clicked() ), this, SLOT ( exportPCDFile() ) );
@@ -217,7 +221,8 @@ ui ( new Ui::PCLViewer ) {
     connect ( ui->reset_stem_button,SIGNAL(clicked()),this,SLOT(reset_stem()));
     connect ( ui->reset_crown_base_button,SIGNAL(clicked()),this,SLOT(reset_crown_base()));
     connect ( ui->reset_crown_button,SIGNAL(clicked()),this,SLOT(reset_crown()));
-    
+    connect ( ui->background_button,SIGNAL(clicked()),this,SLOT(set_background()));
+    connect ( ui->screenshotbutton,SIGNAL(clicked()),this,SLOT(screenshot()));
     connect ( ui->icp_button,SIGNAL ( clicked() ),this,SLOT ( compute_ICP() ) );
     viewer->resetCamera ();
     computeBoundingBox ();
@@ -280,6 +285,61 @@ void
 PCLViewer::abort_crown()
 {
     hull_radius = 0.1;
+}
+
+void
+PCLViewer::screenshot()
+{
+
+
+    QString files = QFileDialog::getSaveFileName(this, tr("Save File"),
+                               "../output/Screen/", tr ( "Images (*.png *.xpm *.jpg);;All Files(*)" ) );
+//    if ( files.size ()> 0 ) {
+        if(!files.endsWith(QString(".png")))
+           {
+            files = files.append(".png");
+        }
+        viewer->saveScreenshot(files.toStdString());
+        file_abs = files.at ( 0 );/*
+        int index = file_abs.lastIndexOf ( "/" );
+        int size = file_abs.size ();
+        int position = size - index - 1;
+        QString file = file_abs.right ( position );
+        getControl ()->setTreeID ( file.toStdString () );*/
+//    }
+
+//     std::cout<<file.toStdString();
+//    return file_abs.toStdString ();
+}
+
+void
+PCLViewer::set_background()
+{
+    QColorDialog dialog (QColor(255,255,255), this);
+    //dialog.setOptions ( ( QFileDialog::DontUseNativeDialog ) );
+    if ( dialog.exec () )
+    {
+    QColor color = dialog.selectedColor();
+    int r,g,b;
+    color.getRgb(&r,&g,&b);
+    viewer->setBackgroundColor((float)r/255.0f,(float)g/255.0f,(float)b/255.0f);
+    }
+    //dialog.setViewMode ( QFileDialog::Detail );
+//    QStringList files;
+//    if ( dialog.exec () )
+//        files = dialog.selectedFiles ();
+//    QString file_abs;
+//    if ( files.size () > 0 ) {
+//        file_abs = files.at ( 0 );
+//        int index = file_abs.lastIndexOf ( "/" );
+//        int size = file_abs.size ();
+//        int position = size - index - 1;
+//        QString file = file_abs.right ( position );
+//        getControl ()->setTreeID ( file.toStdString () );
+//    }
+
+//     std::cout<<file.toStdString();
+//    return file_abs.toStdString ();
 }
 
 void
