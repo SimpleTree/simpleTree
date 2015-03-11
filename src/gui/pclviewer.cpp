@@ -257,7 +257,7 @@ PCLViewer::reset_crown_base()
     viewer->addPointCloud<PointD> ( this->cloud, rgba, "cloud" );
     point_color = 0;
     xNegView ();
-    viewer->addText ( getControl ()->getTreeID (), 10, 20, 1, 0, 0, "tree_text" );
+    viewer->addText ( getControl ()->getTreeID (), 10, 20, 20,1, 0, 0, "tree_text" );
     ui->qvtkWidget->update ();
     reset_crown_is_active = true;
     crop_box_is_active = false;
@@ -294,29 +294,17 @@ PCLViewer::screenshot()
 
     QString files = QFileDialog::getSaveFileName(this, tr("Save File"),
                                "../output/Screen/", tr ( "Images (*.png *.xpm *.jpg);;All Files(*)" ) );
-//    if ( files.size ()> 0 ) {
         if(!files.endsWith(QString(".png")))
            {
             files = files.append(".png");
         }
         viewer->saveScreenshot(files.toStdString());
-        file_abs = files.at ( 0 );/*
-        int index = file_abs.lastIndexOf ( "/" );
-        int size = file_abs.size ();
-        int position = size - index - 1;
-        QString file = file_abs.right ( position );
-        getControl ()->setTreeID ( file.toStdString () );*/
-//    }
-
-//     std::cout<<file.toStdString();
-//    return file_abs.toStdString ();
 }
 
 void
 PCLViewer::set_background()
 {
     QColorDialog dialog (QColor(255,255,255), this);
-    //dialog.setOptions ( ( QFileDialog::DontUseNativeDialog ) );
     if ( dialog.exec () )
     {
     QColor color = dialog.selectedColor();
@@ -324,22 +312,7 @@ PCLViewer::set_background()
     color.getRgb(&r,&g,&b);
     viewer->setBackgroundColor((float)r/255.0f,(float)g/255.0f,(float)b/255.0f);
     }
-    //dialog.setViewMode ( QFileDialog::Detail );
-//    QStringList files;
-//    if ( dialog.exec () )
-//        files = dialog.selectedFiles ();
-//    QString file_abs;
-//    if ( files.size () > 0 ) {
-//        file_abs = files.at ( 0 );
-//        int index = file_abs.lastIndexOf ( "/" );
-//        int size = file_abs.size ();
-//        int position = size - index - 1;
-//        QString file = file_abs.right ( position );
-//        getControl ()->setTreeID ( file.toStdString () );
-//    }
 
-//     std::cout<<file.toStdString();
-//    return file_abs.toStdString ();
 }
 
 void
@@ -528,7 +501,7 @@ void PCLViewer::changeTreeColor() {
 
 
                     viewer->removeShape ( "tree_text" );
-                    viewer->addText ( "Segments are colored uni colored", 10, 150, 0, 0.2, 0.4, "tree_text" );
+                    viewer->addText ( "Segments are colored uni colored", 10, 150, 20,0, 0.2, 0.4, "tree_text" );
                     ui->qvtkWidget->update ();
                 }
             }
@@ -563,7 +536,7 @@ void PCLViewer::changeTreeColor() {
 
 
                     viewer->removeShape ( "tree_text" );
-                    viewer->addText ( "Segments are colored differently", 10, 150, 0, 0.2, 0.4, "tree_text" );
+                    viewer->addText ( "Segments are colored differently", 10, 150, 20,0, 0.2, 0.4, "tree_text" );
                     ui->qvtkWidget->update ();
 		    
                 }
@@ -617,7 +590,7 @@ void PCLViewer::changeTreeColor() {
 
 
                     viewer->removeShape ( "tree_text" );
-                    viewer->addText ( "Branches are colored differently", 10, 150, 0, 0.2, 0.4, "tree_text" );
+                    viewer->addText ( "Branches are colored differently", 10, 150,20, 0, 0.2, 0.4, "tree_text" );
                     ui->qvtkWidget->update ();
                 }
             }
@@ -669,7 +642,7 @@ void PCLViewer::changeTreeColor() {
 
 
                     viewer->removeShape ( "tree_text" );
-                    viewer->addText ( "Different branch orders are colored differently", 10, 150, 0, 0.2, 0.4, "tree_text" );
+                    viewer->addText ( "Different branch orders are colored differently", 10, 150, 20,0, 0.2, 0.4, "tree_text" );
                     ui->qvtkWidget->update ();
                 }
             }
@@ -710,7 +683,7 @@ PCLViewer::compute_complete_folder () {
         QCoreApplication::processEvents ();
         if ( file_str != abort ) {
             ImportPCD import ( file_str, control );
-            getControl ()->setCloudPtr ( import.getCloud () );
+            getControl ()->setCloudPtr( import.getCloud () );
             plotIntensityHist ();
         }
         getControl ()->getGuiPtr ()->writeConsole (
@@ -1623,7 +1596,7 @@ PCLViewer::changePointColor () {
                 }
                 viewer->updatePointCloud ( cloud, "cloud" );
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Intensity", 10, 120, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Point Color by Intensity", 10, 120,20 ,0, 0.2, 0.4, "point_text" );
                 ui->qvtkWidget->update ();
             } else {
                 QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Point Cloud found\n"
@@ -1658,7 +1631,7 @@ PCLViewer::changePointColor () {
                     std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Principal Curvature direction", 10, 120, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Point Color by Principal Curvature direction", 10, 120, 20,0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1691,7 +1664,7 @@ PCLViewer::changePointColor () {
                     std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Principal Curvature magnitude", 10, 120, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Point Color by Principal Curvature magnitude", 10, 120, 20,0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1721,7 +1694,7 @@ PCLViewer::changePointColor () {
                     std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Curvature", 10, 120, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Point Color by Curvature", 10, 120,20, 0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1763,7 +1736,7 @@ PCLViewer::changePointColor () {
                     std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by eigen-values of PCA", 10, 120, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Point Color by eigen-values of PCA", 10, 120,20, 0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1797,7 +1770,7 @@ PCLViewer::changePointColor () {
                     std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by stem detection", 10, 120, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Point Color by stem detection", 10, 120,20, 0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -2056,6 +2029,7 @@ PCLViewer::setTreePtr ( boost::shared_ptr<simpleTree::Tree> tree_ptr ) {
     viewer->removeAllPointClouds();
     viewer->removeAllShapes();
     this->tree_ptr = tree_ptr;
+    setCloudPtr(getControl()->getCloudPtr());
     cylinders = tree_ptr->getAllCylinders();
     tree_color = 0;
     std::vector<boost::shared_ptr<simpleTree::Segment> > segments = tree_ptr->getSegments();
@@ -2141,7 +2115,7 @@ PCLViewer::setTreePtr ( boost::shared_ptr<simpleTree::Tree> tree_ptr ) {
 //     viewer->setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "leaves");
 //     viewer->setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, 0.5,  "leaves");
 
-    viewer->addText ( tree_ptr->string (), 10, 20, 1, 0, 0, "tree_text" );
+    viewer->addText ( tree_ptr->string (), 10, 20, 20,1, 0, 0, "tree_text" );
     plotAllometry ();
     ui->qvtkWidget->update ();
     ui->qvtkWidget2->update ();
@@ -2287,7 +2261,7 @@ PCLViewer::setCloudPtr ( PointCloudI::Ptr cloud_old ) {
     viewer->addPointCloud<PointD> ( this->cloud, rgba, "cloud" );
     point_color = 0;
     xNegView ();
-    viewer->addText ( getControl ()->getTreeID (), 10, 20, 1, 0, 0, "tree_text" );
+    viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
     ui->qvtkWidget->update ();
 
 }

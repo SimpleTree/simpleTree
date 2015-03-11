@@ -63,16 +63,18 @@ namespace simpleTree {
             "  cylinders are still stored in tree structure.\n" );
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
+        //std::cout << "start" << std::endl;
+            reorderTree();
 
-        detectStem ();
-        detectCrown ();
+        //	std::cout << "end" << std::endl;
+            setIDforSegments();
+            detectStem ();
+            reset_stem();
+            detectCrown ();
+
         crown = boost::make_shared<Crown> ( crownPoints (), this->control );
         improveByMedianCheck ();
 	
-	//std::cout << "start" << std::endl;
-        reorderTree();
-	//	std::cout << "end" << std::endl;
-        setIDforSegments();
 
         str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
@@ -99,7 +101,7 @@ namespace simpleTree {
             {
                 firstCrownSegment = cyl->getSegment();
                 crown = boost::make_shared<Crown> ( crownPoints (), this->control );
-                getControl()->getGuiPtr()->setTreePtr(getControl()->getTreePtr());
+                getControl()->setTreePtr(getControl()->getTreePtr());
                 QCoreApplication::processEvents ();
             }
         }
@@ -817,14 +819,18 @@ namespace simpleTree {
     void
     Tree::detectStem () {
         std::vector<boost::shared_ptr<Segment> > allLeaveSegments = getLeaveSegments ();
-        float maxVolume = 0;
+        //float maxVolume = 0;
         for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allLeaveSegments.begin (); it != allLeaveSegments.end (); it++ ) {
             boost::shared_ptr<Segment> leave = *it;
-            float volume = getVolumeToRoot ( leave );
-            if ( volume > maxVolume ) {
+            if(leave->branchOrder==0)
+            {
                 topStemSegment = leave;
-                maxVolume = volume;
+
             }
+        }
+        if(topStemSegment==0)
+        {
+            reset_stem();
         }
     }
 

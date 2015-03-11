@@ -90,7 +90,8 @@ Controller::setCloudPtr (pcl::PointCloud<PointI>::Ptr cloud_ptr)
   this->cloud_ptr = cloud_ptr;
   this->cloud_ptr->width = cloud_ptr->points.size();
     this->cloud_ptr->height = 1;
-    this->tree_ptr.reset (new simpleTree::Tree);
+    this->tree_ptr = 0;
+//    this->tree_ptr.reset(new simpleTree::Tree);
     this->e1.clear();
       this->e2.clear();
       this->e3.clear();
@@ -108,7 +109,8 @@ Controller::setCloudPtr (PointCloudI::Ptr cloud_ptr,
   this->cloud_ptr->width = cloud_ptr->points.size();
   this->cloud_ptr->height = 1;
   this->curvature_ptr = curvature_ptr;
-  this->tree_ptr.reset (new simpleTree::Tree);
+      this->tree_ptr = 0;
+//  this->tree_ptr.reset (new simpleTree::Tree);
   this->e1.clear();
     this->e2.clear();
     this->e3.clear();
@@ -121,7 +123,7 @@ void
 Controller::setCurvaturePtr (CurvatureCloud::Ptr curvature_ptr)
 {
   this->curvature_ptr = curvature_ptr;
-  this->tree_ptr.reset (new simpleTree::Tree);
+//  this->tree_ptr.reset (new simpleTree::Tree);
   this->gui_ptr->setCloudPtr (cloud_ptr);
 }
 
@@ -140,6 +142,7 @@ Controller::getTreePtr ()
 void
 Controller::setTreePtr (boost::shared_ptr<simpleTree::Tree> tree_ptr)
 {
-  this->tree_ptr = tree_ptr;
+  this->tree_ptr = tree_ptr;    
+    this->gui_ptr->setCloudPtr(cloud_ptr);
   this->gui_ptr->setTreePtr (tree_ptr);
 }
