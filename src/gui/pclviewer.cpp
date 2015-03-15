@@ -105,7 +105,7 @@ pp_callback ( const pcl::visualization::PointPickingEvent& event,
             event.getPoint ( x, y, z );
             pcl::PointXYZ p ( x,y,z );
             QString str;
-            str.append ( "Selected point : " ).append ( QString::number ( x ) ).append ( " ; " ).append ( QString::number ( y ) ).append ( " ; " ).append ( QString::number ( x ) ).append (
+            str.append ( "Selected point : " ).append ( QString::number ( x ) ).append ( " ; " ).append ( QString::number ( y ) ).append ( " ; " ).append ( QString::number ( z ) ).append (
                 "\n" );
             viewer->writeConsole ( str );
 
@@ -237,6 +237,7 @@ ui ( new Ui::PCLViewer ) {
     crop_sphere_is_active = false;
     sphere_dialog_ui_ptr.reset ( new Ui_crop_sphere_dialog );
     crop_box_is_active = false;
+    reset_crown_is_active = false;
     allign_clouds_is_active = false;
     box_dialog_ui_ptr.reset ( new Ui_crop_box_dialog );
     method_dialog_ptr.reset ( new Ui_method_dialog );
