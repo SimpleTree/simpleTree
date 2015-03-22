@@ -723,7 +723,10 @@ namespace simpleTree {
         std::vector<boost::shared_ptr<Segment> > allSegments = getSegments ();
         for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allSegments.begin (); it != allSegments.end (); it++ ) {
             boost::shared_ptr<Segment> segment = *it;
+            if(segment != this->rootSegment)
+            {
             segment->correctRadiusByMedianCheck ();
+            }
         }
     }
 

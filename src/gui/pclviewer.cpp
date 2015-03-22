@@ -1175,12 +1175,39 @@ void
 PCLViewer::set_intensity_outlier_minIntens ( double minIntens ) {
     float intens = minIntens;
     this->intensity_outlier_minIntens = intens;
+    for(int i = 0; i < 255 ; i++)
+    {
+            QString cloud_name = "cloud";
+                       cloud_name.append(QString::number(i));
+        float val = 0;
+        if(i>=intensity_outlier_minIntens&&i<=intensity_outlier_maxIntens)
+        {
+            val = 1;
+        }
+        viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, val, cloud_name.toStdString() );
+
+    }
+    ui->qvtkWidget->update ();
 }
 
 void
 PCLViewer::set_intensity_outlier_maxIntens ( double maxIntens ) {
     float intens = maxIntens;
     this->intensity_outlier_maxIntens = intens;
+
+    for(int i = 0; i < 255 ; i++)
+    {
+           QString cloud_name = "cloud";
+           cloud_name.append(QString::number(i));
+        float val = 0;
+        if(i>=intensity_outlier_minIntens&&i<=intensity_outlier_maxIntens)
+        {
+            val = 1;
+        }
+        viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, val, cloud_name.toStdString() );
+
+    }
+    ui->qvtkWidget->update ();
 }
 
 void
@@ -1225,8 +1252,52 @@ PCLViewer::compute_intensity_outlier_removal () {
 }
 
 void
+PCLViewer::abort_intensity_outlier_removal()
+{
+    intensity_clouds.clear();
+    viewer->removeAllPointClouds();
+    getControl()->setCloudPtr(getControl()->getCloudPtr());
+}
+
+void
 PCLViewer::intensityOutlierRemoval () {
     if ( getControl ()->getCloudPtr () != 0 ) {
+        viewer->removeAllPointClouds ();
+        viewer->removeAllShapes ();
+
+
+
+
+        intensity_clouds.clear();
+        for(int i = 0 ; i < 255 ; i++)
+        {
+            boost::shared_ptr<PointCloudD> cloud (new PointCloudD);
+            intensity_clouds.push_back(cloud);
+        }
+
+        for(size_t i = 0 ; i < getControl()->getCloudPtr()->points.size(); i++)
+        {
+            PointI pI = getControl()->getCloudPtr()->points.at(i);
+            pcl::PointXYZRGBA pD;
+            pD.x = pI.x;
+            pD.y = pI.y;
+            pD.z = pI.z;
+            pD.r = 255 - pI.intensity;
+            pD.g = pI.intensity;
+            pD.b = 255 - pI.intensity;
+            pD.a = 255;
+            intensity_clouds.at(pI.intensity)->points.push_back(pD);
+        }
+
+        for(int i = 0 ; i < 255 ; i++)
+        {
+        QString cloud_name = "cloud";
+            pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( intensity_clouds.at(i) );
+            viewer->addPointCloud<PointD> ( intensity_clouds.at(i), rgba, cloud_name.append(QString::number(i)).toStdString());
+        }
+        point_color = 0;
+        xNegView ();
+
         //		boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
         QDialog * intensity_dialog = new QDialog ( this, 0 );
         Ui_Dialog_Intensity intens;
@@ -1234,10 +1305,12 @@ PCLViewer::intensityOutlierRemoval () {
 
         connect ( intens.box_minIntens, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_intensity_outlier_minIntens ( double ) ) );
         connect ( intens.box_maxIntens, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_intensity_outlier_maxIntens ( double ) ) );
-
+        connect ( intens.abort, SIGNAL ( clicked() ), this, SLOT (abort_intensity_outlier_removal()) );
         connect ( intens.abort, SIGNAL ( clicked() ), intensity_dialog, SLOT ( reject() ) );
+
         connect ( intens.compute, SIGNAL ( clicked() ), this, SLOT ( compute_intensity_outlier_removal() ) );
         connect ( intens.compute, SIGNAL ( clicked() ), intensity_dialog, SLOT ( accept() ) );
+        connect ( intensity_dialog, SIGNAL (closeEvent()), this, SLOT (abort_intensity_outlier_removal()));
 	intensity_dialog->setModal(true);
         intensity_dialog->show ();
 

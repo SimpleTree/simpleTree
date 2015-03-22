@@ -118,6 +118,7 @@ private:
 	boost::shared_ptr<SetCoefficients> coeff_ptr;
 	boost::shared_ptr<simpleTree::Tree> tree_ptr;
 	boost::shared_ptr<PointCloudI> allign_cloud;
+    std::vector<boost::shared_ptr<PointCloudD> > intensity_clouds;
 	Method_Coefficients method_coefficients;
 
 	pcl::console::TicToc tt;
@@ -294,12 +295,14 @@ public slots:
 	set_intensity_outlier_maxIntens(double maxIntens);
 	void
 	compute_intensity_outlier_removal();
-
+    void
+    abort_intensity_outlier_removal();
 	void
 	set_radius_outlier_minPts(int minPts);
 	void
 	set_radius_outlier_searchradius(double searchRadius);
 	void compute_radius_outlier_removal();
+
 
 	void
 	set_euclidean_clustering_minsize(int size);
