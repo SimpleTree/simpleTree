@@ -40,6 +40,7 @@
 #include <QString>
 #include <qfile.h>
 #include <QTextStream>
+#include <QRegExp>
 
 #include <iostream>
 #include <fstream>

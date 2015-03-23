@@ -63,7 +63,7 @@ ImportPCD::ImportPCD (std::string fileName,
 
 //       setRGB ();
     }
-    else if (ext == "asc")
+    else if (ext == "asc"||ext == "txt")
     {
       getControl ()->getGuiPtr ()->updateProgress (0);
       QCoreApplication::processEvents ();
@@ -153,8 +153,16 @@ ImportPCD::importASC ()
     while (std::getline (file, line))
     {
       QString qLine = QString::fromStdString (line);
+      //std::cout << qLine.toStdString();
+      qLine.replace(QRegExp("[\\s]+"), " ");
+      //std::cout << qLine.toStdString();
+      if(qLine.endsWith(" "))
+      {
+          qLine.chop(1);
+      }
       QStringList fields = qLine.split (" ");
       PointI p = toPoint (fields);
+      //std::cout<< p << "\n";
       temp->push_back (p);
     }
   }

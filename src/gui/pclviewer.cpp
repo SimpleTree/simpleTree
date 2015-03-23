@@ -2342,7 +2342,7 @@ PCLViewer::setCloudPtr ( PointCloudI::Ptr cloud_old ) {
 
 std::string
 PCLViewer::selectFile () {
-    QFileDialog dialog ( this, tr ( "OpenFile" ), "../data/", tr ( "Point Cloud File(*pcd);;ASCII - File(*.asc);;All Files(*)" ) );
+    QFileDialog dialog ( this, tr ( "OpenFile" ), "../data/", tr ( "Point Cloud File(*pcd);;ASCII - File(*.asc);;txt - File(*.txt);;All Files(*)" ) );
     dialog.setOptions ( ( QFileDialog::DontUseNativeDialog ) );
     dialog.setViewMode ( QFileDialog::Detail );
     QStringList files;
@@ -2652,17 +2652,30 @@ PCLViewer::zPosView () {
 
 void
 PCLViewer::convertPointCloud ( PointCloudI::Ptr cloud2 ) {
+
     this->cloud.reset ( new PointCloudD );
-    this->cloud->resize ( cloud2->points.size () );
-    for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
-        this->cloud->points[i].x = cloud2->points[i].x;
-        this->cloud->points[i].y = cloud2->points[i].y;
-        this->cloud->points[i].z = cloud2->points[i].z;
-        float intens = cloud2->points[i].intensity;
+    PointCloudI::Ptr cloud3  (new PointCloudI);
+
+    if(cloud2->points.size() >1000000)
+    {
+        int fac = cloud2->points.size()/1000000;
+        for ( size_t i = 0; i < cloud2->points.size ()-fac; i += fac ) {
+            cloud3->push_back(cloud2->points.at(i));
+        }
+    } else {
+        cloud3 = cloud2;
+    }
+    std::cout << cloud3->points.size();
+    this->cloud->resize ( cloud3->points.size () );
+    for ( size_t i = 0; i < cloud3->points.size (); i++ ) {
+        this->cloud->points[i].x = cloud3->points[i].x;
+        this->cloud->points[i].y = cloud3->points[i].y;
+        this->cloud->points[i].z = cloud3->points[i].z;
+        float intens = cloud3->points[i].intensity;
         if ( intens == 0 ) {
             intens = 180;
         }
-        cloud2->points[i].intensity = intens;
+        cloud3->points[i].intensity = intens;
         this->cloud->points[i].r = 255 - intens;
         this->cloud->points[i].g = intens;
         this->cloud->points[i].b = 255 - intens;
@@ -2673,12 +2686,12 @@ PCLViewer::convertPointCloud ( PointCloudI::Ptr cloud2 ) {
 
 void
 PCLViewer::computeBoundingBox () {
-    minX = 1000;
-    minY = 1000;
-    minZ = 1000;
-    maxX = -1000;
-    maxY = -1000;
-    maxZ = -1000;
+    minX = 1000000;
+    minY = 1000000;
+    minZ = 1000000;
+    maxX = -1000000;
+    maxY = -1000000;
+    maxZ = -1000000;
     for ( size_t i = 0; i < cloud->points.size (); i++ ) {
         PointD p = cloud->points[i];
         if ( p.x < minX ) {
