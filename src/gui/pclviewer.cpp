@@ -252,34 +252,34 @@ void
 PCLViewer::intialAllign()
 {
     pcl::PointXYZ p1;
-    p1.x = viewer->allign_dialog_ptr->x1->getValue();
-    p1.y = viewer->allign_dialog_ptr->y1->getValue();
-    p1.z = viewer->allign_dialog_ptr->z1->getValue();
+    p1.x = allign_dialog_ptr->x1->value();
+    p1.y = allign_dialog_ptr->y1->value();
+    p1.z = allign_dialog_ptr->z1->value();
 
     pcl::PointXYZ p2;
-    p2.x = viewer->allign_dialog_ptr->x2->getValue();
-    p2.y = viewer->allign_dialog_ptr->y2->getValue();
-    p2.z = viewer->allign_dialog_ptr->z2->getValue();
+    p2.x = allign_dialog_ptr->x2->value();
+    p2.y = allign_dialog_ptr->y2->value();
+    p2.z = allign_dialog_ptr->z2->value();
 
     pcl::PointXYZ p3;
-    p3.x = viewer->allign_dialog_ptr->x3->getValue();
-    p3.y = viewer->allign_dialog_ptr->y3->getValue();
-    p3.z = viewer->allign_dialog_ptr->z3->getValue();
+    p3.x = allign_dialog_ptr->x3->value();
+    p3.y = allign_dialog_ptr->y3->value();
+    p3.z = allign_dialog_ptr->z3->value();
 
     pcl::PointXYZ p4;
-    p4.x = viewer->allign_dialog_ptr->x4->getValue();
-    p4.y = viewer->allign_dialog_ptr->y4->getValue();
-    p4.z = viewer->allign_dialog_ptr->z4->getValue();
+    p4.x = allign_dialog_ptr->x4->value();
+    p4.y = allign_dialog_ptr->y4->value();
+    p4.z = allign_dialog_ptr->z4->value();
 
     pcl::PointXYZ p5;
-    p5.x = viewer->allign_dialog_ptr->x5->getValue();
-    p5.y = viewer->allign_dialog_ptr->y5->getValue();
-    p5.z = viewer->allign_dialog_ptr->z5->getValue();
+    p5.x = allign_dialog_ptr->x5->value();
+    p5.y = allign_dialog_ptr->y5->value();
+    p5.z = allign_dialog_ptr->z5->value();
 
     pcl::PointXYZ p6;
-    p6.x = viewer->allign_dialog_ptr->x6->getValue();
-    p6.y = viewer->allign_dialog_ptr->y6->getValue();
-    p6.z = viewer->allign_dialog_ptr->z6->getValue();
+    p6.x = allign_dialog_ptr->x6->value();
+    p6.y = allign_dialog_ptr->y6->value();
+    p6.z = allign_dialog_ptr->z6->value();
 
     boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > feature1 (new pcl::PointCloud<pcl::PointXYZ>);
     boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > feature2 (new pcl::PointCloud<pcl::PointXYZ>);
@@ -304,7 +304,7 @@ PCLViewer::intialAllign()
        sac_ia.setSourceFeatures (feature1);
        sac_ia.setTargetFeatures (feature2);
 
-       sac_ia.align (*cloud_final);
+    //   sac_ia.align (*cloud_final);
 
 }
 
