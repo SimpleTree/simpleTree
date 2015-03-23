@@ -110,7 +110,9 @@ class PCLViewer: public QMainWindow,public  boost::enable_shared_from_this<PCLVi
 Q_OBJECT
 private:
 
-	
+    boost::shared_ptr<PointCloudI> cloud_source;
+    boost::shared_ptr<PointCloudI> cloud_target;
+    boost::shared_ptr<PointCloudI> cloud_final;
 	callback_args cb_args;
 	boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ui_ptr;
 	boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ui_ptr;
@@ -204,6 +206,9 @@ public:
 	plotIntensityHist();
 
 public slots:
+    void
+    intialAllign();
+
     void
     screenshot();
     void

@@ -249,6 +249,66 @@ ui ( new Ui::PCLViewer ) {
 }
 
 void
+PCLViewer::intialAllign()
+{
+    pcl::PointXYZ p1;
+    p1.x = viewer->allign_dialog_ptr->x1->getValue();
+    p1.y = viewer->allign_dialog_ptr->y1->getValue();
+    p1.z = viewer->allign_dialog_ptr->z1->getValue();
+
+    pcl::PointXYZ p2;
+    p2.x = viewer->allign_dialog_ptr->x2->getValue();
+    p2.y = viewer->allign_dialog_ptr->y2->getValue();
+    p2.z = viewer->allign_dialog_ptr->z2->getValue();
+
+    pcl::PointXYZ p3;
+    p3.x = viewer->allign_dialog_ptr->x3->getValue();
+    p3.y = viewer->allign_dialog_ptr->y3->getValue();
+    p3.z = viewer->allign_dialog_ptr->z3->getValue();
+
+    pcl::PointXYZ p4;
+    p4.x = viewer->allign_dialog_ptr->x4->getValue();
+    p4.y = viewer->allign_dialog_ptr->y4->getValue();
+    p4.z = viewer->allign_dialog_ptr->z4->getValue();
+
+    pcl::PointXYZ p5;
+    p5.x = viewer->allign_dialog_ptr->x5->getValue();
+    p5.y = viewer->allign_dialog_ptr->y5->getValue();
+    p5.z = viewer->allign_dialog_ptr->z5->getValue();
+
+    pcl::PointXYZ p6;
+    p6.x = viewer->allign_dialog_ptr->x6->getValue();
+    p6.y = viewer->allign_dialog_ptr->y6->getValue();
+    p6.z = viewer->allign_dialog_ptr->z6->getValue();
+
+    boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > feature1 (new pcl::PointCloud<pcl::PointXYZ>);
+    boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > feature2 (new pcl::PointCloud<pcl::PointXYZ>);
+
+    feature1->push_back(p1);
+    feature1->push_back(p3);
+    feature1->push_back(p4);
+
+    feature2->push_back(p2);
+    feature2->push_back(p4);
+    feature2->push_back(p6);
+
+       pcl::SampleConsensusInitialAlignment<PointI, PointI, pcl::PointXYZ> sac_ia;
+
+       sac_ia.setMinSampleDistance (0.01);
+       sac_ia.setMaxCorrespondenceDistance(0.1);
+       sac_ia.setMaximumIterations (150);
+
+       sac_ia.setInputCloud (cloud_source);
+       sac_ia.setInputTarget (cloud_target);
+
+       sac_ia.setSourceFeatures (feature1);
+       sac_ia.setTargetFeatures (feature2);
+
+       sac_ia.align (*cloud_final);
+
+}
+
+void
 PCLViewer::reset_crown_base()
 {
     if ( getControl ()->getTreePtr()  != 0 ) {
@@ -366,11 +426,68 @@ void PCLViewer::compute_ICP() {
     allign_cloud.reset ( new PointCloudI );
     allign_clouds_is_active = true;
     point = 1;
-    boost::shared_ptr<PointCloudI> cloud_source ( new PointCloudI );
-    boost::shared_ptr<PointCloudI> cloud_target ( new PointCloudI );
+    //boost::shared_ptr<PointCloudI> cloud_source ( new PointCloudI );
+
+    //boost::shared_ptr<PointCloudI> cloud_target ( new PointCloudI );
     boost::shared_ptr<PointCloudI> cloud_final ( new PointCloudI );
-    std::string file_target = "/home/hackenberg/simple/data/3-22-1.pcd";
-    std::string file_source = "/home/hackenberg/simple/data/3-22-(1)_2013_2014.pcd";
+    std::string file_target = "/home/hackenberg/simpleTree/data/2-16-(-2)_2013-2014.pcd";
+    std::string file_source = "/home/hackenberg/simpleTree/data/2-16-(-2)_2014-2015.pcd";
+    ImportPCD import_source ( file_source, control );
+    ImportPCD import_target ( file_target, control );
+    cloud_source = import_source.getCloud();
+    cloud_target = import_target.getCloud();
+
+    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
+        cloud_target->points[i].x = cloud_target->points[i].x+3;
+    }
+
+    boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
+    boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
+
+    visu_source->resize ( cloud_source->points.size () );
+    for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
+        visu_source->points[i].x = cloud_source->points[i].x;
+        visu_source->points[i].y = cloud_source->points[i].y;
+        visu_source->points[i].z = cloud_source->points[i].z;
+        float intens = cloud_source->points[i].intensity;
+        if ( intens == 0 ) {
+            intens = 180;
+        }
+        visu_source->points[i].r = 255;
+        visu_source->points[i].g = 0;
+        visu_source->points[i].b = 0;
+        visu_source->points[i].a = 255;
+    }
+
+    visu_target->resize ( cloud_target->points.size () );
+    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
+        visu_target->points[i].x = cloud_target->points[i].x;
+        visu_target->points[i].y = cloud_target->points[i].y;
+        visu_target->points[i].z = cloud_target->points[i].z;
+        float intens = cloud_target->points[i].intensity;
+        if ( intens == 0 ) {
+            intens = 180;
+        }
+        visu_target->points[i].r = 0;
+        visu_target->points[i].g = 255;
+        visu_target->points[i].b = 0;
+        visu_target->points[i].a = 255;
+    }
+
+
+    viewer->removeAllPointClouds ();
+    viewer->removeAllShapes ();
+    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( visu_target );
+    viewer->addPointCloud<PointD> ( visu_target, rgba, "cloud1" );
+    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
+    viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
+    xNegView ();
+    viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
+    ui->qvtkWidget->update ();
+
+
+    std::cout << "visualization (PCLViewer::convertPointCloud) cloud size " << this->cloud->points.size() << "\n";
+    computeBoundingBox ();
 
     QDialog * allign_dialog = new QDialog ( this, 0 );
     allign_dialog_ptr.reset ( new Ui_dialog_init_allign );
@@ -380,10 +497,7 @@ void PCLViewer::compute_ICP() {
     connect ( allign_dialog_ptr->spinBox, SIGNAL ( valueChanged ( int ) ), this, SLOT ( switch_point_for_ICP ( int ) ) );
     allign_dialog->setModal(false);
     allign_dialog->show();
-//     ImportPCD import_source ( file_source, control );
-//     ImportPCD import_target ( file_target, control );
-//     cloud_source = import_source.getCloud();
-//     cloud_target = import_target.getCloud();
+
 //
 //     pcl::NormalEstimationOMP<PointI, PointI> ne ( 0 );
 //     ne.setInputCloud ( cloud_source );
@@ -2681,6 +2795,7 @@ PCLViewer::convertPointCloud ( PointCloudI::Ptr cloud2 ) {
         this->cloud->points[i].b = 255 - intens;
         this->cloud->points[i].a = 255;
     }
+    std::cout << "visualization (PCLViewer::convertPointCloud) cloud size " << this->cloud->points.size() << "\n";
     computeBoundingBox ();
 }
 
