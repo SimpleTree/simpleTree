@@ -134,11 +134,11 @@ void WriteCSV::exportAll() {
 
         myfile.open ( a );
         myfile
-        << "id, volume, solidVolume, height, length, BHD, BaseDiameter, volUntilBranch, volUntilCrown, crownHeight, crownVolume, crownArea, crownProjectionArea"
+        << "id, volume [m^3], solidVolume [m^3], height [m], length [m], DBH [cm], rootDiameter [cm], rootHeight [m], volUntilFirstBranch [m^3], volUntilCrown [m^3], crown base [m], crownVolume [m^3], crownArea [m^2], crownProjectionArea [m^2]"
         << std::endl;
 //         std::vector<boost::shared_ptr<Cylinder> > cylinders = getStemCylinders();
         myfile << fileName << " , " << this->tree->getVolume () << " , " << this->tree->getSolidVolume () << " , " << this->tree->getHeight () << " , "
-        << this->tree->getLength () << " , " << this->tree->getBHD () << " , " << this->tree->getBaseDiameter () << " , " << this->tree->getRootSegmentVolume ()
+        << this->tree->getLength () << " , " << this->tree->getBHD () << " , " << this->tree->getBaseDiameter () << " , " << this->tree->getHeightAboveGround() << " , " << this->tree->getRootSegmentVolume ()
         << " , " << this->tree->getVolumeToRoot ( this->tree->getFirstCrownSegment () ) << " , " << this->tree->getFirstCrownSegment ()->getEnd ().z << " , "
         << this->tree->crown->volume << " , " << this->tree->crown->area << " , " << this->tree->crown->crownProjectionArea << std::endl;
         myfile.close ();

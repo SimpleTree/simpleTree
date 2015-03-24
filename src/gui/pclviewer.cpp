@@ -251,6 +251,8 @@ ui ( new Ui::PCLViewer ) {
 void
 PCLViewer::intialAllign()
 {
+     ui->qvtkWidget->update ();
+
     pcl::PointXYZ p1;
     p1.x = allign_dialog_ptr->x1->value();
     p1.y = allign_dialog_ptr->y1->value();
@@ -280,31 +282,256 @@ PCLViewer::intialAllign()
     p6.x = allign_dialog_ptr->x6->value();
     p6.y = allign_dialog_ptr->y6->value();
     p6.z = allign_dialog_ptr->z6->value();
-
+ std::cout << "initial Allign test \n";
     boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > feature1 (new pcl::PointCloud<pcl::PointXYZ>);
     boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > feature2 (new pcl::PointCloud<pcl::PointXYZ>);
 
     feature1->push_back(p1);
     feature1->push_back(p3);
-    feature1->push_back(p4);
+    feature1->push_back(p5);
 
     feature2->push_back(p2);
     feature2->push_back(p4);
     feature2->push_back(p6);
+// std::cout << "initial Allign test \n";
+//       pcl::SampleConsensusInitialAlignment<PointI, PointI, pcl::PointXYZ> sac_ia;
+// std::cout << "initial Allign test \n";
+//       sac_ia.setMinSampleDistance (0.01);
+//       sac_ia.setMaxCorrespondenceDistance(0.1);
+//       sac_ia.setMaximumIterations (150);
+// std::cout << "initial Allign test \n";
+//       sac_ia.setInputCloud (cloud_source);
+//       sac_ia.setInputTarget (cloud_target);
+// std::cout << "initial Allign test \n"; std::cout << "initial Allign test \n";
+//       sac_ia.setSourceFeatures (feature1);
+//       sac_ia.setTargetFeatures (feature2);
+//        std::cout << "initial Allign test \n";
+//       sac_ia.align (*cloud_final);
+//       boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
+//       boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
 
-       pcl::SampleConsensusInitialAlignment<PointI, PointI, pcl::PointXYZ> sac_ia;
+//       visu_source->resize ( cloud_source->points.size () );
+//       for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
+//           visu_source->points[i].x = cloud_source->points[i].x;
+//           visu_source->points[i].y = cloud_source->points[i].y;
+//           visu_source->points[i].z = cloud_source->points[i].z;
+//           float intens = cloud_source->points[i].intensity;
+//           if ( intens == 0 ) {
+//               intens = 180;
+//           }
+//           visu_source->points[i].r = 255;
+//           visu_source->points[i].g = 0;
+//           visu_source->points[i].b = 0;
+//           visu_source->points[i].a = 255;
+//       }
 
-       sac_ia.setMinSampleDistance (0.01);
-       sac_ia.setMaxCorrespondenceDistance(0.1);
-       sac_ia.setMaximumIterations (150);
+//       visu_target->resize ( cloud_final->points.size () );
+//       for ( size_t i = 0; i < cloud_final->points.size (); i++ ) {
+//           visu_target->points[i].x = cloud_final->points[i].x;
+//           visu_target->points[i].y = cloud_final->points[i].y;
+//           visu_target->points[i].z = cloud_final->points[i].z;
+//           float intens = cloud_final->points[i].intensity;
+//           if ( intens == 0 ) {
+//               intens = 180;
+//           }
+//           visu_target->points[i].r = 0;
+//           visu_target->points[i].g = 255;
+//           visu_target->points[i].b = 0;
+//           visu_target->points[i].a = 255;
+//       }
 
-       sac_ia.setInputCloud (cloud_source);
-       sac_ia.setInputTarget (cloud_target);
 
-       sac_ia.setSourceFeatures (feature1);
-       sac_ia.setTargetFeatures (feature2);
+//       viewer->removeAllPointClouds ();
+//       viewer->removeAllShapes ();
+//       pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba1 ( visu_target );
+//       viewer->addPointCloud<PointD> ( visu_target, rgba1, "cloud1" );
+//       pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
+//       viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
+//       xNegView ();
+       viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
+       ui->qvtkWidget->update ();
+       
+       
+       
 
-    //   sac_ia.align (*cloud_final);
+}
+
+void
+PCLViewer:: switch_point_for_ICP ( int i ) {
+    point = i;
+}
+
+
+void PCLViewer::compute_ICP() {
+    allign_cloud.reset ( new PointCloudI );
+    allign_clouds_is_active = true;
+    point = 1;
+    //boost::shared_ptr<PointCloudI> cloud_source ( new PointCloudI );
+
+    //boost::shared_ptr<PointCloudI> cloud_target ( new PointCloudI );
+    boost::shared_ptr<PointCloudI> cloud_final ( new PointCloudI );
+    std::string file_target = "/home/hackenberg/simpleTree/data/2-16-(-2)_2013-2014.pcd";
+    std::string file_source = "/home/hackenberg/simpleTree/data/2-16-(-2)_2014-2015.pcd";
+    ImportPCD import_source ( file_source, control );
+    ImportPCD import_target ( file_target, control );
+    cloud_source = import_source.getCloud();
+    cloud_target = import_target.getCloud();
+
+    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
+        cloud_target->points[i].x = cloud_target->points[i].x+3;
+    }
+
+    boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
+    boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
+
+    visu_source->resize ( cloud_source->points.size () );
+    for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
+        visu_source->points[i].x = cloud_source->points[i].x;
+        visu_source->points[i].y = cloud_source->points[i].y;
+        visu_source->points[i].z = cloud_source->points[i].z;
+        float intens = cloud_source->points[i].intensity;
+        if ( intens == 0 ) {
+            intens = 180;
+        }
+        visu_source->points[i].r = 255;
+        visu_source->points[i].g = 0;
+        visu_source->points[i].b = 0;
+        visu_source->points[i].a = 255;
+    }
+
+    visu_target->resize ( cloud_target->points.size () );
+    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
+        visu_target->points[i].x = cloud_target->points[i].x;
+        visu_target->points[i].y = cloud_target->points[i].y;
+        visu_target->points[i].z = cloud_target->points[i].z;
+        float intens = cloud_target->points[i].intensity;
+        if ( intens == 0 ) {
+            intens = 180;
+        }
+        visu_target->points[i].r = 0;
+        visu_target->points[i].g = 255;
+        visu_target->points[i].b = 0;
+        visu_target->points[i].a = 255;
+    }
+
+
+    viewer->removeAllPointClouds ();
+    viewer->removeAllShapes ();
+    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( visu_target );
+    viewer->addPointCloud<PointD> ( visu_target, rgba, "cloud1" );
+    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
+    viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
+    xNegView ();
+    viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
+    ui->qvtkWidget->update ();
+
+
+    std::cout << "visualization (PCLViewer::convertPointCloud) cloud size " << this->cloud->points.size() << "\n";
+    computeBoundingBox ();
+
+    QDialog * allign_dialog = new QDialog ( this, 0 );
+    allign_dialog_ptr.reset ( new Ui_dialog_init_allign );
+    // Ui_dialog_init_allign allign;
+    allign_dialog_ptr->setupUi ( allign_dialog );
+
+    connect ( allign_dialog_ptr->spinBox, SIGNAL ( valueChanged ( int ) ), this, SLOT ( switch_point_for_ICP ( int ) ) );
+    connect ( allign_dialog_ptr->init_button, SIGNAL (clicked()), this, SLOT (intialAllign()));
+
+    allign_dialog->setModal(false);
+    allign_dialog->show();
+
+//
+//     pcl::NormalEstimationOMP<PointI, PointI> ne ( 0 );
+//     ne.setInputCloud ( cloud_source );
+//     pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> () );
+//     ne.setSearchMethod ( tree );
+//     ne.setRadiusSearch(0.02);
+//     ne.compute ( *cloud_source );
+//
+//     pcl::NormalEstimationOMP<PointI, PointI> ne2 ( 0 );
+//     ne2.setInputCloud ( cloud_target );
+//     pcl::search::KdTree<PointI>::Ptr tree2 ( new pcl::search::KdTree<PointI> () );
+//     ne2.setSearchMethod ( tree2 );
+//     ne2.setRadiusSearch(0.02);
+//     ne2.compute ( *cloud_target );
+//
+//     pcl::HarrisKeypoint3D<PointI,PointI> detector_source;
+//     detector_source.setNonMaxSupression (true);
+//     detector_source.setRadius (0.05);
+//     detector_source.setInputCloud(cloud_source);
+//     pcl::PointCloud<PointI>::Ptr keypoints_source(new pcl::PointCloud<PointI>());
+//     detector_source.compute(*keypoints_source);
+//
+//
+//     pcl::HarrisKeypoint3D<PointI,PointI> detector_target;
+//     detector_target.setNonMaxSupression (true);
+//     detector_target.setRadius (0.05);
+//     detector_target.setInputCloud(cloud_target);
+//
+//     pcl::PointCloud<PointI>::Ptr keypoints_target(new pcl::PointCloud<PointI>());
+//     detector_target.compute(*keypoints_target);
+//
+//     std::cout << keypoints_source->points.size() <<"\n";
+//     std::cout << keypoints_target->points.size() <<"\n";
+//
+//
+//
+//
+//   pcl::FPFHEstimation<PointI, PointI, pcl::FPFHSignature33> fpfh_source;
+//   pcl::search::KdTree<PointI>::Ptr tree_source (new pcl::search::KdTree<PointI>);
+//   fpfh_source.setSearchMethod (tree_source);
+//   fpfh_source.setSearchSurface(cloud_source);
+//   fpfh_source.setInputCloud (keypoints_source);
+//   fpfh_source.setInputNormals (cloud_source);
+//
+//   pcl::PointCloud<pcl::FPFHSignature33>::Ptr fpfhs_source (new pcl::PointCloud<pcl::FPFHSignature33> ());
+//   fpfh_source.setRadiusSearch (0.1);
+//   fpfh_source.compute (*fpfhs_source);
+//
+//
+//   pcl::FPFHEstimation<PointI, PointI, pcl::FPFHSignature33> fpfh_target;
+//   pcl::search::KdTree<PointI>::Ptr tree_target (new pcl::search::KdTree<PointI>);
+//   fpfh_target.setSearchMethod (tree_target);
+//   fpfh_target.setSearchSurface(cloud_target);
+//   fpfh_target.setInputCloud (keypoints_target);
+//   fpfh_target.setInputNormals (cloud_target);
+//
+//   pcl::PointCloud<pcl::FPFHSignature33>::Ptr fpfhs_target (new pcl::PointCloud<pcl::FPFHSignature33> ());
+//   fpfh_target.setRadiusSearch (0.1);
+//   fpfh_target.compute (*fpfhs_target);
+//
+//
+//   pcl::SampleConsensusInitialAlignment<PointI, PointI, pcl::FPFHSignature33> sac_ia;
+//
+//   sac_ia.setMinSampleDistance (0.01);
+//   sac_ia.setMaxCorrespondenceDistance(0.1);
+//   sac_ia.setMaximumIterations (150);
+//
+//   sac_ia.setInputCloud (cloud_source);
+//   sac_ia.setInputTarget (cloud_target);
+//
+//   sac_ia.setSourceFeatures (fpfhs_source);
+//   sac_ia.setTargetFeatures (fpfhs_target);
+//
+//   sac_ia.align (*cloud_final);
+//
+//
+//
+//
+//   for(size_t i = 0; i < cloud_target->points.size(); i++)
+//   {
+//     cloud_target->points.at(i).intensity = 10;
+//   }
+//   for(size_t i = 0; i < cloud_final->points.size(); i++)
+//   {
+//     cloud_final->points.at(i).intensity = 190;
+//   }
+//   std::cout << cloud_final->points.size() << "\n";
+//   std::cout << cloud_target->points.size() << "\n";
+//   *cloud_final += *cloud_target;
+//   this->getControl()->setCloudPtr(cloud_final);
+//
+//   allign_clouds_is_active = false;
 
 }
 
@@ -416,182 +643,7 @@ PCLViewer::reset_crown()
     }
 }
 
-void
-PCLViewer:: switch_point_for_ICP ( int i ) {
-    point = i;
-}
 
-
-void PCLViewer::compute_ICP() {
-    allign_cloud.reset ( new PointCloudI );
-    allign_clouds_is_active = true;
-    point = 1;
-    //boost::shared_ptr<PointCloudI> cloud_source ( new PointCloudI );
-
-    //boost::shared_ptr<PointCloudI> cloud_target ( new PointCloudI );
-    boost::shared_ptr<PointCloudI> cloud_final ( new PointCloudI );
-    std::string file_target = "/home/hackenberg/simpleTree/data/2-16-(-2)_2013-2014.pcd";
-    std::string file_source = "/home/hackenberg/simpleTree/data/2-16-(-2)_2014-2015.pcd";
-    ImportPCD import_source ( file_source, control );
-    ImportPCD import_target ( file_target, control );
-    cloud_source = import_source.getCloud();
-    cloud_target = import_target.getCloud();
-
-    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
-        cloud_target->points[i].x = cloud_target->points[i].x+3;
-    }
-
-    boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
-    boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
-
-    visu_source->resize ( cloud_source->points.size () );
-    for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
-        visu_source->points[i].x = cloud_source->points[i].x;
-        visu_source->points[i].y = cloud_source->points[i].y;
-        visu_source->points[i].z = cloud_source->points[i].z;
-        float intens = cloud_source->points[i].intensity;
-        if ( intens == 0 ) {
-            intens = 180;
-        }
-        visu_source->points[i].r = 255;
-        visu_source->points[i].g = 0;
-        visu_source->points[i].b = 0;
-        visu_source->points[i].a = 255;
-    }
-
-    visu_target->resize ( cloud_target->points.size () );
-    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
-        visu_target->points[i].x = cloud_target->points[i].x;
-        visu_target->points[i].y = cloud_target->points[i].y;
-        visu_target->points[i].z = cloud_target->points[i].z;
-        float intens = cloud_target->points[i].intensity;
-        if ( intens == 0 ) {
-            intens = 180;
-        }
-        visu_target->points[i].r = 0;
-        visu_target->points[i].g = 255;
-        visu_target->points[i].b = 0;
-        visu_target->points[i].a = 255;
-    }
-
-
-    viewer->removeAllPointClouds ();
-    viewer->removeAllShapes ();
-    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( visu_target );
-    viewer->addPointCloud<PointD> ( visu_target, rgba, "cloud1" );
-    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
-    viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
-    xNegView ();
-    viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
-    ui->qvtkWidget->update ();
-
-
-    std::cout << "visualization (PCLViewer::convertPointCloud) cloud size " << this->cloud->points.size() << "\n";
-    computeBoundingBox ();
-
-    QDialog * allign_dialog = new QDialog ( this, 0 );
-    allign_dialog_ptr.reset ( new Ui_dialog_init_allign );
-    // Ui_dialog_init_allign allign;
-    allign_dialog_ptr->setupUi ( allign_dialog );
-
-    connect ( allign_dialog_ptr->spinBox, SIGNAL ( valueChanged ( int ) ), this, SLOT ( switch_point_for_ICP ( int ) ) );
-    allign_dialog->setModal(false);
-    allign_dialog->show();
-
-//
-//     pcl::NormalEstimationOMP<PointI, PointI> ne ( 0 );
-//     ne.setInputCloud ( cloud_source );
-//     pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> () );
-//     ne.setSearchMethod ( tree );
-//     ne.setRadiusSearch(0.02);
-//     ne.compute ( *cloud_source );
-//
-//     pcl::NormalEstimationOMP<PointI, PointI> ne2 ( 0 );
-//     ne2.setInputCloud ( cloud_target );
-//     pcl::search::KdTree<PointI>::Ptr tree2 ( new pcl::search::KdTree<PointI> () );
-//     ne2.setSearchMethod ( tree2 );
-//     ne2.setRadiusSearch(0.02);
-//     ne2.compute ( *cloud_target );
-//
-//     pcl::HarrisKeypoint3D<PointI,PointI> detector_source;
-//     detector_source.setNonMaxSupression (true);
-//     detector_source.setRadius (0.05);
-//     detector_source.setInputCloud(cloud_source);
-//     pcl::PointCloud<PointI>::Ptr keypoints_source(new pcl::PointCloud<PointI>());
-//     detector_source.compute(*keypoints_source);
-//
-//
-//     pcl::HarrisKeypoint3D<PointI,PointI> detector_target;
-//     detector_target.setNonMaxSupression (true);
-//     detector_target.setRadius (0.05);
-//     detector_target.setInputCloud(cloud_target);
-//
-//     pcl::PointCloud<PointI>::Ptr keypoints_target(new pcl::PointCloud<PointI>());
-//     detector_target.compute(*keypoints_target);
-//
-//     std::cout << keypoints_source->points.size() <<"\n";
-//     std::cout << keypoints_target->points.size() <<"\n";
-//
-//
-//
-//
-//   pcl::FPFHEstimation<PointI, PointI, pcl::FPFHSignature33> fpfh_source;
-//   pcl::search::KdTree<PointI>::Ptr tree_source (new pcl::search::KdTree<PointI>);
-//   fpfh_source.setSearchMethod (tree_source);
-//   fpfh_source.setSearchSurface(cloud_source);
-//   fpfh_source.setInputCloud (keypoints_source);
-//   fpfh_source.setInputNormals (cloud_source);
-//
-//   pcl::PointCloud<pcl::FPFHSignature33>::Ptr fpfhs_source (new pcl::PointCloud<pcl::FPFHSignature33> ());
-//   fpfh_source.setRadiusSearch (0.1);
-//   fpfh_source.compute (*fpfhs_source);
-//
-//
-//   pcl::FPFHEstimation<PointI, PointI, pcl::FPFHSignature33> fpfh_target;
-//   pcl::search::KdTree<PointI>::Ptr tree_target (new pcl::search::KdTree<PointI>);
-//   fpfh_target.setSearchMethod (tree_target);
-//   fpfh_target.setSearchSurface(cloud_target);
-//   fpfh_target.setInputCloud (keypoints_target);
-//   fpfh_target.setInputNormals (cloud_target);
-//
-//   pcl::PointCloud<pcl::FPFHSignature33>::Ptr fpfhs_target (new pcl::PointCloud<pcl::FPFHSignature33> ());
-//   fpfh_target.setRadiusSearch (0.1);
-//   fpfh_target.compute (*fpfhs_target);
-//
-//
-//   pcl::SampleConsensusInitialAlignment<PointI, PointI, pcl::FPFHSignature33> sac_ia;
-//
-//   sac_ia.setMinSampleDistance (0.01);
-//   sac_ia.setMaxCorrespondenceDistance(0.1);
-//   sac_ia.setMaximumIterations (150);
-//
-//   sac_ia.setInputCloud (cloud_source);
-//   sac_ia.setInputTarget (cloud_target);
-//
-//   sac_ia.setSourceFeatures (fpfhs_source);
-//   sac_ia.setTargetFeatures (fpfhs_target);
-//
-//   sac_ia.align (*cloud_final);
-//
-//
-//
-//
-//   for(size_t i = 0; i < cloud_target->points.size(); i++)
-//   {
-//     cloud_target->points.at(i).intensity = 10;
-//   }
-//   for(size_t i = 0; i < cloud_final->points.size(); i++)
-//   {
-//     cloud_final->points.at(i).intensity = 190;
-//   }
-//   std::cout << cloud_final->points.size() << "\n";
-//   std::cout << cloud_target->points.size() << "\n";
-//   *cloud_final += *cloud_target;
-//   this->getControl()->setCloudPtr(cloud_final);
-//
-//   allign_clouds_is_active = false;
-
-}
 
 
 void PCLViewer::changeTreeColor() {
