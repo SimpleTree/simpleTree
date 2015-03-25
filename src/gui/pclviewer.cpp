@@ -2426,8 +2426,8 @@ PCLViewer::computeNormals () {
     computeNormals ( getControl ()->getCloudPtr () );
     getControl ()->getGuiPtr ()->updateProgress ( 40 );
     QCoreApplication::processEvents ();
-    CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
-    getControl ()->setCurvaturePtr ( principalCurvatures );
+    //CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
+    //getControl ()->setCurvaturePtr ( principalCurvatures );
     getControl ()->getGuiPtr ()->updateProgress ( 70 );
     QCoreApplication::processEvents ();
     tt.tic ();
@@ -2643,7 +2643,7 @@ PCLViewer::set_method_coeff () {
         updateProgress ( 0 );
         QString str2 = coeff_ptr->struct_to_qstring ( method_coefficients );
         writeConsole ( str2 );
-        SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), control, 3, method_coefficients );
+        SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), control, 1, method_coefficients );
         writeConsole ( str );
         updateProgress ( 50 );
         getControl ()->getGuiPtr ()->writeConsole (
@@ -2820,28 +2820,17 @@ void
 PCLViewer::convertPointCloud ( PointCloudI::Ptr cloud2 ) {
 
     this->cloud.reset ( new PointCloudD );
-    PointCloudI::Ptr cloud3  (new PointCloudI);
-
-    if(cloud2->points.size() >1000000)
-    {
-        int fac = cloud2->points.size()/1000000;
-        for ( size_t i = 0; i < cloud2->points.size ()-fac; i += fac ) {
-            cloud3->push_back(cloud2->points.at(i));
-        }
-    } else {
-        cloud3 = cloud2;
-    }
-    std::cout << cloud3->points.size();
-    this->cloud->resize ( cloud3->points.size () );
-    for ( size_t i = 0; i < cloud3->points.size (); i++ ) {
-        this->cloud->points[i].x = cloud3->points[i].x;
-        this->cloud->points[i].y = cloud3->points[i].y;
-        this->cloud->points[i].z = cloud3->points[i].z;
-        float intens = cloud3->points[i].intensity;
+    std::cout << cloud2->points.size();
+    this->cloud->resize ( cloud2->points.size () );
+    for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
+        this->cloud->points[i].x = cloud2->points[i].x;
+        this->cloud->points[i].y = cloud2->points[i].y;
+        this->cloud->points[i].z = cloud2->points[i].z;
+        float intens = cloud2->points[i].intensity;
         if ( intens == 0 ) {
             intens = 180;
         }
-        cloud3->points[i].intensity = intens;
+        cloud2->points[i].intensity = intens;
         this->cloud->points[i].r = 255 - intens;
         this->cloud->points[i].g = intens;
         this->cloud->points[i].b = 255 - intens;

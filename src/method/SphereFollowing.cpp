@@ -107,7 +107,7 @@ std::vector<int> SphereFollowing::indexOfPointsNearCylinder(
 	float radius = cylinder->getBoundingSphereRadius();
 	std::vector<int> pointIdxRadiusSearch;
 	std::vector<float> pointRadiusSquaredDistance;
-	octree.radiusSearch(queryPoint, radius * factorEnLarge,
+    octree.radiusSearch(queryPoint, radius + factorEnLarge,
 			pointIdxRadiusSearch, pointRadiusSquaredDistance);
 	std::vector<int> indices;
 	for (size_t i = 0; i < pointIdxRadiusSearch.size(); i++) {
@@ -133,7 +133,7 @@ std::vector<float> SphereFollowing::distancesToModel(PointCloudI::Ptr cloud) {
 		boost::shared_ptr<simpleTree::Cylinder> cylinder = boost::make_shared<
 				simpleTree::Cylinder>(cyl);
 		std::vector<int> indices = indexOfPointsNearCylinder(octree, cylinder,
-				5);
+                0.05);
 		for (size_t i = 0; i < indices.size(); i++) {
 			PointI point = cloud->points[indices[i]];
 			float dist = cylinder->distToPoint(point);

@@ -67,9 +67,10 @@ namespace simpleTree {
             reorderTree();
 
         //	std::cout << "end" << std::endl;
-            setIDforSegments();
+
             detectStem ();
             reset_stem();
+                        setIDforSegments();
             detectCrown ();
 
         crown = boost::make_shared<Crown> ( crownPoints (), this->control );
@@ -140,8 +141,14 @@ namespace simpleTree {
 
     void Tree::setIDforSegments() {
         setBranchOrder ( getRootSegment(),0 );
+        std::cout << "1 \n";
+        QCoreApplication::processEvents ();
         setSegmentID();
+        std::cout << "2 \n";
+        QCoreApplication::processEvents ();
         setBranchID ( getRootSegment(),0 );
+        std::cout << "3 \n";
+        QCoreApplication::processEvents ();
     }
     
     std::vector< boost::shared_ptr< Segment > > 
@@ -215,9 +222,11 @@ namespace simpleTree {
 	if(segment->getChildren().size()>0)
 	{
 	  std::vector<boost::shared_ptr<Segment> > children = segment->getChildren();
-	  std::sort (children.begin(), children.end(), compareChildren);
+
+      std::sort (children.begin(), children.end(), compareChildren);
+
 	  segment->setChildren(children);
-	}
+    }
       }
     }
     
@@ -241,18 +250,55 @@ namespace simpleTree {
     
 
      
-    void Tree::setBranchOrder ( boost::shared_ptr< Segment > segment, float order ) {      
-        segment->branchOrder = order;
-        if ( segment->getChildren().size() >0 ) {
-            boost::shared_ptr<Segment> firstChild = segment->getChildren().at ( 0 );
-            setBranchOrder ( firstChild,order );
-            if ( segment->getChildren().size() >1 ) {
-                for ( size_t i = 1; i < segment->getChildren().size(); i++ ) {
+    void Tree::setBranchOrder ( boost::shared_ptr< Segment > segment, float order ) {
+        if(order == 0)
+        {
+            segment->branchOrder = order;
+            if ( segment->getChildren().size() >0 ) {
+                std::vector<boost::shared_ptr<Segment> > stemSegments;
+                boost::shared_ptr<Segment> stemSegment = getStemTopSegment ();
+                while ( stemSegment ) {
+                    stemSegments.push_back(stemSegment);
+                    stemSegment = stemSegment->getParent ();
+                }
+
+                for(size_t i = 0; i < segment->getChildren().size(); i++)
+                {
                     boost::shared_ptr<Segment> child = segment->getChildren().at ( i );
-                    setBranchOrder ( child,order+1 );
+                    bool isStem = false;
+                    for(size_t i = 0; i < stemSegments.size(); i ++)
+                    {
+                        if(stemSegments.at(i)==child)
+                        {
+                            isStem = true;
+                        }
+                    }
+                    if(isStem)
+                    {
+                        setBranchOrder ( child,0 );
+                    } else {
+                        setBranchOrder(child, order+1);
+                    }
+                }
+
+
+
+            }
+        } else {
+            segment->branchOrder = order;
+            if ( segment->getChildren().size() >0 ) {
+                boost::shared_ptr<Segment> firstChild = segment->getChildren().at ( 0 );
+                setBranchOrder ( firstChild,order );
+                if ( segment->getChildren().size() >1 ) {
+                    for ( size_t i = 1; i < segment->getChildren().size(); i++ ) {
+                        boost::shared_ptr<Segment> child = segment->getChildren().at ( i );
+                        setBranchOrder ( child,order+1 );
+                    }
                 }
             }
         }
+
+
     }
 
 
@@ -270,7 +316,7 @@ namespace simpleTree {
         if ( ID==0 ) {
             std::vector< boost::shared_ptr<Segment> >stemSegments;
             boost::shared_ptr<Segment> currentSegment = this->getStemTopSegment();
-            while ( currentSegment != 0 ) {
+            while ( currentSegment) {
                 stemSegments.push_back ( currentSegment );
                 currentSegment->branchID = 0;
                 currentSegment = currentSegment->getParent();
@@ -278,10 +324,23 @@ namespace simpleTree {
             int branchID = 1;
             for ( size_t i = 0; i < stemSegments.size(); i++ ) {
                 boost::shared_ptr<Segment> currentSegment = stemSegments.at ( i );
-                if ( currentSegment->getChildren().size() >1 ) {
-                    for ( size_t j = 1; j < currentSegment->getChildren().size(); j++ ) {
-                        boost::shared_ptr<Segment> startingBranchSegment = currentSegment->getChildren().at ( j );
-                        setBranchID ( startingBranchSegment, branchID );
+                if ( currentSegment->getChildren().size() >0 ) {
+                    for ( size_t j = 0; j < currentSegment->getChildren().size(); j++ ) {
+                        boost::shared_ptr<Segment> child = currentSegment->getChildren().at ( j );
+                        bool isStem = false;
+                        for(size_t k = 0; k < stemSegments.size(); k ++)
+                        {
+                            if(stemSegments.at(k)==child)
+                            {
+                                isStem = true;
+                            }
+                        }
+                        if(isStem)
+                        {
+                            segment->branchID = 0;
+                        } else {
+                            setBranchID(child, branchID);
+                        }
                         branchID ++;
                     }
                 }

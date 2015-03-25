@@ -79,16 +79,32 @@ void WriteCSV::exportAll() {
     memcpy ( a, str.c_str (), str.size () );
 
     myfile.open ( a );
-    myfile << "fileName , startX, startY, startZ, endX, endY, endZ, volume, radius, length, GrowthVolume, SegmentID, ParentSegmentID, BranchID, BranchOrder \n";
+    myfile << "fileName , startX, startY, startZ, endX, endY, endZ, volume, radius, length, GrowthVolume, SegmentID, ParentSegmentID, BranchID, BranchOrder, median Radius Segment, volume to Root,  \n";
     std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = this->tree->getAllCylinders ();
     for ( std::vector<boost::shared_ptr<simpleTree::Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
         boost::shared_ptr<simpleTree::Cylinder> cylinder = *it;
         if ( cylinder->getSegment()->getParent() !=0 ) {
-            myfile << fileName << " , " << cylinder->toString () << " , " << this->tree->getGrowthVolume ( cylinder )  << " , " << cylinder->getSegment()->segmentID
-            << " , " << cylinder->getSegment()->getParent()->segmentID<< " , " << cylinder->getSegment()->branchID<< " , " << cylinder->getSegment()->branchOrder << "\n";
+            myfile << fileName
+            << " , " << cylinder->toString ()
+            << " , " << this->tree->getGrowthVolume ( cylinder )
+            << " , " << cylinder->getSegment()->segmentID
+            << " , " << cylinder->getSegment()->getParent()->segmentID
+            << " , " << cylinder->getSegment()->branchID
+            << " , " << cylinder->getSegment()->branchOrder
+            << " , " << cylinder->getSegment()->medianRadius()
+            << " , " << tree->getVolumeToRoot(cylinder->getSegment())
+            << "\n";
         } else {
-            myfile << fileName << " , " << cylinder->toString () << " , " << this->tree->getGrowthVolume ( cylinder )  << " , " << cylinder->getSegment()->segmentID
-            << " , " << -1 << " , " << cylinder->getSegment()->branchID<< " , " << cylinder->getSegment()->branchOrder << "\n";
+            myfile << fileName
+            << " , " << cylinder->toString ()
+            << " , " << this->tree->getGrowthVolume ( cylinder )
+            << " , " << cylinder->getSegment()->segmentID
+            << " , " << -1
+            << " , " << cylinder->getSegment()->branchID
+            << " , " << cylinder->getSegment()->branchOrder
+            << " , " << cylinder->getSegment()->medianRadius()
+            << " , " << tree->getVolumeToRoot(cylinder->getSegment())
+            << "\n";
         }
         
     }
@@ -209,7 +225,7 @@ void WriteCSV::exportAll() {
         std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = this->tree->getStemCylinders ();
         for ( std::vector<boost::shared_ptr<simpleTree::Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
             boost::shared_ptr<simpleTree::Cylinder> cylinder = *it;
-            myfile << fileName << " , " << cylinder->toString ();
+            myfile << fileName << " , " << cylinder->toString ()<< "\n";
         }
         myfile.close ();
     }
