@@ -91,7 +91,7 @@ Controller::getCloudPtr ()
 }
 
 void
-Controller::setCloudPtr (pcl::PointCloud<PointI>::Ptr cloud_ptr)
+Controller::setCloudPtr (pcl::PointCloud<PointI>::Ptr cloud_ptr, bool changeView )
 {
   this->cloud_ptr = cloud_ptr;
   this->cloud_ptr->width = cloud_ptr->points.size();
@@ -103,7 +103,13 @@ Controller::setCloudPtr (pcl::PointCloud<PointI>::Ptr cloud_ptr)
       this->e3.clear();
       this->isStem.clear();
     this->curvature_ptr.reset(new CurvatureCloud);
-  this->gui_ptr->setCloudPtr (cloud_ptr);
+    if(changeView)
+    {
+        this->gui_ptr->setCloudPtr (cloud_ptr, true );
+    } else {
+        this->gui_ptr->setCloudPtr (cloud_ptr, false );
+    }
+
 
 }
 

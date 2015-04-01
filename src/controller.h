@@ -89,7 +89,7 @@ class Controller : public boost::enable_shared_from_this<Controller>
     void
         setCurvaturePtr (CurvatureCloud::Ptr curvature_ptr);
     void
-    setCloudPtr (PointCloudI::Ptr cloud_ptr);
+    setCloudPtr (PointCloudI::Ptr cloud_ptr, bool changeView = false);
     boost::shared_ptr<PCLViewer>
     getGuiPtr ();
     std::string

@@ -49,6 +49,7 @@
 #include <QFileDialog>
 #include "../import/importpcd.h"
 #include "../controller.h"
+#include <pcl/filters/passthrough.h>
 
 // Visualization Toolkit (VTK)
 #include <vtkRenderWindow.h>
@@ -226,7 +227,7 @@ public:
 	void
 	connectToController(boost::shared_ptr<Controller> control);
 	void
-	setCloudPtr(PointCloudI::Ptr cloud);
+    setCloudPtr(PointCloudI::Ptr cloud, bool changeView = false);
 	void
 	setTreePtr(boost::shared_ptr<simpleTree::Tree> tree_ptr);
 	boost::shared_ptr<Controller>
@@ -239,8 +240,38 @@ public:
 	plotAllometry();
 	void
 	plotIntensityHist();
+    boost::shared_ptr<PointCloudI>
+    extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min);
+    boost::shared_ptr<PointCloudI>
+    transformToOrigin(boost::shared_ptr<PointCloudI> tree, Eigen::Vector4f center);
+    boost::shared_ptr<PointCloudD>
+    transform(boost::shared_ptr<PointCloudD> tree, int angle, int height);
+    boost::shared_ptr<PointCloudI>
+    transform(boost::shared_ptr<PointCloudI> tree, int angle, int height);
 
 public slots:
+    void
+    allign_rotate_translate();
+    void
+    set_allign_rotate();
+    void
+    set_allign_rotate_box();
+    void
+    set_allign_x();
+    void
+    set_allign_x_box();
+    void
+    set_allign_y();
+    void
+    set_allign_y_box();
+    void
+    set_allign_z();
+    void
+    set_allign_z_box();
+    void
+    performICP();
+    void
+    rotateAllign();
     void
     intialAllign();
 
