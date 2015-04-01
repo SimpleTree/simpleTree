@@ -423,37 +423,49 @@ PCLViewer::rotateAllign()
 void
 PCLViewer::set_allign_z_box()
 {
-
+    int z = allign_dialog_ptr->z_2->value()*1000;
+    allign_dialog_ptr->z->setValue(z);
+    allign_rotate_translate();
 }
 
 void
 PCLViewer::set_allign_z()
 {
-
+    float z = allign_dialog_ptr->z->value();
+    allign_dialog_ptr->z_2->setValue(z/1000);
+    allign_rotate_translate();
 }
 
 void
 PCLViewer::set_allign_y()
 {
-
+    float y = allign_dialog_ptr->y->value();
+    allign_dialog_ptr->y_2->setValue(y/1000);
+    allign_rotate_translate();
 }
 
 void
 PCLViewer::set_allign_y_box()
 {
-
+        int y = allign_dialog_ptr->y_2->value()*1000;
+        allign_dialog_ptr->y->setValue(y);
+        allign_rotate_translate();
 }
 
 void
 PCLViewer::set_allign_x_box()
 {
-
+    int x = allign_dialog_ptr->x_2->value()*1000;
+    allign_dialog_ptr->x->setValue(x);
+    allign_rotate_translate();
 }
 
 void
 PCLViewer::set_allign_x()
 {
-
+    float x = allign_dialog_ptr->x->value();
+    allign_dialog_ptr->x_2->setValue(x/1000);
+    allign_rotate_translate();
 }
 
 
@@ -665,8 +677,14 @@ void PCLViewer::compute_ICP() {
   //  connect ( allign_dialog_ptr->spinBox, SIGNAL ( valueChanged ( int ) ), this, SLOT ( switch_point_for_ICP ( int ) ) );
     connect ( allign_dialog_ptr->init_button, SIGNAL (clicked()), this, SLOT (intialAllign()));
     connect ( allign_dialog_ptr->rotate, SIGNAL(sliderReleased()), this, SLOT (set_allign_rotate()));
+    connect ( allign_dialog_ptr->rotate_2, SIGNAL(valueChanged()), this, SLOT (set_allign_rotate_box()));
     //connect ( allign_dialog_ptr->rotate2, SIGNAL(sliderReleased()), this, SLOT (rotateAllign()));
-    connect ( allign_dialog_ptr->z, SIGNAL(sliderReleased()), this, SLOT (rotateAllign()));
+    connect ( allign_dialog_ptr->z, SIGNAL(sliderReleased()), this, SLOT (set_allign_z()));
+    connect ( allign_dialog_ptr->z_2, SIGNAL(valueChanged()), this, SLOT (set_allign_z_box()));
+    connect ( allign_dialog_ptr->y, SIGNAL(sliderReleased()), this, SLOT (set_allign_y()));
+    connect ( allign_dialog_ptr->y_2, SIGNAL(valueChanged()), this, SLOT (set_allign_y_box()));
+    connect ( allign_dialog_ptr->x, SIGNAL(sliderReleased()), this, SLOT (set_allign_x()));
+    connect ( allign_dialog_ptr->x_2, SIGNAL(valueChanged()), this, SLOT (set_allign_x_box()));
     connect ( allign_dialog_ptr->pushButton, SIGNAL(clicked()), this, SLOT (performICP()));
     allign_dialog->setModal(false);
     allign_dialog->show();
