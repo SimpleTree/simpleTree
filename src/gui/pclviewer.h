@@ -100,6 +100,7 @@
 #include "../method/StemPointDetection.h"
 #include "../method/set_coefficients.h"
 #include "../method/method_coefficients.h"
+#include "../gui/allign.h"
 
 #include "../../build/ui_pclviewer.h"
 #include "../../build/ui_radius_dialog.h"
@@ -137,9 +138,7 @@ class PCLViewer;
 struct callback_args {
 	// structure used to pass arguments to the callback function
 	boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ptr;
-	boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ptr;
-	
-	
+    boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ptr;
 	PCLViewer * viewer;
 };
 class PCLViewer: public QMainWindow,public  boost::enable_shared_from_this<PCLViewer>  {
@@ -196,8 +195,8 @@ private:
 
 	void
 	convertPointCloud(PointCloudI::Ptr);
-	void
-	computeBoundingBox();
+
+
 	void
 	computeNormals(PointCloudI::Ptr cloud);
 	CurvatureCloud::Ptr
@@ -220,10 +219,15 @@ public:
 	bool crop_box_is_active;
 	bool crop_sphere_is_active;
 	bool allign_clouds_is_active;
-		boost::shared_ptr<Ui_dialog_init_allign> allign_dialog_ptr;
+    boost::shared_ptr<Ui_dialog_init_allign> allign_dialog_ptr;
 	
 	explicit
 	PCLViewer(QWidget *parent = 0);
+
+    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+
+    void
+    computeBoundingBox();
 	~PCLViewer();
 	void
 	connectToController(boost::shared_ptr<Controller> control);
@@ -249,6 +253,8 @@ public:
     transform(boost::shared_ptr<PointCloudD> tree, int angle, int height);
     boost::shared_ptr<PointCloudI>
     transform(boost::shared_ptr<PointCloudI> tree, int angle, int height);
+    boost::shared_ptr<PointCloudD>
+    convertPointCloud(PointCloudI::Ptr & cloud, float r, float g, float b);
 
 public slots:
     void
@@ -485,7 +491,7 @@ protected:
   
 
 
-	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+
 	boost::shared_ptr<pcl::visualization::PCLPlotter> plotter;
 	PointCloudD::Ptr cloud;
 	std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders;
