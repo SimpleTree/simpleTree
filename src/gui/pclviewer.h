@@ -211,6 +211,7 @@ private:
 public:
 //   virtual
 //   void resize();
+        Ui::PCLViewer *ui;
   int point = 1;
     void
     init();
@@ -495,8 +496,8 @@ protected:
 	unsigned int blue;
 
 private:
-	Ui::PCLViewer *ui;
-	void
+
+    void
 	generateData(double *ax, double *acos, double *asin, int numPoints);
 	void
 	generateCloud();

@@ -23,8 +23,10 @@ set (project_SOURCES src/export/exportply.cpp src/export/writecsv.cpp src/main.c
 		     src/Model/crown.cpp 
 		     src/Model/Cylinder.cpp 
 		     src/Model/Segment.cpp 
-		     src/Model/Tree.cpp)
-set (project_HEADERS src/controller.h 
+                     src/Model/Tree.cpp
+                     src/gui/allign.cpp   )
+set (project_HEADERS     src/controller.h
+                         src/gui/allign.h
 			 src/export/writecsv.h
  			 src/export/exportply.h
 		     src/gui/pclviewer.h
