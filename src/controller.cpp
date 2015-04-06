@@ -68,8 +68,6 @@ Controller::init (int argc,
   this->gui_ptr->show ();
   this->gui_ptr->connectToController (shared_from_this ());
   a.exec ();
-  std::cout << "test" << std::endl;
-
 }
 
 std::string

@@ -30,7 +30,7 @@ class AllignPointCloud : public QObject
 {
     Q_OBJECT
 public:
-    AllignPointCloud();
+    explicit AllignPointCloud(QObject * parent = 0);
     void
     setViewer(boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer);
     void
@@ -38,13 +38,16 @@ public:
     void
     setGuiPtr(boost::shared_ptr<PCLViewer> guiPtr);
     void
-    dialog();
-    void
     init();
 
-private:
     void
-    visualizeClouds();
+    rotate_translate();
+
+private:
+    boost::shared_ptr<QDialog> allign_dialog;
+
+    void
+    visualizeClouds(bool show_final = false);
 
     const float slice_height = 0.05f;
 
@@ -81,34 +84,46 @@ private:
     boost::shared_ptr<PointCloudI>
     transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base);
     boost::shared_ptr<PointCloudI>
-    transform(boost::shared_ptr<PointCloudI> tree, int angle, int z_transform);
+    transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y ,int z);
     boost::shared_ptr<PointCloudD>
-    transform(boost::shared_ptr<PointCloudD> tree, int angle, int z_transform);
+    transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y, int z);
 
+
+    PointCloudI::Ptr
+    downsampleCloud(PointCloudI::Ptr cloud);
+
+    void
+    saveFile(QString name, PointCloudI::Ptr cloud);
+
+    void
+    resetVisualization();
 
 public slots:
+
     void
-    allign_rotate_translate();
+    abort();
     void
-    set_allign_rotate();
+    save();
     void
-    set_allign_rotate_box();
+    rotate_slider();
     void
-    set_allign_x();
+    rotate_spinbox();
     void
-    set_allign_x_box();
+    x_slider();
     void
-    set_allign_y();
+    x_spinbox();
     void
-    set_allign_y_box();
+    y_slider();
     void
-    set_allign_z();
+    y_spinbox();
     void
-    set_allign_z_box();
+    z_slider();
     void
-    performICP();
+    z_spinbox();
     void
-    rotateAllign();
+    ICP();
+//    void
+//    rotateAllign();
     //    void
     //    intialAllign();
 };

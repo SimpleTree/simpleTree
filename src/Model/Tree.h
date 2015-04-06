@@ -234,8 +234,8 @@ namespace simpleTree
       std::vector<boost::shared_ptr<Cylinder> >
       getStemCylinders ();
 
-      std::string
-      toString ();
+//      std::string
+//      toString ();
 
     protected:
 

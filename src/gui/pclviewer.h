@@ -123,16 +123,16 @@ typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 
 
 class SetCoefficients;
-
+class AllignPointCloud;
 
 namespace Ui {
 class PCLViewer;
-
 }
+
 namespace simpleTree {
 class Tree;
-
 }
+
 class Controller;
 class PCLViewer;
 struct callback_args {
@@ -144,10 +144,12 @@ struct callback_args {
 class PCLViewer: public QMainWindow,public  boost::enable_shared_from_this<PCLViewer>  {
 Q_OBJECT
 private:
+    boost::shared_ptr<AllignPointCloud> allign;
 
-    boost::shared_ptr<PointCloudI> cloud_source;
-    boost::shared_ptr<PointCloudI> cloud_target;
-    boost::shared_ptr<PointCloudI> cloud_final;
+
+//    boost::shared_ptr<PointCloudI> cloud_source;
+//    boost::shared_ptr<PointCloudI> cloud_target;
+//    boost::shared_ptr<PointCloudI> cloud_final;
 	callback_args cb_args;
 	boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ui_ptr;
 	boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ui_ptr;
@@ -211,14 +213,14 @@ public:
 //   virtual
 //   void resize();
         Ui::PCLViewer *ui;
-  int point = 1;
+//  int point = 1;
     void
     init();
 
     bool reset_crown_is_active;
 	bool crop_box_is_active;
 	bool crop_sphere_is_active;
-	bool allign_clouds_is_active;
+//	bool allign_clouds_is_active;
     boost::shared_ptr<Ui_dialog_init_allign> allign_dialog_ptr;
 	
 	explicit
@@ -247,40 +249,40 @@ public:
 	plotIntensityHist();
     boost::shared_ptr<PointCloudI>
     extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min);
-    boost::shared_ptr<PointCloudI>
-    transformToOrigin(boost::shared_ptr<PointCloudI> tree, Eigen::Vector4f center);
+//    boost::shared_ptr<PointCloudI>
+//    transformToOrigin(boost::shared_ptr<PointCloudI> tree, Eigen::Vector4f center);
+//    boost::shared_ptr<PointCloudD>
+//    transform(boost::shared_ptr<PointCloudD> tree, int angle, int height);
+//    boost::shared_ptr<PointCloudI>
+//    transform(boost::shared_ptr<PointCloudI> tree, int angle, int height);
     boost::shared_ptr<PointCloudD>
-    transform(boost::shared_ptr<PointCloudD> tree, int angle, int height);
-    boost::shared_ptr<PointCloudI>
-    transform(boost::shared_ptr<PointCloudI> tree, int angle, int height);
-    boost::shared_ptr<PointCloudD>
-    convertPointCloud(PointCloudI::Ptr & cloud, float r, float g, float b);
+    convertPointCloud(PointCloudI::Ptr & cloud, int r, int g, int b);
 
 public slots:
-    void
-    allign_rotate_translate();
-    void
-    set_allign_rotate();
-    void
-    set_allign_rotate_box();
-    void
-    set_allign_x();
-    void
-    set_allign_x_box();
-    void
-    set_allign_y();
-    void
-    set_allign_y_box();
-    void
-    set_allign_z();
-    void
-    set_allign_z_box();
-    void
-    performICP();
-    void
-    rotateAllign();
-    void
-    intialAllign();
+//    void
+//    allign_rotate_translate();
+//    void
+//    set_allign_rotate();
+//    void
+//    set_allign_rotate_box();
+//    void
+//    set_allign_x();
+//    void
+//    set_allign_x_box();
+//    void
+//    set_allign_y();
+//    void
+//    set_allign_y_box();
+//    void
+//    set_allign_z();
+//    void
+//    set_allign_z_box();
+//    void
+//    performICP();
+//    void
+//    rotateAllign();
+//    void
+//    intialAllign();
 
     void
     screenshot();
@@ -297,8 +299,8 @@ public slots:
     void compute_crown();
     void abort_crown();
 
-  void
-  switch_point_for_ICP(int i);
+//  void
+//  switch_point_for_ICP(int i);
   void
   compute_ICP();
   
