@@ -1,29 +1,29 @@
 #include "allign.h"
 
-AllignPointCloud::AllignPointCloud(QObject *parent) : QObject(parent)
+AllignPointCloudDialog::AllignPointCloudDialog(QObject *parent) : QObject(parent)
 {
 }
 
 void
-AllignPointCloud::setViewer(boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer)
+AllignPointCloudDialog::setViewer(boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer)
 {
     this->viewer = viewer;
 }
 
 void
-AllignPointCloud::setUi(Ui::PCLViewer * ui)
+AllignPointCloudDialog::setUi(Ui::PCLViewer * ui)
 {
     this->ui = ui;
 }
 
 boost::shared_ptr<PCLViewer>
-AllignPointCloud::getGuiPtr()
+AllignPointCloudDialog::getGuiPtr()
 {
     return gui_ptr.lock();
 }
 
 void
-AllignPointCloud::saveFile(QString name, PointCloudI::Ptr cloud)
+AllignPointCloudDialog::saveFile(QString name, PointCloudI::Ptr cloud)
 {
     if (cloud != 0 ) {
         QString dir ("../data/");
@@ -34,20 +34,20 @@ AllignPointCloud::saveFile(QString name, PointCloudI::Ptr cloud)
 }
 
 void
-AllignPointCloud::resetVisualization()
+AllignPointCloudDialog::resetVisualization()
 {
     getGuiPtr()->viewer->removeShape("tree_text1");
     getGuiPtr()->viewer->removeShape("tree_text2");
     getGuiPtr()->getControl()->setTreeID(name_source.toStdString());
-    *getGuiPtr()->getControl()->getCloudPtr() = *cloud_source;
+    *getGuiPtr()->getControl()->getCloudPtr() = *cloud_target;
     getGuiPtr()->setCloudPtr(getGuiPtr()->getControl()->getCloudPtr());
 }
 
 void
-AllignPointCloud::abort()
+AllignPointCloudDialog::abort()
 {
     //cloud_source.reset(new PointCloudI);
-    cloud_target.reset(new PointCloudI);
+    cloud_source.reset(new PointCloudI);
     cloud_final.reset(new PointCloudI);
     resetVisualization();
     allign_dialog->close();
@@ -55,13 +55,13 @@ AllignPointCloud::abort()
 }
 
 void
-AllignPointCloud::save()
+AllignPointCloudDialog::save()
 {
-    saveFile(name_source, cloud_source);
+    saveFile(name_source, cloud_target);
     saveFile(name_target, cloud_final);
 
    // cloud_source.reset(new PointCloudI);
-    cloud_target.reset(new PointCloudI);
+    cloud_source.reset(new PointCloudI);
     cloud_final.reset(new PointCloudI);
 
     resetVisualization();
@@ -69,23 +69,23 @@ AllignPointCloud::save()
 }
 
 void
-AllignPointCloud::init()
+AllignPointCloudDialog::init()
 {
-    import(cloud_source,name_source);
-    Eigen::Vector4f base_source;
-    stemBase(cloud_source,base_source);
-    cloud_source = transformToOrigin(cloud_source, base_source);
-
-
     import(cloud_target,name_target);
+    Eigen::Vector4f base_source;
+    stemBase(cloud_target,base_source);
+    cloud_target = transformToOrigin(cloud_target, base_source);
+
+
+    import(cloud_source,name_source);
     Eigen::Vector4f base_target;
-    stemBase(cloud_target,base_target);
-    cloud_target = transformToOrigin(cloud_target, base_target);
+    stemBase(cloud_source,base_target);
+    cloud_source = transformToOrigin(cloud_source, base_target);
 
     cloud_final.reset(new PointCloudI);
-    *cloud_final = *cloud_target;
+    *cloud_final = *cloud_source;
 
-    getGuiPtr()->getControl()->setCloudPtr(cloud_source);
+    getGuiPtr()->getControl()->setCloudPtr(cloud_target);
     getGuiPtr()->computeBoundingBox();
     visualizeClouds();
 
@@ -109,13 +109,13 @@ AllignPointCloud::init()
 }
 
 void
-AllignPointCloud::setGuiPtr(boost::shared_ptr<PCLViewer> guiPtr)
+AllignPointCloudDialog::setGuiPtr(boost::shared_ptr<PCLViewer> guiPtr)
 {
     this->gui_ptr = guiPtr;
 }
 
 void
-AllignPointCloud::stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f & base)
+AllignPointCloudDialog::stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f & base)
 {
     PointI p1;
     PointI p2;
@@ -127,7 +127,7 @@ AllignPointCloud::stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f 
 }
 
 void
-AllignPointCloud::import(boost::shared_ptr<PointCloudI> & cloud, QString & name)
+AllignPointCloudDialog::import(boost::shared_ptr<PointCloudI> & cloud, QString & name)
 {
     cloud.reset(new PointCloudI);
     QString path;
@@ -139,7 +139,7 @@ AllignPointCloud::import(boost::shared_ptr<PointCloudI> & cloud, QString & name)
 }
 
 void
-AllignPointCloud::selectFile (QString & name, QString & path) {
+AllignPointCloudDialog::selectFile (QString & name, QString & path) {
     QFileDialog dialog ( &*getGuiPtr(), tr ( "Open File" ), "../data/", tr ( "Point Cloud File(*pcd);;ASCII - File(*.asc);;txt - File(*.txt);;All Files(*)" ) );
     dialog.setOptions ( ( QFileDialog::DontUseNativeDialog ) );
     dialog.setViewMode ( QFileDialog::Detail );
@@ -158,7 +158,7 @@ AllignPointCloud::selectFile (QString & name, QString & path) {
 }
 
 void
-AllignPointCloud::extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::shared_ptr<PointCloudI> base, float height)
+AllignPointCloudDialog::extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::shared_ptr<PointCloudI> base, float height)
 {
     pcl::PassThrough<PointI> pass;
     pass.setInputCloud (cloud);
@@ -168,7 +168,7 @@ AllignPointCloud::extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::
 }
 
 boost::shared_ptr<PointCloudI>
-AllignPointCloud::transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base)
+AllignPointCloudDialog::transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base)
 {
     Eigen::Affine3f transform = Eigen::Affine3f::Identity();
     transform.translation() << -base(0,0),-base(1,0),-base(2,0)+0.2f;
@@ -179,7 +179,7 @@ AllignPointCloud::transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::
 
 
 void
-AllignPointCloud::visualizeClouds(bool show_final)
+AllignPointCloudDialog::visualizeClouds(bool show_final)
 {
     getGuiPtr()->viewer->removeAllPointClouds ();
     getGuiPtr()->viewer->removeAllShapes ();
@@ -187,14 +187,14 @@ AllignPointCloud::visualizeClouds(bool show_final)
     if(show_final)
     {
         boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
-        visu_source = getGuiPtr()->convertPointCloud(cloud_source,51,102,51);
+        visu_source = getGuiPtr()->convertPointCloud(cloud_target,51,102,51);
         pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba1 ( visu_source );
         getGuiPtr()->viewer->addPointCloud<PointD> ( visu_source, rgba1, "cloud1" );
         getGuiPtr()->viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud1" );
         getGuiPtr()->viewer->addText(name_source.toStdString(),10,50,20,0.2,0.4,0.2,"tree_text1");
 
         boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
-        visu_target = getGuiPtr()->convertPointCloud(cloud_target,128,0,0);
+        visu_target = getGuiPtr()->convertPointCloud(cloud_source,128,0,0);
         pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_target );
         getGuiPtr()->viewer->addPointCloud<PointD> ( visu_target, rgba2, "cloud2" );
         getGuiPtr()->viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud2" );
@@ -207,14 +207,14 @@ AllignPointCloud::visualizeClouds(bool show_final)
             getGuiPtr()->viewer->addText( name_target.toStdString(), 10, 20,20, 1, 0.8, 0.2, "tree_text2" );
     } else {
         boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
-        visu_source = getGuiPtr()->convertPointCloud(cloud_source,51,102,51);
+        visu_source = getGuiPtr()->convertPointCloud(cloud_target,51,102,51);
         pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba1 ( visu_source );
         getGuiPtr()->viewer->addPointCloud<PointD> ( visu_source, rgba1, "cloud1" );
         getGuiPtr()->viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud1" );
         getGuiPtr()->viewer->addText(name_source.toStdString(),10,50,20,0.2,0.4,0.2,"tree_text1");
 
         boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
-        visu_target = getGuiPtr()->convertPointCloud(cloud_target,128,0,0);
+        visu_target = getGuiPtr()->convertPointCloud(cloud_source,128,0,0);
         pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_target );
         getGuiPtr()->viewer->addPointCloud<PointD> ( visu_target, rgba2, "cloud2" );
         getGuiPtr()->viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud2" );
@@ -229,7 +229,7 @@ AllignPointCloud::visualizeClouds(bool show_final)
 
 
 boost::shared_ptr<PointCloudI>
-AllignPointCloud::extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min)
+AllignPointCloudDialog::extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min)
 {
     boost::shared_ptr<PointCloudI> tree_base (new PointCloudI);
     pcl::PassThrough<PointI> pass;
@@ -241,7 +241,7 @@ AllignPointCloud::extractStemBase(boost::shared_ptr<PointCloudI> tree, float hei
 }
 
 PointCloudI::Ptr
-AllignPointCloud::downsampleCloud(PointCloudI::Ptr cloud)
+AllignPointCloudDialog::downsampleCloud(PointCloudI::Ptr cloud)
 {
     boost::shared_ptr<PointCloudI> downsampled (new PointCloudI);
     pcl::VoxelGrid<PointI> sor;
@@ -252,15 +252,15 @@ AllignPointCloud::downsampleCloud(PointCloudI::Ptr cloud)
 }
 
 void
-AllignPointCloud::ICP()
+AllignPointCloudDialog::ICP()
 {
-    *cloud_target = *cloud_final;
+    *cloud_source = *cloud_final;
 
     boost::shared_ptr<PointCloudI> downsampled_target (new PointCloudI);
     boost::shared_ptr<PointCloudI> downsampled_source (new PointCloudI);
 
-    downsampled_source = downsampleCloud(cloud_source);
-    downsampled_target = downsampleCloud(cloud_target);
+    downsampled_source = downsampleCloud(cloud_target);
+    downsampled_target = downsampleCloud(cloud_source);
 
 
 
@@ -287,7 +287,7 @@ AllignPointCloud::ICP()
         stream << transformation_matrix;
         str.append(QString::fromStdString(stream.str()));
         getGuiPtr()->writeConsole(QString(str));
-        pcl::transformPointCloud(*cloud_target,*cloud_final, transformation_matrix);
+        pcl::transformPointCloud(*cloud_source,*cloud_final, transformation_matrix);
     }
     else
     {
@@ -300,7 +300,7 @@ AllignPointCloud::ICP()
 
 
 void
-AllignPointCloud::rotate_spinbox()
+AllignPointCloudDialog::rotate_spinbox()
 {
     int angle = allign_dialog_ptr->rotate_2->value();
     allign_dialog_ptr->rotate->setValue(angle*10);
@@ -308,7 +308,7 @@ AllignPointCloud::rotate_spinbox()
 }
 
 void
-AllignPointCloud::rotate_slider()
+AllignPointCloudDialog::rotate_slider()
 {
     float angle = allign_dialog_ptr->rotate->value();
     allign_dialog_ptr->rotate_2->setValue(angle/10.0f);
@@ -319,7 +319,7 @@ AllignPointCloud::rotate_slider()
 
 
 void
-AllignPointCloud::z_spinbox()
+AllignPointCloudDialog::z_spinbox()
 {
     int z = allign_dialog_ptr->z_2->value()*1000;
     allign_dialog_ptr->z->setValue(z);
@@ -327,7 +327,7 @@ AllignPointCloud::z_spinbox()
 }
 
 void
-AllignPointCloud::z_slider()
+AllignPointCloudDialog::z_slider()
 {
     float z = allign_dialog_ptr->z->value();
     allign_dialog_ptr->z_2->setValue(z/1000.0f);
@@ -335,7 +335,7 @@ AllignPointCloud::z_slider()
 }
 
 void
-AllignPointCloud::y_spinbox()
+AllignPointCloudDialog::y_spinbox()
 {
     int y = allign_dialog_ptr->y_2->value()*1000;
     allign_dialog_ptr->y->setValue(y);
@@ -343,7 +343,7 @@ AllignPointCloud::y_spinbox()
 }
 
 void
-AllignPointCloud::y_slider()
+AllignPointCloudDialog::y_slider()
 {
     int y = allign_dialog_ptr->y->value();
     allign_dialog_ptr->y_2->setValue(y/1000.0f);
@@ -351,7 +351,7 @@ AllignPointCloud::y_slider()
 }
 
 void
-AllignPointCloud::x_spinbox()
+AllignPointCloudDialog::x_spinbox()
 {
     int x = allign_dialog_ptr->x_2->value()*1000;
     allign_dialog_ptr->x->setValue(x);
@@ -359,7 +359,7 @@ AllignPointCloud::x_spinbox()
 }
 
 void
-AllignPointCloud::x_slider()
+AllignPointCloudDialog::x_slider()
 {
     float x = allign_dialog_ptr->x->value();
     allign_dialog_ptr->x_2->setValue(x/1000.0f);
@@ -369,7 +369,7 @@ AllignPointCloud::x_slider()
 
 
 void
-AllignPointCloud::rotate_translate()
+AllignPointCloudDialog::rotate_translate()
 {
     int angle = allign_dialog_ptr->rotate->value();
     int x = allign_dialog_ptr->x->value();
@@ -377,14 +377,14 @@ AllignPointCloud::rotate_translate()
     int z = allign_dialog_ptr->z->value();
 
     cloud_final.reset(new PointCloudI);
-    cloud_final = transform(cloud_target,angle,x,y,z);
+    cloud_final = transform(cloud_source,angle,x,y,z);
     visualizeClouds(true);
 
     getGuiPtr()->ui->qvtkWidget->update ();
 }
 
 boost::shared_ptr<PointCloudD>
-AllignPointCloud::transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y,  int z)
+AllignPointCloudDialog::transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y,  int z)
 {
     float theta = 2*M_PI/3600.0f*angle;
     float dx = x/100.0f;
@@ -402,7 +402,7 @@ AllignPointCloud::transform(boost::shared_ptr<PointCloudD> & tree, int angle, in
 
 
 boost::shared_ptr<PointCloudI>
-AllignPointCloud::transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y, int z)
+AllignPointCloudDialog::transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y, int z)
 {
     float theta = 2*M_PI/3600.0f*angle;
     float dx = x/100.0f;

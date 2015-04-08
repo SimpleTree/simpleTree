@@ -123,7 +123,7 @@ typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 
 
 class SetCoefficients;
-class AllignPointCloud;
+class AllignPointCloudDialog;
 
 namespace Ui {
 class PCLViewer;
@@ -144,7 +144,7 @@ struct callback_args {
 class PCLViewer: public QMainWindow,public  boost::enable_shared_from_this<PCLViewer>  {
 Q_OBJECT
 private:
-    boost::shared_ptr<AllignPointCloud> allign;
+    boost::shared_ptr<AllignPointCloudDialog> allign;
 
 
 //    boost::shared_ptr<PointCloudI> cloud_source;

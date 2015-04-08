@@ -571,7 +571,7 @@ ui ( new Ui::PCLViewer ) {
 //}
 
 void PCLViewer::compute_ICP() {
-    allign.reset(new AllignPointCloud(this));
+    allign.reset(new AllignPointCloudDialog(this));
     //boost::shared_ptr<AllignPointCloud> allign (new AllignPointCloud(this));
     allign->setViewer(viewer);
     allign->setUi(ui);

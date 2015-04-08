@@ -26,11 +26,12 @@ class AllignPointCloud;
 
 
 
-class AllignPointCloud : public QObject
+class AllignPointCloudDialog
+        : public QObject
 {
     Q_OBJECT
 public:
-    explicit AllignPointCloud(QObject * parent = 0);
+    AllignPointCloudDialog(QObject * parent = 0);
     void
     setViewer(boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer);
     void
@@ -54,8 +55,8 @@ private:
     QString name_source;
     QString name_target;
 
-    boost::shared_ptr<PointCloudI> cloud_source;
     boost::shared_ptr<PointCloudI> cloud_target;
+    boost::shared_ptr<PointCloudI> cloud_source;
     boost::shared_ptr<PointCloudI> cloud_final;
 
     Ui::PCLViewer *ui;
@@ -73,6 +74,7 @@ private:
 
     void
     selectFile(QString & name, QString & path);
+
     void
     import(boost::shared_ptr<PointCloudI> & cloud, QString & name);
     void

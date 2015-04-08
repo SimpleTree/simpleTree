@@ -12,7 +12,10 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/export/exportply.cpp src/export/writecsv.cpp src/main.cpp
+set (project_SOURCES src/pointclouds/allignpointcloud.cpp
+                     src/export/exportply.cpp
+                     src/export/writecsv.cpp
+                     src/main.cpp
 		     src/controller.cpp 
 		     src/gui/pclviewer.cpp
 		     src/import/importpcd.cpp 
@@ -24,11 +27,14 @@ set (project_SOURCES src/export/exportply.cpp src/export/writecsv.cpp src/main.c
 		     src/Model/Cylinder.cpp 
 		     src/Model/Segment.cpp 
                      src/Model/Tree.cpp
-                     src/gui/allign.cpp   )
-set (project_HEADERS     src/controller.h
-                         src/gui/allign.h
-			 src/export/writecsv.h
- 			 src/export/exportply.h
+                     src/gui/allign.cpp)
+
+
+set (project_HEADERS src/pointclouds/allignpointcloud.h
+                     src/controller.h
+                     src/gui/allign.h
+                     src/export/writecsv.h
+                     src/export/exportply.h
 		     src/gui/pclviewer.h
 		     src/import/importpcd.h 
 		     src/method/SphereFollowing.h
@@ -39,6 +45,7 @@ set (project_HEADERS     src/controller.h
 		     src/Model/Cylinder.h 
 		     src/Model/Segment.h 
 		     src/Model/Tree.h)
+
 set (project_FORMS   src/gui/pclviewer.ui 
 					 src/gui/allign_dialog.ui
 					 src/gui/method_dialog.ui
