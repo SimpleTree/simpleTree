@@ -62,19 +62,26 @@ namespace simpleTree
     this->depth = depth;
   }
 
-  std::string
+QString
   Cylinder::toString ()
   {
-    std::string str = "";
-    std::ostringstream stream;
-    pcl::PointXYZ start = getStart ();
-    pcl::PointXYZ end = getEnd ();
-    stream << start.x << " , " << start.y << " , " << start.z;
-    stream << " , " << end.x << " , " << end.y << " , " << end.z;
-    stream << " , " << getVolume ();
-    stream << " , " << getRadius ();
-    stream << " , " << getLength ();
-    return stream.str ();
+      QString str;
+      pcl::PointXYZ start = getStart ();
+      pcl::PointXYZ end = getEnd ();
+      str.append(QString::number(start.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));
+      str.append(QString::number(end.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));
+      str.append(QString::number(getVolume())).append(QString(",")).append(QString::number(getRadius())).append(QString(",")).append(QString::number(getLength()));
+      return str;
+//    std::string str = "";
+//    std::ostringstream stream;
+//    pcl::PointXYZ start = getStart ();
+//    pcl::PointXYZ end = getEnd ();
+//    stream << start.x << " , " << start.y << " , " << start.z;
+//    stream << " , " << end.x << " , " << end.y << " , " << end.z;
+//    stream << " , " << getVolume ();
+//    stream << " , " << getRadius ();
+//    stream << " , " << getLength ();
+//    return stream.str ();
   }
 
   pcl::PointXYZ

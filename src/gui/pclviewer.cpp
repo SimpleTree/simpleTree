@@ -84,10 +84,6 @@ pp_callback ( const pcl::visualization::PointPickingEvent& event,
 
 
 
-// void PCLViewer::resize() {
-// QMainWindow::resize(screenres.width(), screenres.height());
-// ui->scrollArea->resize(screenres.width(), screenres.height());
-// }
 
 
 PCLViewer::PCLViewer ( QWidget *parent ) :

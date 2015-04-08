@@ -41,6 +41,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <qstring.h>
 #endif
 
 
@@ -103,7 +104,7 @@ namespace simpleTree
       correctBranchingSection ();
       void
       correctRadiusByMedianCheck ();
-      std::string
+      QString
       toString ();
       float
       medianRadius ();

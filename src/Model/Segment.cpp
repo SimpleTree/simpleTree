@@ -64,19 +64,18 @@ namespace simpleTree
     // TODO Auto-generated destructor stub
   }
 
-  std::string
+  QString
   Segment::toString ()
   {
-    std::string str = "";
-    std::ostringstream stream;
+      QString str;
+//    std::string str = "";
+//    std::ostringstream stream;
     pcl::PointXYZ start = getStart ();
     pcl::PointXYZ end = getEnd ();
-    stream << start.x << " , " << start.y << " , " << start.z;
-    stream << " , " << end.x << " , " << end.y << " , " << end.z;
-    stream << " , " << getVolume ();
-    stream << " , " << medianRadius ();
-    stream << " , " << getLength () << "\n";
-    return stream.str ();
+    str.append(QString::number(start.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));
+    str.append(QString::number(end.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));
+    str.append(QString::number(getVolume())).append(QString(",")).append(QString::number(medianRadius())).append(QString(",")).append(QString::number(getLength()));
+    return str;
   }
 
   pcl::PointXYZ

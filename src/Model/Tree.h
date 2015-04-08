@@ -140,6 +140,8 @@ namespace simpleTree
 
     public:
       void
+      resetRoot();
+      void
       reorderTree();
       void
       reset_crown(float h);
@@ -226,7 +228,7 @@ namespace simpleTree
       float
       getSolidVolume ();
       float
-      getBHD ();
+      getDBH ();
       float
       getBaseDiameter ();
       float
@@ -234,8 +236,6 @@ namespace simpleTree
       std::vector<boost::shared_ptr<Cylinder> >
       getStemCylinders ();
 
-//      std::string
-//      toString ();
 
     protected:
 

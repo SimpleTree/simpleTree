@@ -59,6 +59,8 @@ namespace simpleTree {
         rootSegment->addCylinder ( rootCylinder );
         buildTree ( rootSegment, getRootCylinder () );
         mergeCylinders ();
+       // mergeCylinders ();
+        mergeCylinders ();
         improveBranchJunctions ();
         improveFit ();
         closeGaps ();
@@ -82,7 +84,7 @@ namespace simpleTree {
 
         crown = boost::make_shared<Crown> ( crownPoints (), this->control );
         improveByMedianCheck ();
-	
+        resetRoot();
 
         str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
@@ -144,6 +146,14 @@ namespace simpleTree {
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
+    }
+
+    void
+    Tree::resetRoot()
+    {
+        boost::shared_ptr<Cylinder> cylinder = rootSegment->getCylinders().at(0);
+        cylinder->values[2] = 0.02f;
+
     }
 
     void Tree::setIDforSegments() {
@@ -209,11 +219,8 @@ namespace simpleTree {
      {
 	  Tree tree;
           std::vector<boost::shared_ptr<Segment> > leaves1 = tree.getLeaveSegmentsFromSegment(child1);
-	 // std::cout<< "\n" << leaves1.size() << "asd\n";
           boost::shared_ptr<Segment> leave1 = tree.getLeaveSegmentWithMostVolume( leaves1,child1 );
-	 // std::cout << leaves1.size() << "leave gefunden \n";
 	  float volume1 = tree.getVolumeToLeave(leave1, child1);
-	 // std::cout << leaves1.size() << "volume \n";
 	  std::vector<boost::shared_ptr<Segment> > leaves2 = tree.getLeaveSegmentsFromSegment(child2);
           boost::shared_ptr<Segment> leave2 = tree.getLeaveSegmentWithMostVolume( leaves2,child2 );
 	  float volume2 = tree.getVolumeToLeave(leave2, child2);
@@ -236,23 +243,6 @@ namespace simpleTree {
     }
       }
     }
-    
-//     void
-//     Tree::reorderChildren(Segment segment){
-//       if(segment->getChildren().size()>1)
-//       {
-// 	std::vector<float> volumes;
-// 	for(size_t i = 0; i < segment->getChildren().size(); i++)
-// 	{
-// 	  Segment child = segment->getChildren().at(i);
-// 	  std::vector<boost::shared_ptr<Segment> > leaves = getLeaveSegmentsFromSegment(child);
-//           boost::shared_ptr<Segment> leave = getLeaveSegmentWithMostVolume( leaves,child );
-// 	  float volume = getVolumeToLeave(boost::shared_ptr<Segment> leave, boost::shared_ptr<Segment> base);
-// 	  volumes.push_back(volume);
-// 	}
-//       
-//       }
-//     }
     
     
 
@@ -376,7 +366,7 @@ namespace simpleTree {
         str.append ( QString::number ( getHeight () ) );
         str.append ( "\n" );
         str.append ( "BHD (cm): " );
-        str.append ( QString::number ( getBHD () ) );
+        str.append ( QString::number ( getDBH () ) );
         str.append ( "\n" );
         str.append ( "volume (l)" );
         str.append ( QString::number ( getVolume () * 1000 ) );
@@ -460,21 +450,36 @@ namespace simpleTree {
     }
 
     float
-    Tree::getBHD () {
-        float BHD = 0;
+    Tree::getDBH () {
+        float DBH = 0;
+        float distanceOfCylinderToDBH = std::numeric_limits<float>::max();
         std::vector<boost::shared_ptr<Cylinder> > cylinders = getStemCylinders ();
         for ( std::vector<boost::shared_ptr<Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
+
             boost::shared_ptr<Cylinder> cylinder = *it;
-            if ( cylinder->values[2] > 1.3 ) {
-                BHD = cylinder->values[6] * 200;
-            }
+
+            float dist = 0;
+
+//            if ( cylinder->values[2] > 1.3 ) {
+//                //BHD = cylinder->values[6] * 200;
+
+//            }
 
             if ( ( cylinder->values[2] <= 1.3 ) && ( ( cylinder->values[2] + cylinder->values[5] ) >= 1.3 ) ) {
-                BHD = cylinder->values[6] * 200;
+                //BHD = cylinder->values[6] * 200;
+                dist = 0;
+            } else if(cylinder->values[2] > 1.3){
+               dist = cylinder->values[2] - 1.3;
+            } else if((cylinder->values[2]+ cylinder->values[5]) < 1.3 ){
+                dist = 1.3 - (cylinder->values[2]+ cylinder->values[5]) ;
+            }
+            if(dist < distanceOfCylinderToDBH){
+                distanceOfCylinderToDBH = dist;
+                DBH = cylinder->values[6] * 200;
             }
 
         }
-        return BHD;
+        return DBH;
     }
 
     float
@@ -690,7 +695,7 @@ namespace simpleTree {
                 boost::shared_ptr<Segment> seg = *it;
                 std::vector<boost::shared_ptr<Cylinder> > mergedCylinders;
                 std::vector<boost::shared_ptr<Cylinder> > cylinders = seg->getCylinders ();
-                if ( cylinders.size () > 1 ) {
+                if ( cylinders.size () > 1 && cylinders.at(0)->getLength()<0.1) {
                     for ( size_t i = 0; i < ( cylinders.size () - 1 ); i++ ) {
                         boost::shared_ptr<Cylinder> first = cylinders.at ( i );
                         i++;

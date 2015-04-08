@@ -36,6 +36,11 @@
 #ifndef WRITECSV_H
 #define WRITECSV_H
 #include"../Model/Tree.h"
+#include <QtCore/QString>
+#include <QtCore/QFile>
+#include <QtCore/QDebug>
+#include <QtCore/QTextStream>
+
 namespace simpleTree
 {
 	class Tree;

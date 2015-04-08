@@ -109,7 +109,7 @@ namespace simpleTree
       getStart ();
       pcl::PointXYZ
       getEnd ();
-      std::string
+      QString
       toString ();
 
   };
