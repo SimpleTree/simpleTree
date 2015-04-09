@@ -9,6 +9,7 @@
 #include "pclviewer.h"
 
 #include "../../build/ui_allign_dialog.h"
+#include "../pointclouds/allignpointcloud.h"
 
 #include <QDir>
 
@@ -45,6 +46,7 @@ public:
     rotate_translate();
 
 private:
+    boost::shared_ptr<AllignPointCloud> allign_point_cloud;
     boost::shared_ptr<QDialog> allign_dialog;
 
     void

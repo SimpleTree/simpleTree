@@ -2,6 +2,7 @@
 
 AllignPointCloudDialog::AllignPointCloudDialog(QObject *parent) : QObject(parent)
 {
+    allign_point_cloud.reset(new AllignPointCloud());
 }
 
 void
@@ -72,15 +73,22 @@ void
 AllignPointCloudDialog::init()
 {
     import(cloud_target,name_target);
-    Eigen::Vector4f base_source;
-    stemBase(cloud_target,base_source);
-    cloud_target = transformToOrigin(cloud_target, base_source);
-
-
     import(cloud_source,name_source);
-    Eigen::Vector4f base_target;
-    stemBase(cloud_source,base_target);
-    cloud_source = transformToOrigin(cloud_source, base_target);
+   // Eigen::Vector4f base_source;
+   // stemBase(cloud_target,base_source);
+   // cloud_target = transformToOrigin(cloud_target, base_source);
+
+
+    //import(cloud_source,name_source);
+    //Eigen::Vector4f base_target;
+    //stemBase(cloud_source,base_target);
+    //cloud_source = transformToOrigin(cloud_source, base_target);
+
+
+    allign_point_cloud->setInputSource(cloud_source);
+    allign_point_cloud->setInputSource(cloud_target);
+    allign_point_cloud->initialAllign();
+
 
     cloud_final.reset(new PointCloudI);
     *cloud_final = *cloud_source;
@@ -114,17 +122,17 @@ AllignPointCloudDialog::setGuiPtr(boost::shared_ptr<PCLViewer> guiPtr)
     this->gui_ptr = guiPtr;
 }
 
-void
-AllignPointCloudDialog::stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f & base)
-{
-    PointI p1;
-    PointI p2;
-    pcl::getMinMax3D<PointI>(*cloud,p1,p2);
-    float minHeight = p1.z;
-    boost::shared_ptr<PointCloudI> cloud_base (new PointCloudI);
-    extractBaseCloud(cloud, cloud_base, minHeight);
-    pcl::compute3DCentroid(*cloud_base, base);
-}
+//void
+//AllignPointCloudDialog::stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f & base)
+//{
+//    PointI p1;
+//    PointI p2;
+//    pcl::getMinMax3D<PointI>(*cloud,p1,p2);
+//    float minHeight = p1.z;
+//    boost::shared_ptr<PointCloudI> cloud_base (new PointCloudI);
+//    extractBaseCloud(cloud, cloud_base, minHeight);
+//    pcl::compute3DCentroid(*cloud_base, base);
+//}
 
 void
 AllignPointCloudDialog::import(boost::shared_ptr<PointCloudI> & cloud, QString & name)
@@ -157,25 +165,25 @@ AllignPointCloudDialog::selectFile (QString & name, QString & path) {
     }
 }
 
-void
-AllignPointCloudDialog::extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::shared_ptr<PointCloudI> base, float height)
-{
-    pcl::PassThrough<PointI> pass;
-    pass.setInputCloud (cloud);
-    pass.setFilterFieldName ("z");
-    pass.setFilterLimits (height, height+slice_height);
-    pass.filter (*base);
-}
+//void
+//AllignPointCloudDialog::extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::shared_ptr<PointCloudI> base, float height)
+//{
+//    pcl::PassThrough<PointI> pass;
+//    pass.setInputCloud (cloud);
+//    pass.setFilterFieldName ("z");
+//    pass.setFilterLimits (height, height+slice_height);
+//    pass.filter (*base);
+//}
 
-boost::shared_ptr<PointCloudI>
-AllignPointCloudDialog::transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base)
-{
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translation() << -base(0,0),-base(1,0),-base(2,0)+0.2f;
-    boost::shared_ptr<PointCloudI>transformed_cloud (new PointCloudI ());
-    pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
-    return transformed_cloud;
-}
+//boost::shared_ptr<PointCloudI>
+//AllignPointCloudDialog::transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base)
+//{
+//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+//    transform.translation() << -base(0,0),-base(1,0),-base(2,0)+0.2f;
+//    boost::shared_ptr<PointCloudI>transformed_cloud (new PointCloudI ());
+//    pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
+//    return transformed_cloud;
+//}
 
 
 void
@@ -228,71 +236,75 @@ AllignPointCloudDialog::visualizeClouds(bool show_final)
 
 
 
-boost::shared_ptr<PointCloudI>
-AllignPointCloudDialog::extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min)
-{
-    boost::shared_ptr<PointCloudI> tree_base (new PointCloudI);
-    pcl::PassThrough<PointI> pass;
-    pass.setInputCloud (tree);
-    pass.setFilterFieldName ("z");
-    pass.setFilterLimits (height_min, height_min+0.05);
-    pass.filter (*tree_base);
-    return tree_base;
-}
+//boost::shared_ptr<PointCloudI>
+//AllignPointCloudDialog::extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min)
+//{
+//    boost::shared_ptr<PointCloudI> tree_base (new PointCloudI);
+//    pcl::PassThrough<PointI> pass;
+//    pass.setInputCloud (tree);
+//    pass.setFilterFieldName ("z");
+//    pass.setFilterLimits (height_min, height_min+0.05);
+//    pass.filter (*tree_base);
+//    return tree_base;
+//}
 
-PointCloudI::Ptr
-AllignPointCloudDialog::downsampleCloud(PointCloudI::Ptr cloud)
-{
-    boost::shared_ptr<PointCloudI> downsampled (new PointCloudI);
-    pcl::VoxelGrid<PointI> sor;
-    sor.setInputCloud ( cloud );
-    sor.setLeafSize ( 0.02, 0.02, 0.02 );
-    sor.filter ( *downsampled );
-    return downsampled;
-}
+//PointCloudI::Ptr
+//AllignPointCloudDialog::downsampleCloud(PointCloudI::Ptr cloud)
+//{
+//    boost::shared_ptr<PointCloudI> downsampled (new PointCloudI);
+//    pcl::VoxelGrid<PointI> sor;
+//    sor.setInputCloud ( cloud );
+//    sor.setLeafSize ( 0.02, 0.02, 0.02 );
+//    sor.filter ( *downsampled );
+//    return downsampled;
+//}
 
 void
 AllignPointCloudDialog::ICP()
 {
     *cloud_source = *cloud_final;
 
-    boost::shared_ptr<PointCloudI> downsampled_target (new PointCloudI);
-    boost::shared_ptr<PointCloudI> downsampled_source (new PointCloudI);
-
-    downsampled_source = downsampleCloud(cloud_target);
-    downsampled_target = downsampleCloud(cloud_source);
+    allign_point_cloud->ICP();
+    getGuiPtr()->writeConsole(allign_point_cloud->result_str);
 
 
+//    boost::shared_ptr<PointCloudI> downsampled_target (new PointCloudI);
+//    boost::shared_ptr<PointCloudI> downsampled_source (new PointCloudI);
+
+//    downsampled_source = downsampleCloud(cloud_target);
+//    downsampled_target = downsampleCloud(cloud_source);
 
 
-    pcl::IterativeClosestPoint<PointI, PointI> icp;
-    icp.setInputSource(downsampled_target);
-    icp.setInputTarget(downsampled_source);
-    icp.setMaximumIterations (150);
-    icp.setMaxCorrespondenceDistance(0.06);
-    icp.setTransformationEpsilon(1e-8);
-    icp.setEuclideanFitnessEpsilon(1e-5);
-
-    icp.align(*cloud_final);
 
 
-    if (icp.hasConverged ())
-    {
+//    pcl::IterativeClosestPoint<PointI, PointI> icp;
+//    icp.setInputSource(downsampled_target);
+//    icp.setInputTarget(downsampled_source);
+//    icp.setMaximumIterations (150);
+//    icp.setMaxCorrespondenceDistance(0.06);
+//    icp.setTransformationEpsilon(1e-8);
+//    icp.setEuclideanFitnessEpsilon(1e-5);
 
-        QString str("\nICP has converged, score is ");
-        str.append(QString::number(icp.getFitnessScore ())).append("\n");
-        Eigen::Matrix4f transformation_matrix = Eigen::Matrix4f::Identity ();
-        transformation_matrix *= icp.getFinalTransformation();
-        std::stringstream stream;
-        stream << transformation_matrix;
-        str.append(QString::fromStdString(stream.str()));
-        getGuiPtr()->writeConsole(QString(str));
-        pcl::transformPointCloud(*cloud_source,*cloud_final, transformation_matrix);
-    }
-    else
-    {
-        PCL_ERROR ("\nICP has not converged.\n");
-    }
+//    icp.align(*cloud_final);
+
+
+//    if (icp.hasConverged ())
+//    {
+
+//        QString str("\nICP has converged, score is ");
+//        str.append(QString::number(icp.getFitnessScore ())).append("\n");
+//        Eigen::Matrix4f transformation_matrix = Eigen::Matrix4f::Identity ();
+//        transformation_matrix *= icp.getFinalTransformation();
+//        std::stringstream stream;
+//        stream << transformation_matrix;
+//        str.append(QString::fromStdString(stream.str()));
+//        getGuiPtr()->writeConsole(QString(str));
+//        pcl::transformPointCloud(*cloud_source,*cloud_final, transformation_matrix);
+//    }
+//    else
+//    {
+//        PCL_ERROR ("\nICP has not converged.\n");
+//    }
 
     visualizeClouds(true);
 }
@@ -377,44 +389,45 @@ AllignPointCloudDialog::rotate_translate()
     int z = allign_dialog_ptr->z->value();
 
     cloud_final.reset(new PointCloudI);
-    cloud_final = transform(cloud_source,angle,x,y,z);
+    cloud_final = allign_point_cloud->transform<PointI>(cloud_source,angle,x,y,z);
+//    cloud_final = transform(cloud_source,angle,x,y,z);
     visualizeClouds(true);
 
     getGuiPtr()->ui->qvtkWidget->update ();
 }
 
-boost::shared_ptr<PointCloudD>
-AllignPointCloudDialog::transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y,  int z)
-{
-    float theta = 2*M_PI/3600.0f*angle;
-    float dx = x/100.0f;
-    float dy = y/100.0f;
-    float dz = z/100.0f;
+//boost::shared_ptr<PointCloudD>
+//AllignPointCloudDialog::transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y,  int z)
+//{
+//    float theta = 2*M_PI/3600.0f*angle;
+//    float dx = x/100.0f;
+//    float dy = y/100.0f;
+//    float dz = z/100.0f;
 
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translation() << dx, dy,dz;
-    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
-    boost::shared_ptr<PointCloudD> transformed_cloud (new PointCloudD ());
-    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-    return transformed_cloud;
+//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+//    transform.translation() << dx, dy,dz;
+//    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+//    boost::shared_ptr<PointCloudD> transformed_cloud (new PointCloudD ());
+//    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
+//    return transformed_cloud;
 
-}
+//}
 
 
-boost::shared_ptr<PointCloudI>
-AllignPointCloudDialog::transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y, int z)
-{
-    float theta = 2*M_PI/3600.0f*angle;
-    float dx = x/100.0f;
-    float dy = y/100.0f;
-    float dz = z/100.0f;
+//boost::shared_ptr<PointCloudI>
+//AllignPointCloudDialog::transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y, int z)
+//{
+//    float theta = 2*M_PI/3600.0f*angle;
+//    float dx = x/100.0f;
+//    float dy = y/100.0f;
+//    float dz = z/100.0f;
 
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translation() << dx, dy,dz;
-    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
-    boost::shared_ptr<PointCloudI> transformed_cloud (new PointCloudI ());
-    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-    return transformed_cloud;
+//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+//    transform.translation() << dx, dy,dz;
+//    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+//    boost::shared_ptr<PointCloudI> transformed_cloud (new PointCloudI ());
+//    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
+//    return transformed_cloud;
 
-}
+//}
 

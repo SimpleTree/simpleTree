@@ -28,12 +28,12 @@ AllignPointCloud::initialAllign()
     float minHeight_source = std::numeric_limits<float>::max();
     Eigen::Vector4f root_source;
     getRootPoint(cloud_source,root_source,minHeight_source);
-    transform(cloud_source,root_source);
+    transform<PointI>(cloud_source,root_source);
 
     float minHeight_target = std::numeric_limits<float>::max();
     Eigen::Vector4f root_target;
     getRootPoint(cloud_target,root_target,minHeight_target);
-    transform(cloud_target,root_target);
+    transform<PointI>(cloud_target,root_target);
 
 
 
@@ -85,16 +85,6 @@ AllignPointCloud::getDialog()
     return this->allign_dialog.lock();
 }
 
-template <typename PointT>
-boost::shared_ptr<pcl::PointCloud<PointT> >
-transform(boost::shared_ptr<pcl::PointCloud<PointT> > & cloud,Eigen::Vector4f dest)
-{
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translation() << -dest(0,0),-dest(1,0),-dest(2,0)+0.2f;
-    boost::shared_ptr<pcl::PointCloud<PointT> >transformed_cloud (new PointCloudI ());
-    pcl::transformPointCloud (*cloud, *transformed_cloud, transform);
-    return transformed_cloud;
-}
 
 
 void
@@ -108,23 +98,23 @@ AllignPointCloud::extractZSlice(boost::shared_ptr<PointCloudI> cloud, boost::sha
 }
 
 
-template <typename PointT>
-boost::shared_ptr<pcl::PointCloud<PointT> >
-AllignPointCloud::transform(boost::shared_ptr<pcl::PointCloud<PointT> > & tree, int angleInDegree, int x, int y, int z)
-{
-    float angle = angleInDegree;
-    float theta = 2*M_PI/3600.0f*angle;
-    float dx = x/100.0f;
-    float dy = y/100.0f;
-    float dz = z/100.0f;
+//template <typename PointT>
+//boost::shared_ptr<pcl::PointCloud<PointT> >
+//AllignPointCloud::transform(boost::shared_ptr<pcl::PointCloud<PointT> > & tree, int angleInDegree, int x, int y, int z)
+//{
+//    float angle = angleInDegree;
+//    float theta = 2*M_PI/3600.0f*angle;
+//    float dx = x/100.0f;
+//    float dy = y/100.0f;
+//    float dz = z/100.0f;
 
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translation() << dx, dy,dz;
-    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
-    boost::shared_ptr<pcl::PointCloud<PointT> > transformed_cloud (new pcl::PointCloud<PointT>() );
-    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-    return transformed_cloud;
-}
+//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+//    transform.translation() << dx, dy,dz;
+//    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
+//    boost::shared_ptr<pcl::PointCloud<PointT> > transformed_cloud (new pcl::PointCloud<PointT>() );
+//    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
+//    return transformed_cloud;
+//}
 
 
 
