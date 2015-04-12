@@ -256,7 +256,7 @@ public:
 //    boost::shared_ptr<PointCloudI>
 //    transform(boost::shared_ptr<PointCloudI> tree, int angle, int height);
     boost::shared_ptr<PointCloudD>
-    convertPointCloud(PointCloudI::Ptr & cloud, int r, int g, int b);
+    convertPointCloud(PointCloudI::Ptr  cloud, int r, int g, int b);
 
 public slots:
 //    void

@@ -57,9 +57,6 @@ private:
     QString name_source;
     QString name_target;
 
-    boost::shared_ptr<PointCloudI> cloud_target;
-    boost::shared_ptr<PointCloudI> cloud_source;
-    boost::shared_ptr<PointCloudI> cloud_final;
 
     Ui::PCLViewer *ui;
 
@@ -79,22 +76,22 @@ private:
 
     void
     import(boost::shared_ptr<PointCloudI> & cloud, QString & name);
-    void
-    stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f & base);
-    boost::shared_ptr<PointCloudI>
-    extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min);
-    void
-    extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::shared_ptr<PointCloudI> base, float height);
-    boost::shared_ptr<PointCloudI>
-    transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base);
-    boost::shared_ptr<PointCloudI>
-    transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y ,int z);
-    boost::shared_ptr<PointCloudD>
-    transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y, int z);
+//    void
+//    stemBase(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f & base);
+//    boost::shared_ptr<PointCloudI>
+//    extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min);
+//    void
+//    extractBaseCloud(boost::shared_ptr<PointCloudI> cloud, boost::shared_ptr<PointCloudI> base, float height);
+//    boost::shared_ptr<PointCloudI>
+//    transformToOrigin(boost::shared_ptr<PointCloudI> cloud,Eigen::Vector4f base);
+//    boost::shared_ptr<PointCloudI>
+//    transform(boost::shared_ptr<PointCloudI> & tree, int angle, int x, int y ,int z);
+//    boost::shared_ptr<PointCloudD>
+//    transform(boost::shared_ptr<PointCloudD> & tree, int angle, int x, int y, int z);
 
 
-    PointCloudI::Ptr
-    downsampleCloud(PointCloudI::Ptr cloud);
+//    PointCloudI::Ptr
+//    downsampleCloud(PointCloudI::Ptr cloud);
 
     void
     saveFile(QString name, PointCloudI::Ptr cloud);

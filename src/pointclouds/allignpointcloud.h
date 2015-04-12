@@ -29,8 +29,20 @@ public:
     void
     setInputSource(PointCloudI::Ptr);
 
+    PointCloudI::Ptr
+    getSource();
+
+    PointCloudI::Ptr
+    getTarget();
+
+    PointCloudI::Ptr
+    getFinal();
+
     void
     setInputTarget(PointCloudI::Ptr);
+
+    void
+    setInputFinal(PointCloudI::Ptr);
 
     void
     initialAllign();
@@ -43,7 +55,7 @@ public:
 
     template <typename PointT>
     boost::shared_ptr<pcl::PointCloud<PointT> >
-    transform(boost::shared_ptr<pcl::PointCloud<PointT> > & tree, int angleInDegree, int x, int y, int z)
+    transform(boost::shared_ptr<pcl::PointCloud<PointT> >  tree, int angleInDegree, int x, int y, int z)
     {
         float angle = angleInDegree;
         float theta = 2*M_PI/3600.0f*angle;
@@ -61,7 +73,7 @@ public:
 
     template <typename PointT>
     boost::shared_ptr<pcl::PointCloud<PointT> >
-    transform(boost::shared_ptr<pcl::PointCloud<PointT> > & cloud,Eigen::Vector4f dest)
+    transform(boost::shared_ptr<pcl::PointCloud<PointT> >  cloud,Eigen::Vector4f dest)
     {
         Eigen::Affine3f transform = Eigen::Affine3f::Identity();
         transform.translation() << -dest(0,0),-dest(1,0),-dest(2,0)+0.2f;
@@ -71,13 +83,8 @@ public:
     }
 
 
-//    template <typename PointT>
-//    boost::shared_ptr<pcl::PointCloud<PointT> >
-//    transform(boost::shared_ptr<pcl::PointCloud<PointT> > & cloud,Eigen::Vector4f dest);
 
-//    template <typename PointT>
-//    boost::shared_ptr<pcl::PointCloud<PointT> >
-//    transform(boost::shared_ptr<pcl::PointCloud<PointT> > & cloud, int angle, int x, int y ,int z);
+
 
 private:
 
@@ -119,9 +126,6 @@ private:
     PointCloudI::Ptr
     downsampleCloud(PointCloudI::Ptr cloud, float leaf_size = 0.02f);
 
-
-//    void
-//    resetVisualization();
 
 
 

@@ -1,0 +1,20 @@
+#ifndef VOXEL_GRID_DIALOG_H
+#define VOXEL_GRID_DIALOG_H
+
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+#include "pclviewer.h"
+
+class Voxel_Grid_Dialog : public QDialog
+{
+    Q_OBJECT
+private:
+    boost::weak_ptr<PCLViewer> pclviewer;
+public:
+    Voxel_Grid_Dialog(QObject * parent = 0);
+
+    boost::shared_ptr<PCLViewer>
+    getViewer();
+};
+
+#endif // VOXEL_GRID_DIALOG_H

@@ -208,367 +208,6 @@ ui ( new Ui::PCLViewer ) {
 
 }
 
-//void
-//PCLViewer::intialAllign()
-//{
-//     ui->qvtkWidget->update ();
-
-
-//// std::cout << "initial Allign test \n";
-////       pcl::SampleConsensusInitialAlignment<PointI, PointI, pcl::PointXYZ> sac_ia;
-//// std::cout << "initial Allign test \n";
-////       sac_ia.setMinSampleDistance (0.01);
-////       sac_ia.setMaxCorrespondenceDistance(0.1);
-////       sac_ia.setMaximumIterations (150);
-//// std::cout << "initial Allign test \n";
-////       sac_ia.setInputCloud (cloud_source);
-////       sac_ia.setInputTarget (cloud_target);
-//// std::cout << "initial Allign test \n"; std::cout << "initial Allign test \n";
-////       sac_ia.setSourceFeatures (feature1);
-////       sac_ia.setTargetFeatures (feature2);
-////        std::cout << "initial Allign test \n";
-////       sac_ia.align (*cloud_final);
-////       boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
-////       boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
-
-////       visu_source->resize ( cloud_source->points.size () );
-////       for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
-////           visu_source->points[i].x = cloud_source->points[i].x;
-////           visu_source->points[i].y = cloud_source->points[i].y;
-////           visu_source->points[i].z = cloud_source->points[i].z;
-////           float intens = cloud_source->points[i].intensity;
-////           if ( intens == 0 ) {
-////               intens = 180;
-////           }
-////           visu_source->points[i].r = 255;
-////           visu_source->points[i].g = 0;
-////           visu_source->points[i].b = 0;
-////           visu_source->points[i].a = 255;
-////       }
-
-////       visu_target->resize ( cloud_final->points.size () );
-////       for ( size_t i = 0; i < cloud_final->points.size (); i++ ) {
-////           visu_target->points[i].x = cloud_final->points[i].x;
-////           visu_target->points[i].y = cloud_final->points[i].y;
-////           visu_target->points[i].z = cloud_final->points[i].z;
-////           float intens = cloud_final->points[i].intensity;
-////           if ( intens == 0 ) {
-////               intens = 180;
-////           }
-////           visu_target->points[i].r = 0;
-////           visu_target->points[i].g = 255;
-////           visu_target->points[i].b = 0;
-////           visu_target->points[i].a = 255;
-////       }
-
-
-////       viewer->removeAllPointClouds ();
-////       viewer->removeAllShapes ();
-////       pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba1 ( visu_target );
-////       viewer->addPointCloud<PointD> ( visu_target, rgba1, "cloud1" );
-////       pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
-////       viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
-////       xNegView ();
-//       viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
-//       ui->qvtkWidget->update ();
-//}
-
-
-////void
-////PCLViewer:: switch_point_for_ICP ( int i ) {
-////    point = i;
-////}
-
-
-//boost::shared_ptr<PointCloudI>
-//PCLViewer::transformToOrigin(boost::shared_ptr<PointCloudI> tree, Eigen::Vector4f center)
-//{
-//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-
-//    // Define a translation of 2.5 meters on the x axis.
-//    transform.translation() << -center(0,0),-center(1,0),-center(2,0)+0.2f;
-
-
-
-//    // Executing the transformation
-//   boost::shared_ptr<PointCloudI>transformed_cloud (new PointCloudI ());
-//    // You can either apply transform_1 or transform_2; they are the same
-//    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-//    return transformed_cloud;
-//}
-
-//boost::shared_ptr<PointCloudI>
-//PCLViewer::extractStemBase(boost::shared_ptr<PointCloudI> tree, float height_min)
-//{
-//    boost::shared_ptr<PointCloudI> tree_base (new PointCloudI);
-//    pcl::PassThrough<PointI> pass;
-//      pass.setInputCloud (tree);
-//      pass.setFilterFieldName ("z");
-//      pass.setFilterLimits (height_min, height_min+0.05);
-//      //pass.setFilterLimitsNegative (true);
-//      pass.filter (*tree_base);
-//      return tree_base;
-//}
-
-
-//void
-//PCLViewer::performICP()
-//{
-//    int angle = allign_dialog_ptr->rotate->value();
-//    int z_transform = allign_dialog_ptr->z->value();
-//    cloud_target = transform(cloud_target,angle,z_transform);
-
-
-//    pcl::IterativeClosestPoint<PointI, PointI> icp;
-//      icp.setInputSource(cloud_source);
-//      icp.setInputTarget(cloud_target);
-//      icp.setMaximumIterations (20);
-
-//      boost::shared_ptr<PointCloudI> Final (new PointCloudI);
-
-//      icp.align(*Final);
-//      cloud_target = Final;
-
-
-//      if (icp.hasConverged ())
-//        {
-//          std::cout << "\nICP has converged, score is " << icp.getFitnessScore () << std::endl;
-//        }
-//        else
-//        {
-//          PCL_ERROR ("\nICP has not converged.\n");
-//        }
-
-//    boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
-//    boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
-
-//    visu_source->resize ( cloud_source->points.size () );
-//    for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
-//        visu_source->points[i].x = cloud_source->points[i].x;
-//        visu_source->points[i].y = cloud_source->points[i].y;
-//        visu_source->points[i].z = cloud_source->points[i].z;
-//        float intens = cloud_source->points[i].intensity;
-//        if ( intens == 0 ) {
-//            intens = 180;
-//        }
-//        visu_source->points[i].r = 255;
-//        visu_source->points[i].g = 0;
-//        visu_source->points[i].b = 0;
-//        visu_source->points[i].a = 255;
-//    }
-
-//    visu_target->resize ( cloud_target->points.size () );
-//    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
-//        visu_target->points[i].x = cloud_target->points[i].x;
-//        visu_target->points[i].y = cloud_target->points[i].y;
-//        visu_target->points[i].z = cloud_target->points[i].z;
-//        float intens = cloud_target->points[i].intensity;
-//        if ( intens == 0 ) {
-//            intens = 180;
-//        }
-//        visu_target->points[i].r = 0;
-//        visu_target->points[i].g = 255;
-//        visu_target->points[i].b = 0;
-//        visu_target->points[i].a = 255;
-//    }
-
-
-
-//    viewer->removeAllPointClouds ();
-//    viewer->removeAllShapes ();
-//    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( visu_target );
-//    viewer->addPointCloud<PointD> ( visu_target, rgba, "cloud1" );
-//    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
-//    viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
-//   // xNegView ();
-//    viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
-//    ui->qvtkWidget->update ();
-//}
-
-
-//void
-//PCLViewer::set_allign_rotate_box()
-//{
-//    int angle = allign_dialog_ptr->rotate_2->value()*10;
-//    allign_dialog_ptr->rotate->setValue(angle);
-//    allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::set_allign_rotate()
-//{
-//    float angle = allign_dialog_ptr->rotate->value();
-//    allign_dialog_ptr->rotate_2->setValue(angle/10);
-//    allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::switch_point_for_ICP(int i)
-//{
-
-//}
-
-//void
-//PCLViewer::rotateAllign()
-//{
-
-//}
-
-//void
-//PCLViewer::set_allign_z_box()
-//{
-//    int z = allign_dialog_ptr->z_2->value()*1000;
-//    allign_dialog_ptr->z->setValue(z);
-//    allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::set_allign_z()
-//{
-//    float z = allign_dialog_ptr->z->value();
-//    allign_dialog_ptr->z_2->setValue(z/1000);
-//    allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::set_allign_y()
-//{
-//    float y = allign_dialog_ptr->y->value();
-//    allign_dialog_ptr->y_2->setValue(y/1000);
-//    allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::set_allign_y_box()
-//{
-//        int y = allign_dialog_ptr->y_2->value()*1000;
-//        allign_dialog_ptr->y->setValue(y);
-//        allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::set_allign_x_box()
-//{
-//    int x = allign_dialog_ptr->x_2->value()*1000;
-//    allign_dialog_ptr->x->setValue(x);
-//    allign_rotate_translate();
-//}
-
-//void
-//PCLViewer::set_allign_x()
-//{
-//    float x = allign_dialog_ptr->x->value();
-//    allign_dialog_ptr->x_2->setValue(x/1000);
-//    allign_rotate_translate();
-//}
-
-
-
-//void
-//PCLViewer::allign_rotate_translate()
-//{
-
-
-//    boost::shared_ptr<PointCloudD> visu_source (new PointCloudD);
-//    boost::shared_ptr<PointCloudD> visu_target (new PointCloudD);
-
-//    visu_source->resize ( cloud_source->points.size () );
-//    for ( size_t i = 0; i < cloud_source->points.size (); i++ ) {
-//        visu_source->points[i].x = cloud_source->points[i].x;
-//        visu_source->points[i].y = cloud_source->points[i].y;
-//        visu_source->points[i].z = cloud_source->points[i].z;
-//        float intens = cloud_source->points[i].intensity;
-//        if ( intens == 0 ) {
-//            intens = 180;
-//        }
-//        visu_source->points[i].r = 255;
-//        visu_source->points[i].g = 0;
-//        visu_source->points[i].b = 0;
-//        visu_source->points[i].a = 255;
-//    }
-
-//    visu_target->resize ( cloud_target->points.size () );
-//    for ( size_t i = 0; i < cloud_target->points.size (); i++ ) {
-//        visu_target->points[i].x = cloud_target->points[i].x;
-//        visu_target->points[i].y = cloud_target->points[i].y;
-//        visu_target->points[i].z = cloud_target->points[i].z;
-//        float intens = cloud_target->points[i].intensity;
-//        if ( intens == 0 ) {
-//            intens = 180;
-//        }
-//        visu_target->points[i].r = 0;
-//        visu_target->points[i].g = 255;
-//        visu_target->points[i].b = 0;
-//        visu_target->points[i].a = 255;
-//    }
-
-
-//    int angle = allign_dialog_ptr->rotate->value();
-//    int z_transform = allign_dialog_ptr->z->value();
-//    visu_target = transform(visu_target,angle,z_transform);
-
-
-//    viewer->removeAllPointClouds ();
-//    viewer->removeAllShapes ();
-//    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( visu_target );
-//    viewer->addPointCloud<PointD> ( visu_target, rgba, "cloud1" );
-//    pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba2 ( visu_source );
-//    viewer->addPointCloud<PointD> ( visu_source, rgba2, "cloud2" );
-//   // xNegView ();
-//    viewer->addText ( getControl ()->getTreeID (), 10, 20,20, 1, 0, 0, "tree_text" );
-//    ui->qvtkWidget->update ();
-//}
-
-//boost::shared_ptr<PointCloudD>
-//PCLViewer::transform(boost::shared_ptr<PointCloudD> tree, int angle, int z_transform)
-//{
-//    float theta = M_PI/3600*angle;
-//    float height = z_transform/100.0f;
-
-
-//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-
-//      // Define a translation of 2.5 meters on the x axis.
-//      transform.translation() << 0, 0.0, height;
-
-//      // The same rotation matrix as before; tetha radians arround Z axis
-//      transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
-
-
-
-//      // Executing the transformation
-//      boost::shared_ptr<PointCloudD> transformed_cloud (new PointCloudD ());
-//      // You can either apply transform_1 or transform_2; they are the same
-//      pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-//      return transformed_cloud;
-
-//}
-
-
-//boost::shared_ptr<PointCloudI>
-//PCLViewer::transform(boost::shared_ptr<PointCloudI> tree, int angle, int z_transform)
-//{
-//    float theta = M_PI/360*angle;
-//    float height = z_transform/100;
-
-
-//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-
-//      // Define a translation of 2.5 meters on the x axis.
-//      transform.translation() << 0, 0.0, height;
-
-//      // The same rotation matrix as before; tetha radians arround Z axis
-//      transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
-
-
-
-//      // Executing the transformation
-//      boost::shared_ptr<PointCloudI> transformed_cloud (new PointCloudI ());
-//      // You can either apply transform_1 or transform_2; they are the same
-//      pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-//      return transformed_cloud;
-
-//}
 
 void PCLViewer::compute_ICP() {
     allign.reset(new AllignPointCloudDialog(this));
@@ -666,13 +305,11 @@ void
 PCLViewer::reset_crown()
 {
     if ( getControl ()->getTreePtr()  != 0 ) {
-        //    boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
         QDialog * radius_dialog = new QDialog ( this, 0 );
         Ui_Dialog_Crown rad;
         rad.setupUi ( radius_dialog );
 
         connect ( rad.crown_radius, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crown_radius ( double ) ) );
-//      connect (refer.box_maxIntens, SIGNAL(valueChanged(double)), this, SLOT(set_intensity_outlier_maxIntens(double)));
 
         connect ( rad.abort, SIGNAL ( clicked() ), this, SLOT (abort_crown() ) );
         connect ( rad.abort, SIGNAL ( clicked() ), radius_dialog, SLOT (accept() ) );
@@ -735,9 +372,6 @@ void PCLViewer::changeTreeColor() {
                     double g =(rand() % 255)/255.0f;
                     double b =(rand() % 255)/255.0f;
 
-//                     double r = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
-//                     double g = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
-//                     double b = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
                     boost::shared_ptr<simpleTree::Segment> seg = segments.at ( i );
                     for ( size_t j = 0; j < seg->getCylinders().size(); j++ ) {
                         std::stringstream ss;
@@ -781,9 +415,6 @@ void PCLViewer::changeTreeColor() {
 		  		  double r = (rand() % 255)/255.0f;
                     double g =(rand() % 255)/255.0f;
                     double b =(rand() % 255)/255.0f;
-//                     double r = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
-//                     double g = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
-//                     double b = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
                     r_vec.push_back ( r );
                     g_vec.push_back ( g );
                     b_vec.push_back ( b );
@@ -832,10 +463,7 @@ void PCLViewer::changeTreeColor() {
 		  		  double r = (rand() % 255)/255.0f;
                     double g =(rand() % 255)/255.0f;
                     double b =(rand() % 255)/255.0f;
-		    std::cout << r << ";" << g << ";" << b << "\n";
-//                     double r = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
-//                     double g = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
-//                     double b = 255 * ( 1024 * rand () / ( RAND_MAX + 1.0f ) );
+
                     r_vec.push_back ( r );
                     g_vec.push_back ( g );
                     b_vec.push_back ( b );
@@ -874,7 +502,6 @@ void PCLViewer::changeTreeColor() {
 
 void
 PCLViewer::compute_complete_folder () {
-//   std::cout<<"foo"<<std::endl;
     QDir dir ( "../data" );
     std::cout << dir.absolutePath().toStdString();
     QStringList filters;
@@ -934,8 +561,6 @@ PCLViewer::compute_complete_folder () {
             "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
         QCoreApplication::processEvents ();
         if ( getControl ()->getCloudPtr () != 0 ) {
-            //if(getControl()->getCloudPtr()->points.size() != getControl()->getIsStem().size())
-            //{
             pcl::console::TicToc tt;
             tt.tic ();
             QString str = "\n";
@@ -1673,44 +1298,7 @@ PCLViewer::statisticalOutlierRemoval () {
                                "Please load a Point Cloud first" ),
                                QMessageBox::Ok );
     }
-//	if (getControl()->getCloudPtr() != 0) {
-////		writeConsole("\n");
-////		getControl()->getGuiPtr()->writeConsole(
-////				"--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-////		QString str = "";
-////
-////								 str.append("Statistical outlier removal starts.\n All points whith a mean distance larger than ").
-////										 append(QString::number(statistical_outlier_stdmult = 5.0))
-////										 .append(" times the average distance to its  ").append(QString::number(statistical_outlier_knn))
-////										 .append(" nearest neighbors are deleted.\n");
-////						writeConsole(str);
-////
-////		PointCloudI::Ptr cloud_filtered(new PointCloudI);
-////		pcl::StatisticalOutlierRemoval<PointI> sor;
-////		sor.setInputCloud(getControl()->getCloudPtr());
-////		sor.setMeanK(5);
-////		sor.setStddevMulThresh(4.0);
-////		sor.filter(*cloud_filtered);
-////
-////		int size_before = getControl()->getCloudPtr()->points.size();
-////		int size_after = cloud_filtered->points.size();
-////		float a = size_before;
-////		float b = size_after;
-////		float percentage = (100.0f * b) / (a);
-////		getControl()->setCloudPtr(cloud_filtered);
-////		writeConsole(
-////				QString("Outlier removal done, ").append(
-////						QString::number(size_after)).append(
-////						" points left, size reduced to ").append(
-////						QString::number(percentage).append(
-////								" percent of original cloud.\n")));
-////		getControl()->getGuiPtr()->writeConsole(
-////				"--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-//	} else {
-//		QMessageBox::warning(this, tr("Simple Tree"),
-//				tr("No Point Cloud found\n"
-//						"Please load a Point Cloud first"), QMessageBox::Ok);
-//	}
+
 }
 void
 PCLViewer::set_voxel_grid_size ( double size ) {
@@ -2238,14 +1826,9 @@ PCLViewer::plot () {
     for ( int i = 0; i < 1000; i++ ) {
         vec.push_back ( 0 );
     }
-    //adding plot data
     plotter->addHistogramData ( vec, 10 );
-//    plotter->addPlotData ( ax, acos, numPoints, "cos" );
-//    plotter->addPlotData ( ax, asin, numPoints, "sin" );
 
-    //display for 2 seconds
     plotter->spin ();
-//   plotter->clearPlots ();
     ui->qvtkWidget2->update ();
 }
 
@@ -2268,45 +1851,7 @@ PCLViewer::connectToController ( boost::shared_ptr<Controller> control ) {
     this->control = control;
 }
 
-//void
-//PCLViewer::setCrownVisibility ()
-//{
-//  if (getControl ()->getTreePtr () != 0)
-//  {
-//    if (isVisibleCrown)
-//    {
-//      viewer->removePolygonMesh ("crown");
-//      isVisibleCrown = false;
-//    }
-//    else
-//    {
-//      pcl::PointCloud<pcl::PointXYZ>::Ptr hullPoints = getControl ()->getTreePtr ()->crown->hull_cloud;
-//      std::vector<pcl::Vertices> polygons = getControl ()->getTreePtr ()->crown->polygons;
-//      viewer->addPolygonMesh<pcl::PointXYZ> (hullPoints, polygons, "crown");
-//      isVisibleCrown = true;
-//    }
-//  }
-//}
-//
-//void
-//PCLViewer::setLeaveVisibility ()
-//{
-//  if (getControl ()->getTreePtr () != 0)
-//  {
-//    if (isVisibleLeaves)
-//    {
-//      viewer->removePolygonMesh ("leaves");
-//      isVisibleLeaves = false;
-//    }
-//    else
-//    {
-//      pcl::PointCloud<pcl::PointXYZ>::Ptr hullPoints_concave = getControl ()->getTreePtr ()->crown->hull_cloud_concave;
-//      std::vector<pcl::Vertices> polygons_concave = getControl ()->getTreePtr ()->crown->polygons_concave;
-//      viewer->addPolygonMesh<pcl::PointXYZ> (hullPoints_concave, polygons_concave, "leaves");
-//      isVisibleLeaves = true;
-//    }
-//  }
-//}
+
 
 void
 PCLViewer::setTreePtr ( boost::shared_ptr<simpleTree::Tree> tree_ptr ) {
@@ -2371,15 +1916,11 @@ PCLViewer::setTreePtr ( boost::shared_ptr<simpleTree::Tree> tree_ptr ) {
     std::vector<pcl::Vertices> polygons = tree_ptr->crown->polygons;
     viewer->addPolygonMesh<pcl::PointXYZ> ( hullPoints, polygons, "crown" );
     viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.2, 0.45, 0, "crown" );
-//     viewer->setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "crown");
-//     viewer->setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, 0.5, "crown");
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr hullPoints_concave = tree_ptr->crown->hull_cloud_concave;
     std::vector<pcl::Vertices> polygons_concave = tree_ptr->crown->polygons_concave;
     viewer->addPolygonMesh<pcl::PointXYZ> ( hullPoints_concave, polygons_concave, "leaves" );
     viewer->setPointCloudRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.2, 0.45, 0, "leaves" );
-//     viewer->setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "leaves");
-//     viewer->setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, 0.5,  "leaves");
 
 
     plotAllometry ();
@@ -2593,12 +2134,6 @@ PCLViewer::mergeClouds () {
     sor.setInputCloud ( cloudB );
     sor.setLeafSize ( 0.003, 0.003, 0.003 );
     sor.filter ( *cloud_filtered );
-
-//		int size_before = getControl()->getCloudPtr()->points.size();
-//		int size_after = cloud_filtered->points.size();
-//		float a = size_before;
-//		float b = size_after;
-//		float percentage = (100.0f * b) / (a);
     getControl ()->setCloudPtr ( cloud_filtered,true );
     sizeAB = cloud_filtered->points.size ();
     QString str;
@@ -2849,7 +2384,7 @@ PCLViewer::zPosView () {
 }
 
 boost::shared_ptr<PointCloudD>
-PCLViewer::convertPointCloud ( PointCloudI::Ptr & cloud , int r, int g, int b)
+PCLViewer::convertPointCloud ( PointCloudI::Ptr  cloud , int r, int g, int b)
 {
     boost::shared_ptr<PointCloudD> visu_cloud (new PointCloudD);
     visu_cloud->resize ( cloud->points.size () );
@@ -2870,7 +2405,7 @@ void
 PCLViewer::convertPointCloud ( PointCloudI::Ptr cloud2 ) {
 
     this->cloud.reset ( new PointCloudD );
-    std::cout << cloud2->points.size();
+    //std::cout << cloud2->points.size();
     this->cloud->resize ( cloud2->points.size () );
     for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
         this->cloud->points[i].x = cloud2->points[i].x;
@@ -2891,12 +2426,12 @@ PCLViewer::convertPointCloud ( PointCloudI::Ptr cloud2 ) {
 
 void
 PCLViewer::computeBoundingBox () {
-    minX = 1000000;
-    minY = 1000000;
-    minZ = 1000000;
-    maxX = -1000000;
-    maxY = -1000000;
-    maxZ = -1000000;
+    minX = std::numeric_limits<float>::max();
+    minY = std::numeric_limits<float>::max();
+    minZ = std::numeric_limits<float>::max();
+    maxX = std::numeric_limits<float>::min();
+    maxY = std::numeric_limits<float>::min();
+    maxZ = std::numeric_limits<float>::min();
     for ( size_t i = 0; i < cloud->points.size (); i++ ) {
         PointD p = cloud->points[i];
         if ( p.x < minX ) {

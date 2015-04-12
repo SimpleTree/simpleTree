@@ -34,11 +34,6 @@ AllignPointCloud::initialAllign()
     Eigen::Vector4f root_target;
     getRootPoint(cloud_target,root_target,minHeight_target);
     transform<PointI>(cloud_target,root_target);
-
-
-
-
-
 }
 
 
@@ -98,25 +93,6 @@ AllignPointCloud::extractZSlice(boost::shared_ptr<PointCloudI> cloud, boost::sha
 }
 
 
-//template <typename PointT>
-//boost::shared_ptr<pcl::PointCloud<PointT> >
-//AllignPointCloud::transform(boost::shared_ptr<pcl::PointCloud<PointT> > & tree, int angleInDegree, int x, int y, int z)
-//{
-//    float angle = angleInDegree;
-//    float theta = 2*M_PI/3600.0f*angle;
-//    float dx = x/100.0f;
-//    float dy = y/100.0f;
-//    float dz = z/100.0f;
-
-//    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-//    transform.translation() << dx, dy,dz;
-//    transform.rotate (Eigen::AngleAxisf (theta, Eigen::Vector3f::UnitZ()));
-//    boost::shared_ptr<pcl::PointCloud<PointT> > transformed_cloud (new pcl::PointCloud<PointT>() );
-//    pcl::transformPointCloud (*tree, *transformed_cloud, transform);
-//    return transformed_cloud;
-//}
-
-
 
 PointCloudI::Ptr
 AllignPointCloud::downsampleCloud(PointCloudI::Ptr cloud, float leaf_size)
@@ -137,8 +113,8 @@ AllignPointCloud::ICP()
     boost::shared_ptr<PointCloudI> downsampled_source (new PointCloudI);
     boost::shared_ptr<PointCloudI> downsampled_target (new PointCloudI);
 
-    downsampled_target = downsampleCloud(cloud_target);
     downsampled_source = downsampleCloud(cloud_source);
+    downsampled_target = downsampleCloud(cloud_target);
 
     pcl::IterativeClosestPoint<PointI, PointI> icp;
     icp.setInputSource(downsampled_source);
@@ -168,4 +144,26 @@ AllignPointCloud::ICP()
     }
 }
 
+PointCloudI::Ptr
+AllignPointCloud::getSource()
+{
+    return cloud_source;
+}
 
+PointCloudI::Ptr
+AllignPointCloud::getTarget()
+{
+    return cloud_target;
+}
+
+PointCloudI::Ptr
+AllignPointCloud::getFinal()
+{
+    return cloud_final;
+}
+
+void
+AllignPointCloud::setInputFinal(PointCloudI::Ptr cloud)
+{
+    cloud_final = cloud;
+}
