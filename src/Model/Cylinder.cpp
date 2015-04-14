@@ -94,8 +94,8 @@ QString
   pcl::PointXYZ
   Cylinder::getEnd ()
   {
-    pcl::PointXYZ start (values[0] + values[3], values[1] + values[4], values[2] + values[5]);
-    return start;
+    pcl::PointXYZ end (values[0] + values[3], values[1] + values[4], values[2] + values[5]);
+    return end;
   }
 
   float

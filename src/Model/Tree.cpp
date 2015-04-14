@@ -59,7 +59,7 @@ namespace simpleTree {
         rootSegment->addCylinder ( rootCylinder );
         buildTree ( rootSegment, getRootCylinder () );
         mergeCylinders ();
-       // mergeCylinders ();
+        //mergeCylinders ();
        // mergeCylinders ();
         improveBranchJunctions ();
         improveFit ();
@@ -69,27 +69,19 @@ namespace simpleTree {
 
         str = "";
         str.append ( QString::number ( removed_cylinders_size ) ).append ( " cylinders were removed due to bad allocation." ).append ( QString::number ( cylinders_size ) ).append (
-            "  cylinders are still stored in tree structure.\n" );
+                    "  cylinders are still stored in tree structure.\n" );
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
-        //std::cout << "start" << std::endl;
-            reorderTree();
+        reorderTree();
 
-        //	std::cout << "end" << std::endl;
-
-            detectStem ();
-            reset_stem();
-                        setIDforSegments();
-            detectCrown ();
+        detectStem ();
+        reset_stem();
+        setIDforSegments();
+        detectCrown ();
 
         crown = boost::make_shared<Crown> ( crownPoints (), this->control );
         improveByMedianCheck ();
         resetRoot();
-
-        str = "";
-        str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
-        QCoreApplication::processEvents ();
 
         str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
@@ -131,18 +123,10 @@ namespace simpleTree {
         detectCrown ();
         crown = boost::make_shared<Crown> ( crownPoints (), this->control );
         improveByMedianCheck ();
-
-    //std::cout << "start" << std::endl;
         reorderTree();
-    //	std::cout << "end" << std::endl;
         setIDforSegments();
 
         QString str = "";
-        str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
-        QCoreApplication::processEvents ();
-
-        str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
@@ -152,8 +136,9 @@ namespace simpleTree {
     Tree::resetRoot()
     {
         boost::shared_ptr<Cylinder> cylinder = rootSegment->getCylinders().at(0);
-        cylinder->values[2] = 0.02f;
-
+        float temp = cylinder->values[2];
+        cylinder->values[2] = 0;
+        cylinder->values[5] += temp;
     }
 
     void Tree::setIDforSegments() {
@@ -362,13 +347,13 @@ namespace simpleTree {
     Tree::string () {
         QString str = QString::fromStdString ( this->name );
         str.append ( "\n" );
-        str.append ( "height (m): " );
+        str.append ( "Height (m): " );
         str.append ( QString::number ( getHeight () ) );
         str.append ( "\n" );
-        str.append ( "BHD (cm): " );
+        str.append ( "DBH (cm): " );
         str.append ( QString::number ( getDBH () ) );
         str.append ( "\n" );
-        str.append ( "volume (l)" );
+        str.append ( "Volume (l)" );
         str.append ( QString::number ( getVolume () * 1000 ) );
         str.append ( "\n" );
         return str.toStdString ();
@@ -707,14 +692,14 @@ namespace simpleTree {
                         coeff.values.push_back ( first->getValues () [3] + second->getValues () [3] );
                         coeff.values.push_back ( first->getValues () [4] + second->getValues () [4] );
                         coeff.values.push_back ( first->getValues () [5] + second->getValues () [5] );
-                        coeff.values.push_back ( second->getValues () [6] );
+                        coeff.values.push_back ( (first->getValues()[6] + second->getValues () [6])/2.0f );
                         boost::shared_ptr<Cylinder> mergedCylinder = boost::make_shared<Cylinder> ( coeff );
                         mergedCylinder->setSegment ( *it );
                         mergedCylinders.push_back ( mergedCylinder );
                     }
                     if ( cylinders.size () % 2 == 1 ) {
                         mergedCylinders.push_back ( cylinders.back () );
-                    }
+                    }                 
                     seg->setCylinders ( mergedCylinders );
                 }
             }

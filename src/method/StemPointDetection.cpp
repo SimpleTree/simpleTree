@@ -62,10 +62,8 @@ void StemPointDetection::copyCloud() {
 	cloud_temp.reset(new PointCloudI);
 	pcl::copyPointCloud(*cloud, *cloud_temp);
 	for (size_t i = 0; i < cloud_temp->points.size(); i++) {
-		if (stem_pts_old.at(i)) {
-
-	// std::cout << "fooasdasdas \n";	  
-	 cloud_temp->points[i].intensity = 0;
+		if (stem_pts_old.at(i)) {  
+            cloud_temp->points[i].intensity = 0;
 			
 		} else {
 	 
