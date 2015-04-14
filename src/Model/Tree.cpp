@@ -60,7 +60,7 @@ namespace simpleTree {
         buildTree ( rootSegment, getRootCylinder () );
         mergeCylinders ();
        // mergeCylinders ();
-        mergeCylinders ();
+       // mergeCylinders ();
         improveBranchJunctions ();
         improveFit ();
         closeGaps ();

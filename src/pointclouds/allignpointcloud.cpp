@@ -14,8 +14,7 @@ AllignPointCloud::getRootPoint(boost::shared_ptr<PointCloudI> cloud,Eigen::Vecto
     pcl::getMinMax3D<PointI>(*cloud,p1,p2);
     minHeight = p1.z;
     boost::shared_ptr<PointCloudI> z_slice (new PointCloudI);
-    extractZSlice(cloud, z_slice, minHeight);
-
+    extractZSlice(cloud, z_slice, minHeight);    
     boost::shared_ptr<PointCloudI> cluster (new PointCloudI);
     extractLargestCluster(z_slice,cluster);
 
@@ -28,12 +27,12 @@ AllignPointCloud::initialAllign()
     float minHeight_source = std::numeric_limits<float>::max();
     Eigen::Vector4f root_source;
     getRootPoint(cloud_source,root_source,minHeight_source);
-    transform<PointI>(cloud_source,root_source);
+    cloud_source = transform<PointI>(cloud_source,root_source);
 
     float minHeight_target = std::numeric_limits<float>::max();
     Eigen::Vector4f root_target;
     getRootPoint(cloud_target,root_target,minHeight_target);
-    transform<PointI>(cloud_target,root_target);
+    cloud_target = transform<PointI>(cloud_target,root_target);
 }
 
 
@@ -41,10 +40,10 @@ void
 AllignPointCloud::extractLargestCluster(boost::shared_ptr<PointCloudI> cloud_in, boost::shared_ptr<PointCloudI>  cloud_out, float distance)
 {
     std::vector<pcl::PointIndices> cluster_indices;
-    cloud_out.reset(new PointCloudI);
 
     pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> );
     tree->setInputCloud ( cloud_in );
+
 
     pcl::EuclideanClusterExtraction<PointI> ec;
     ec.setClusterTolerance ( distance );
@@ -58,7 +57,6 @@ AllignPointCloud::extractLargestCluster(boost::shared_ptr<PointCloudI> cloud_in,
         for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
             cloud_out->points.push_back ( cloud_in->points[*pit] );
     }
-
 }
 
 

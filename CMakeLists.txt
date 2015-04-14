@@ -12,7 +12,8 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/pointclouds/allignpointcloud.cpp
+set (project_SOURCES src/pointclouds/voxelgridfilter.cpp
+                     src/pointclouds/allignpointcloud.cpp
                      src/export/exportply.cpp
                      src/export/writecsv.cpp
                      src/main.cpp
@@ -30,7 +31,7 @@ set (project_SOURCES src/pointclouds/allignpointcloud.cpp
                      src/gui/allign.cpp)
 
 
-set (project_HEADERS src/pointclouds/allignpointcloud.h
+set (project_HEADERS src/pointclouds/allignpointcloud.h src/pointclouds/voxelgridfilter.h
                      src/controller.h
                      src/gui/allign.h
                      src/export/writecsv.h
@@ -47,6 +48,7 @@ set (project_HEADERS src/pointclouds/allignpointcloud.h
 		     src/Model/Tree.h)
 
 set (project_FORMS   src/gui/pclviewer.ui 
+                     src/gui/eigen_dialog.ui
 					 src/gui/allign_dialog.ui
 					 src/gui/method_dialog.ui
 					 src/gui/radius_dialog.ui

@@ -1320,19 +1320,33 @@ PCLViewer::compute_voxel_grid_downsampling () {
         " side length are merged to one point.\n" );
     writeConsole ( str );
 
-    sor.setInputCloud ( getControl ()->getCloudPtr () );
-    sor.setLeafSize ( voxel_grid_size, voxel_grid_size, voxel_grid_size );
-    sor.filter ( *cloud_filtered );
-
+    VoxelGridFilter voxel(voxel_grid_size,1);
+    voxel.setInput(getControl()->getCloudPtr());
+    voxel.voxel_grid_filter();
+    cloud_filtered = voxel.getOutput();
+    {
     int size_before = getControl ()->getCloudPtr ()->points.size ();
     int size_after = cloud_filtered->points.size ();
     float a = size_before;
     float b = size_after;
     float percentage = ( 100.0f * b ) / ( a );
+       writeConsole ( QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+        QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+    }
+
+//    sor.setInputCloud ( getControl ()->getCloudPtr () );
+//    sor.setLeafSize ( voxel_grid_size, voxel_grid_size, voxel_grid_size );
+//    sor.filter ( *cloud_filtered );
+
+//    int size_before = getControl ()->getCloudPtr ()->points.size ();
+//    int size_after = cloud_filtered->points.size ();
+//    float a = size_before;
+//    float b = size_after;
+//    float percentage = ( 100.0f * b ) / ( a );
     getControl ()->setCloudPtr ( cloud_filtered );
-    writeConsole (
-        QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
-            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+//    writeConsole (
+//        QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+//            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
 
     getControl ()->getGuiPtr ()->writeConsole (
         "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );

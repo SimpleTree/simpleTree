@@ -9,6 +9,12 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree.h>
+#include <pcl/common/common.h>
+#include <pcl/point_types.h>
+#include <pcl/octree/octree.h>
+#include <pcl/filters/extract_indices.h>
+
+#include <QString>
 
 
 typedef pcl::PointXYZRGBA PointD;
@@ -30,6 +36,13 @@ private:
 
     float cell_size;
     float split_size;
+
+    boost::shared_ptr<PointCloudI>
+    extractSubCloud(PointI min, PointI max);
+
+    boost::shared_ptr<PointCloudI>
+    down_sample(boost::shared_ptr<PointCloudI> cloud);
+
 
 public:
     VoxelGridFilter(float cell_size = 0.025f, float split_size = 1.0f);

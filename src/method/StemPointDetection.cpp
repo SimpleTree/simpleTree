@@ -48,7 +48,7 @@ StemPointDetection::StemPointDetection(PointCloudI::Ptr cloud,
 	cec.setInputCloud(cloud_temp);
 	cec.setConditionFunction(&customRegionGrowing);
 	cec.setClusterTolerance(max_distance);
-	cec.setMinClusterSize(100);
+    cec.setMinClusterSize(1000);
 	cec.segment(*clusters);
 	resetStemPoints();
 

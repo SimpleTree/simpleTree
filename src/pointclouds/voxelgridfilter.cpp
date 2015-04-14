@@ -1,39 +1,106 @@
 #include "voxelgridfilter.h"
 
-VoxelGridFilter::VoxelGridFilter()
+VoxelGridFilter::VoxelGridFilter(float cell_size , float split_size)
 {
+    this -> cell_size = cell_size;
+    this -> split_size = split_size;
 }
 
 
-void
-VoxelGridFilter::voxel_grid_filter () {
-    writeConsole ( "\n" );
-    getControl ()->getGuiPtr ()->writeConsole (
-        "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+boost::shared_ptr<PointCloudI>
+VoxelGridFilter::extractSubCloud(PointI min, PointI max)
+{
+    pcl::octree::OctreePointCloudSearch<PointI> octree ( 0.02f );
+    octree.setInputCloud ( input );
+    octree.addPointsFromInputCloud ();
+    boost::shared_ptr<PointCloudI> sub_cloud (new PointCloudI);
+    std::vector<int> pointIdxBoxSearch;
+    Eigen::Vector3f min_pt ( min.x, min.y, min.z );
+    Eigen::Vector3f max_pt ( max.x, max.y, max.z );
+    octree.boxSearch ( min_pt, max_pt, pointIdxBoxSearch );
 
-    PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+    pcl::ExtractIndices<PointI> extract;
+    pcl::PointIndices::Ptr inliers ( new pcl::PointIndices () );
+    inliers->indices = pointIdxBoxSearch;
+    extract.setInputCloud ( input );
+    extract.setIndices ( inliers );
+    extract.setNegative ( false );
+    extract.filter ( *sub_cloud );
+    return sub_cloud;
+}
+
+boost::shared_ptr<PointCloudI>
+VoxelGridFilter::getOutput()
+{
+    return this->output;
+}
+
+boost::shared_ptr<PointCloudI>
+VoxelGridFilter::down_sample(boost::shared_ptr<PointCloudI> cloud)
+{
+        boost::shared_ptr<PointCloudI> downsampled_cloud (new PointCloudI);
     pcl::VoxelGrid<PointI> sor;
-    QString str = "";
 
-    str.append ( "Voxel grid filtering starts.\n, all points inside a voxel with " ).append ( QString::number ( voxel_grid_size ) ).append (
-        " side length are merged to one point.\n" );
-    writeConsole ( str );
+    sor.setInputCloud ( cloud );
+    sor.setLeafSize ( cell_size, cell_size, cell_size );
+    sor.filter ( *downsampled_cloud );
+    return downsampled_cloud;
+}
 
-    sor.setInputCloud ( getControl ()->getCloudPtr () );
-    sor.setLeafSize ( voxel_grid_size, voxel_grid_size, voxel_grid_size );
-    sor.filter ( *cloud_filtered );
+void
+VoxelGridFilter::voxel_grid_filter ()
+{
+    output.reset(new PointCloudI);
+    PointI p1;
+    PointI p2;
+    pcl::getMinMax3D<PointI>(*input,p1,p2);
 
-    int size_before = getControl ()->getCloudPtr ()->points.size ();
-    int size_after = cloud_filtered->points.size ();
-    float a = size_before;
-    float b = size_after;
-    float percentage = ( 100.0f * b ) / ( a );
-    getControl ()->setCloudPtr ( cloud_filtered );
-    writeConsole (
-        QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
-            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+    float xMin = p1.x;
+    float xMax = p2.x;
 
-    getControl ()->getGuiPtr ()->writeConsole (
-        "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
-    voxel_grid_size = 0.01;
+    float yMin = p1.y;
+    float yMax = p2.y;
+
+    float zMin = p1.z;
+    float zMax = p2.z;
+
+
+    float xCurrent= xMin;
+    while(xCurrent < xMax)
+    {
+         float yCurrent = yMin;
+        while(yCurrent < yMax)
+        {
+                float zCurrent = zMin;
+            while(zCurrent < zMax)
+            {
+                PointI min;
+                PointI max;
+                min.x = xCurrent;
+                min.y = yCurrent;
+                min.z = zCurrent;
+                max.x = xCurrent + split_size;
+                max.y = yCurrent + split_size;
+                max.z = zCurrent + split_size;
+                boost::shared_ptr<PointCloudI> sub_cloud = extractSubCloud(min,max);
+                boost::shared_ptr<PointCloudI> sub_downsampled = down_sample(sub_cloud);
+                * output += * sub_downsampled;
+                zCurrent += split_size;
+            }
+            yCurrent += split_size;
+        }
+        xCurrent += split_size;
+    }
+    output_size = output->points.size();
+
+}
+
+
+
+
+void
+VoxelGridFilter::setInput(boost::shared_ptr<PointCloudI> input_cloud)
+{
+    this->input_size = input_cloud->points.size();
+    this->input = input_cloud;
 }

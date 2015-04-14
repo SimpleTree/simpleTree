@@ -40,7 +40,14 @@ AllignPointCloudDialog::resetVisualization()
     getGuiPtr()->viewer->removeShape("tree_text1");
     getGuiPtr()->viewer->removeShape("tree_text2");
     getGuiPtr()->getControl()->setTreeID(name_source.toStdString());
+    if(allign_point_cloud->getFinal()!=0)
+    {
     *getGuiPtr()->getControl()->getCloudPtr() = *(allign_point_cloud->getFinal());
+    }
+    else
+    {
+    *getGuiPtr()->getControl()->getCloudPtr() = *(allign_point_cloud->getSource());
+    }
     getGuiPtr()->setCloudPtr(getGuiPtr()->getControl()->getCloudPtr());
 }
 

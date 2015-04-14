@@ -49,11 +49,6 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
 	str.append("Done sphere-following in ").append(QString::number(f)).append(
 			" seconds.\n");
 	getControl()->getGuiPtr()->writeConsole(str);
-//	for(int i = 0 ; i < cylinders.size(); i++)
-//	{
-//		std::cout << cylinders.at(0) << std::endl;
-//	}
-
 }
 
 SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
@@ -67,7 +62,6 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
     epsilon_cluster_stem = coeff.epsilon_cluster_stem;
     epsilon_cluster_branch = coeff.epsilon_cluster_branch;
     epsilon_sphere = coeff.epsilon_sphere;
-  //  const float epsilon_sphere_branch = 0.013;
     minPts_Ransac_stem = coeff.minPts_ransac_stem;
     minPts_Ransac_branch = coeff.minPts_ransac_branch;
     minPts_cluster_stem = coeff.minPts_cluster_stem;
@@ -101,10 +95,6 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
 	str.append("Done sphere-following in ").append(QString::number(f)).append(
 			" seconds.\n");
 	getControl()->getGuiPtr()->writeConsole(str);
-//	for(int i = 0 ; i < cylinders.size(); i++)
-//		{
-//			std::cout << cylinders.at(0) << std::endl;
-//		}
 }
 
 SphereFollowing::~SphereFollowing() {
@@ -167,16 +157,13 @@ std::vector<float> SphereFollowing::distancesToModel(PointCloudI::Ptr cloud) {
 			if (std::abs(dist) < std::abs(distances[indices[i]])) {
 				distances[indices[i]] = dist;
 			}
-
 		}
-
 	}
 	QString str;
 	float f = tt.toc() / 1000;
 	str.append("Distance to model computation in ").append(QString::number(f)).append(
 			" seconds.\n");
-	getControl()->getGuiPtr()->writeConsole(str);
-	//std::cout << "Distance to model computation in " << tt.toc () / 1000 << " seconds." << std::endl;
+    getControl()->getGuiPtr()->writeConsole(str);
 	return distances;
 }
 
@@ -295,8 +282,7 @@ std::vector<PointCloudI::Ptr> SphereFollowing::intersectionSphereSurface(
 bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 		PointCloudI& cloud_out) {
 	pcl::console::TicToc tt;
-	cloud_out.points.clear();
-	//std::cout << "Segmenting to clusters...\n", tt.tic ();
+    cloud_out.points.clear();
 	float minSize = std::numeric_limits< float>::max();
 	for (size_t i = 0; i < cloud_in.points.size(); i++) {
 		if (cloud_in.points[i].z < minSize) {
@@ -311,11 +297,6 @@ bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 			cloud_out.push_back(cloud_in.points[i]);
 		}
 	}
-	//std::cout << ">> Done: " << tt.toc () /1000 << " seconds, " << cloud_out.points.size() << " points found." << "\n";
-//  if(!cloud_out.points.empty()){
-//    return false;
-//  }
-
 	return true;
 }
 
@@ -351,7 +332,7 @@ pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
 			distances.begin() + distances.size() / 2, distances.end());
 	r = distances[distances.size() / 2];
 
-	if (r > 0.55) {
+    if (r > 0.025&&use_ransac_for_sphere) {
 		pcl::ModelCoefficients::Ptr coefficients_cylinder(
 				new pcl::ModelCoefficients);
 
@@ -377,7 +358,7 @@ pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
 		x2 = coefficients_cylinder->values[4];
 		y2 = coefficients_cylinder->values[5];
 		z2 = coefficients_cylinder->values[6];
-		r = coefficients_cylinder->values[3];
+
 		pcl::ModelCoefficientsPtr coefficients_line(new pcl::ModelCoefficients);
 		coefficients_line->values.push_back(x);
 		coefficients_line->values.push_back(y);
@@ -395,9 +376,13 @@ pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
 		proj.setModelCoefficients(coefficients_line);
 		proj.filter(*cloud_projected);
 
+        if(coefficients_cylinder->values[3]< r*4)
+        {
 		x = cloud_projected->points[0].x;
 		y = cloud_projected->points[0].y;
 		z = cloud_projected->points[0].z;
+        r = coefficients_cylinder->values[3];
+        }
 
 	}
 	pcl::ModelCoefficients coeffs;
@@ -423,12 +408,11 @@ pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
 
 void SphereFollowing::addConnectionCylinder(
 		pcl::ModelCoefficients startSphere, float start_radius) {
-	float minDist = 100000;
+    float minDist = std::numeric_limits<float>::max();
 	pcl::PointXYZ candidateStartPoint(0, 0, 0);
 	pcl::PointXYZ closestStartPoint(0, 0, 0);
 	pcl::PointXYZ sphereCenter(startSphere.values[0], startSphere.values[1],
-			startSphere.values[2]);
-	//std::cout << cylinders.size () << " cylinders " << std::endl;
+            startSphere.values[2]);
 	for (size_t i = 0; i < cylinders.size(); i++) {
 		pcl::ModelCoefficients cylinder = cylinders[i];
 		candidateStartPoint.x = cylinder.values[0] + cylinder.values[3];
@@ -440,15 +424,12 @@ void SphereFollowing::addConnectionCylinder(
 						+ ((candidateStartPoint.y - sphereCenter.y)
 								* (candidateStartPoint.y - sphereCenter.y))
 						+ ((candidateStartPoint.z - sphereCenter.z)
-								* (candidateStartPoint.z - sphereCenter.z)));
-//       std::cout << distance << " dist" <<std::endl;
+                                * (candidateStartPoint.z - sphereCenter.z)));
 		if (distance < minDist) {
-			minDist = distance;
-// 	std::cout << minDist<<std::endl;
+            minDist = distance;
 			closestStartPoint = candidateStartPoint;
 		}
-	}
-	//std::cout << minDist << std::endl;
+    }
 	pcl::ModelCoefficients connectionCylinder;
 
 	connectionCylinder.values.push_back(closestStartPoint.x);

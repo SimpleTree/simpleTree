@@ -74,7 +74,7 @@
 #include <pcl/filters/voxel_grid.h>
 #include <QScrollBar>
 #include <QWebView>
- #include <QFile>
+#include <QFile>
 #include <pcl/filters/radius_outlier_removal.h>
 #include <pcl/filters/conditional_removal.h>
 #include <pcl/visualization/point_picking_event.h>
@@ -101,6 +101,7 @@
 #include "../method/set_coefficients.h"
 #include "../method/method_coefficients.h"
 #include "../gui/allign.h"
+#include "../pointclouds/voxelgridfilter.h"
 
 #include "../../build/ui_pclviewer.h"
 #include "../../build/ui_radius_dialog.h"
@@ -114,6 +115,7 @@
 #include "../../build/ui_method_dialog.h"
 #include "../../build/ui_allign_dialog.h"
 #include "../../build/ui_crown_dialog.h"
+#include "../../build/ui_eigen_dialog.h"
 
 typedef pcl::PointXYZRGBA PointD;
 typedef pcl::PointCloud<PointD> PointCloudD;

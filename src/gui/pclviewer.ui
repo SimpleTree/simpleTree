@@ -94,7 +94,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-184</y>
+         <y>0</y>
          <width>1918</width>
          <height>1198</height>
         </rect>
@@ -147,7 +147,7 @@
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <widget class="QVTKWidget" name="qvtkWidget" native="true">
+          <widget class="QVTKWidget" name="qvtkWidget">
            <property name="geometry">
             <rect>
              <x>260</x>
@@ -1018,7 +1018,7 @@
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <widget class="QVTKWidget" name="qvtkWidget2" native="true">
+            <widget class="QVTKWidget" name="qvtkWidget2">
              <property name="geometry">
               <rect>
                <x>10</x>
@@ -1652,7 +1652,7 @@
               <x>10</x>
               <y>170</y>
               <width>231</width>
-              <height>71</height>
+              <height>121</height>
              </rect>
             </property>
             <property name="toolTip">
@@ -1685,7 +1685,7 @@
                <x>10</x>
                <y>0</y>
                <width>211</width>
-               <height>71</height>
+               <height>111</height>
               </rect>
              </property>
              <property name="title">
@@ -1823,13 +1823,36 @@
                 <normaloff>../resources/compression.png</normaloff>../resources/compression.png</iconset>
               </property>
              </widget>
+             <widget class="QPushButton" name="eigen_value_button">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>70</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filters by Intensity threshold.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/histo.png</normaloff>../resources/histo.png</iconset>
+              </property>
+             </widget>
             </widget>
            </widget>
            <widget class="QFrame" name="cluster_frame">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>250</y>
+              <y>300</y>
               <width>231</width>
               <height>71</height>
              </rect>
@@ -1902,7 +1925,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>330</y>
+              <y>380</y>
               <width>231</width>
               <height>121</height>
              </rect>
@@ -2090,7 +2113,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>460</y>
+              <y>510</y>
               <width>231</width>
               <height>71</height>
              </rect>
