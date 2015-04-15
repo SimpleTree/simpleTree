@@ -548,6 +548,7 @@ PCLViewer::compute_complete_folder () {
         std::vector<bool> isStem;
 
         EigenValueEstimator es ( getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
+        getControl()->getGuiPtr()->writeConsole("test");
         StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
         getControl ()->setE1 ( e1 );
         getControl ()->setE2 ( e2 );
@@ -593,10 +594,6 @@ PCLViewer::compute_complete_folder () {
             getControl ()->getGuiPtr ()->writeConsole (
                 "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
             getControl ()->setTreePtr ( tree );
-            //      }else {
-            //        QMessageBox::warning(this, tr("Simple Tree"),
-            //            tr("Please detect stem points first"), QMessageBox::Ok);
-            //      }
         }
         if ( getControl ()->getTreePtr () != 0 ) {
             WriteCSV write ( getControl ()->getTreePtr (), getControl ()->getTreeID () );
@@ -1478,12 +1475,10 @@ PCLViewer::changePointColor () {
                         this->cloud->points[i].b = 255 - intens;
                         this->cloud->points[i].a = 255;
                     }
-                } else {
-                    std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->updatePointCloud ( cloud, "cloud" );
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Intensity", 10, 120,20 ,0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Intensity", 10, 120,20 ,0, 0.2, 0.4, "point_text" );
                 ui->qvtkWidget->update ();
             } else {
                 QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Point Cloud found\n"
@@ -1493,23 +1488,25 @@ PCLViewer::changePointColor () {
             break;
         }
         case 1: {
-            if ( this->getControl ()->getE3().size() >= 0 ) {
-                std::vector<float> eigen_values = this->getControl ()->getE3();
+            if ( this->getControl ()->getE1().size() >= 0 ) {
+                std::vector<float> eigen_values = this->getControl ()->getE1();
                 if ( eigen_values.size() == this->cloud->points.size () ) {
-                   float max = 0.34;
+                    std::vector<float>::iterator max_it = std::max_element(eigen_values.begin(),eigen_values.end());
+                   float max = *max_it;
+                   std::vector<float>::iterator min_it = std::min_element(eigen_values.begin(),eigen_values.end());
+                  float min = *min_it;
+                  float dif = max-min;
 
                     for ( size_t i = 0; i < eigen_values.size (); i++ ) {
-                        float ratio = eigen_values[i]/max;
-                        this->cloud->points[i].r = 255 *ratio;
-                        this->cloud->points[i].g = 255 -255 * ratio;
+                        float ratio = eigen_values[i]/dif;
+                        this->cloud->points[i].r = 255 *ratio-255*min/dif;
+                        this->cloud->points[i].g = 255 - (255 *ratio-255*min/dif);
                         this->cloud->points[i].b = 0;
                         this->cloud->points[i].a = 255;
                     }
-                } else {
-                    std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by third principal component", 10, 120, 20,0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "First principal component", 10, 120, 20,0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1519,64 +1516,57 @@ PCLViewer::changePointColor () {
             break;
         }
         case 2: {
-            if ( this->getControl ()->getCurvaturePtr () != 0 ) {
-                CurvatureCloud::Ptr cloud2 = this->getControl ()->getCurvaturePtr ();
-                if ( cloud2->points.size () == this->cloud->points.size () ) {
-                    float maxI = -10000000, maxJ = -10000000;
-                    for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
-                        if ( cloud2->points[i].pc1 > maxI ) {
-                            maxI = cloud2->points[i].pc1;
-                        }
-                        if ( cloud2->points[i].pc2 > maxJ ) {
-                            maxJ = cloud2->points[i].pc2;
-                        }
-                    }
-                    for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
-                        this->cloud->points[i].r = 255 * ( cloud2->points[i].pc1 / maxI );
-                        this->cloud->points[i].g = 255 * ( cloud2->points[i].pc2 / maxJ );
-                        this->cloud->points[i].b = 122;
+            if ( this->getControl ()->getE2().size() >= 0 ) {
+                std::vector<float> eigen_values = this->getControl ()->getE2();
+                if ( eigen_values.size() == this->cloud->points.size () ) {
+                    std::vector<float>::iterator max_it = std::max_element(eigen_values.begin(),eigen_values.end());
+                   float max = *max_it;
+                   std::vector<float>::iterator min_it = std::min_element(eigen_values.begin(),eigen_values.end());
+                  float min = *min_it;
+                  float dif = max-min;
+
+                    for ( size_t i = 0; i < eigen_values.size (); i++ ) {
+                        float ratio = eigen_values[i]/dif;
+                        this->cloud->points[i].r = 255 *ratio-255*min/dif;
+                        this->cloud->points[i].g = 255 - (255 *ratio-255*min/dif);
+                        this->cloud->points[i].b = 0;
                         this->cloud->points[i].a = 255;
                     }
-                } else {
-                    std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Principal Curvature magnitude", 10, 120, 20,0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Second principal component", 10, 120, 20,0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
-                QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Principal Curvatures found\n"
-                                       "Please load a Point Cloud first" ),
+                QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "Compute PCA first"),
                                        QMessageBox::Ok );
             }
             break;
         }
         case 3: {
-            if ( this->getControl ()->getCloudPtr () != 0 ) {
-                PointCloudI::Ptr cloud2 = this->getControl ()->getCloudPtr ();
-                if ( cloud2->points.size () == this->cloud->points.size () ) {
-                    float maxX = -10000000;
-                    for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
-                        if ( cloud2->points[i].curvature > maxX ) {
-                            maxX = cloud2->points[i].curvature;
-                        }
-                    }
-                    for ( size_t i = 0; i < cloud2->points.size (); i++ ) {
-                        this->cloud->points[i].r = 255 * ( cloud2->points[i].curvature / maxX );
-                        this->cloud->points[i].g = 255 * ( cloud2->points[i].curvature / maxX );
-                        this->cloud->points[i].b = 122;
+            if ( this->getControl ()->getE3().size() >= 0 ) {
+                std::vector<float> eigen_values = this->getControl ()->getE3();
+                if ( eigen_values.size() == this->cloud->points.size () ) {
+                    std::vector<float>::iterator max_it = std::max_element(eigen_values.begin(),eigen_values.end());
+                   float max = *max_it;
+                   std::vector<float>::iterator min_it = std::min_element(eigen_values.begin(),eigen_values.end());
+                  float min = *min_it;
+                  float dif = max-min;
+
+                    for ( size_t i = 0; i < eigen_values.size (); i++ ) {
+                        float ratio = eigen_values[i]/dif;
+                        this->cloud->points[i].r = 255 *ratio-255*min/dif;
+                        this->cloud->points[i].g = 255 - (255 *ratio-255*min/dif);
+                        this->cloud->points[i].b = 0;
                         this->cloud->points[i].a = 255;
                     }
-                } else {
-                    std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by Curvature", 10, 120,20, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Third principal component", 10, 120, 20,0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
-                QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Point Cloud found\n"
-                                       "Please load a Point Cloud first" ),
+                QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "Compute PCA first"),
                                        QMessageBox::Ok );
             }
             break;
@@ -1609,11 +1599,9 @@ PCLViewer::changePointColor () {
                         this->cloud->points[i].b = 255 * ( e3[i] / maxE3 );
                         this->cloud->points[i].a = 255;
                     }
-                } else {
-                    std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
                 }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by eigen-values of PCA", 10, 120,20, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Surface planarity", 10, 120,20, 0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1643,11 +1631,8 @@ PCLViewer::changePointColor () {
                     }
                 }
 
-                else {
-                    std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
-                }
                 viewer->removeShape ( "point_text" );
-                viewer->addText ( "Point Color by stem detection", 10, 120,20, 0, 0.2, 0.4, "point_text" );
+                viewer->addText ( "Main branching structure", 10, 120,20, 0, 0.2, 0.4, "point_text" );
                 viewer->updatePointCloud ( cloud, "cloud" );
                 ui->qvtkWidget->update ();
             } else {
@@ -1658,7 +1643,7 @@ PCLViewer::changePointColor () {
             break;
         }
         default:
-            std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
+            ;
         }
     }
 }
@@ -2000,7 +1985,7 @@ PCLViewer::computeNormals () {
     QCoreApplication::processEvents ();
     //CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
     //getControl ()->setCurvaturePtr ( principalCurvatures );
-    getControl ()->getGuiPtr ()->updateProgress ( 70 );
+    getControl ()->getGuiPtr ()->updateProgress ( 30 );
     QCoreApplication::processEvents ();
     tt.tic ();
     std::vector<float> e1;
@@ -2009,15 +1994,17 @@ PCLViewer::computeNormals () {
     std::vector<bool> isStem;
 
     EigenValueEstimator es ( getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
-    StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
     getControl ()->setE1 ( e1 );
     getControl ()->setE2 ( e2 );
     getControl ()->setE3 ( e3 );
-    getControl ()->setIsStem ( detect.getStemPtsNew () );
-    getControl ()->getGuiPtr ()->updateProgress ( 100 );
-    QString str;
-    float f = tt.toc () / 1000;
-    str.append ( "Computed PCA analysis in  " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+    getControl()->getGuiPtr()->writeConsole(es.result);
+    getControl ()->getGuiPtr ()->updateProgress ( 70 );
+    QCoreApplication::processEvents ();
+
+    StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
+    getControl ()->setIsStem (detect.getStemPtsNew());
+    getControl ()->getGuiPtr ()->writeConsole(detect.result);
+    getControl ()->getGuiPtr ()->updateProgress (100);
     getControl ()->getGuiPtr ()->writeConsole (
         "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
     QCoreApplication::processEvents ();

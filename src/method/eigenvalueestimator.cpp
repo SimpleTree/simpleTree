@@ -44,7 +44,7 @@ EigenValueEstimator::EigenValueEstimator (PointCloudI::Ptr cloud_in,
   e2.clear();
   e3.clear();
   this->cloud = cloud_in;
-  pcl::octree::OctreePointCloudSearch<PointI> octree (0.01f);
+  pcl::octree::OctreePointCloudSearch<PointI> octree (0.02f);
 
     octree.setInputCloud (cloud);
     octree.addPointsFromInputCloud ();
@@ -56,21 +56,19 @@ EigenValueEstimator::EigenValueEstimator (PointCloudI::Ptr cloud_in,
     std::vector<float> pointRadiusSquaredDistance;
     octree.radiusSearch (p, range, pointIdxRadiusSearch, pointRadiusSquaredDistance);
 
-    // Placeholder for the 3x3 covariance matrix at each surface patch
+
     Eigen::Matrix3f covariance_matrix;
-    // 16-bytes aligned placeholder for the XYZ centroid of a surface patch
     Eigen::Vector4f xyz_centroid;
-
-    // Estimate the XYZ centroid
     pcl::compute3DCentroid<PointI> (*cloud, pointIdxRadiusSearch, xyz_centroid);
-
-    // Compute the 3x3 covariance matrix
     pcl::computeCovarianceMatrix (*cloud, pointIdxRadiusSearch, xyz_centroid, covariance_matrix);
+
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigen (covariance_matrix);
     float lambda1,lambda2,lambda3,sum;
-    lambda1 = eigen.eigenvalues()[0];
-    lambda2 = eigen.eigenvalues()[1];
-    lambda3 = eigen.eigenvalues()[2];
+    Eigen::Matrix<float,3,1> lambda = eigen.eigenvalues();
+    lambda1 = lambda[0];
+    lambda2 = lambda[1];
+    lambda3 = lambda[2];
+
     sum = lambda1+lambda2+lambda3;
     lambda1 /= sum;
     lambda2 /= sum;
@@ -86,11 +84,7 @@ EigenValueEstimator::EigenValueEstimator (PointCloudI::Ptr cloud_in,
     	isStem.push_back(false);
     }
    }
-  std::vector<float>::iterator max = std::max_element(e3.begin(),e3.end());
-  std::vector<float>::iterator min = std::min_element(e3.begin(),e3.end());
-  std::cout << "minmax" << *min << "," << *max << std::endl;
-  std::cout << "PCA in " << tt.toc () / 1000 << " seconds." << std::endl;
-
+  result.append(QString("PCA computed in ")).append(QString::number(tt.toc()/1000)).append(QString(" seconds.\n"));
 }
 
 EigenValueEstimator::~EigenValueEstimator ()

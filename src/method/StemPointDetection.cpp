@@ -36,78 +36,66 @@
 #include "StemPointDetection.h"
 
 StemPointDetection::StemPointDetection(PointCloudI::Ptr cloud,
-		std::vector<bool> stem_pts_old, float max_distance, float max_intens) {
-	this->cloud = cloud;
-	this->stem_pts_old = stem_pts_old;
-	this->max_intens = max_intens;
-	this->max_distance = max_distance;
-	clusters.reset(new pcl::IndicesClusters);
+                                       std::vector<bool> stem_pts_old, float max_distance, float max_intens) {
+      tt.tic ();
+    this->cloud = cloud;
+    this->stem_pts_old = stem_pts_old;
+    this->max_intens = max_intens;
+    this->max_distance = max_distance;
+    clusters.reset(new pcl::IndicesClusters);
 
-	copyCloud();
-	pcl::ConditionalEuclideanClustering<PointI> cec(true);
-	cec.setInputCloud(cloud_temp);
-	cec.setConditionFunction(&customRegionGrowing);
-	cec.setClusterTolerance(max_distance);
-    cec.setMinClusterSize(1000);
-	cec.segment(*clusters);
-	resetStemPoints();
-
+    copyCloud();
+    pcl::ConditionalEuclideanClustering<PointI> cec(true);
+    cec.setInputCloud(cloud_temp);
+    cec.setConditionFunction(&customRegionGrowing);
+    cec.setClusterTolerance(max_distance);
+    cec.setMinClusterSize(cloud_temp->points.size()/70);
+    cec.segment(*clusters);
+    resetStemPoints();
+    result.append(QString("Stem point detected in ")).append(QString::number(tt.toc()/1000)).append(QString(" seconds.\n"));
 }
 
 StemPointDetection::~StemPointDetection() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 void StemPointDetection::copyCloud() {
-	cloud_temp.reset(new PointCloudI);
-	pcl::copyPointCloud(*cloud, *cloud_temp);
-	for (size_t i = 0; i < cloud_temp->points.size(); i++) {
-		if (stem_pts_old.at(i)) {  
+    cloud_temp.reset(new PointCloudI);
+    pcl::copyPointCloud(*cloud, *cloud_temp);
+    for (size_t i = 0; i < cloud_temp->points.size(); i++) {
+        if (stem_pts_old.at(i))        {
             cloud_temp->points[i].intensity = 0;
-			
-		} else {
-	 
-			cloud_temp->points[i].intensity = 255;
-		}
-	}
+        }
+        else
+        {
+            cloud_temp->points[i].intensity = 255;
+        }
+    }
 }
 
 bool customRegionGrowing(const PointI& p1, const PointI& p2,
-		float squared_distance) {
-	float dist = 0.05;
-	if (squared_distance < dist) {
-		if (p1.intensity < 0.5)
-			return (true);
-		if (p2.intensity < 0.5)
-			return (true);
-	}
-	return false;
+                         float squared_distance) {
+    float dist = 0.05;
+    if (squared_distance < dist) {
+        if (p1.intensity < 0.5)
+            return (true);
+        if (p2.intensity < 0.5)
+            return (true);
+    }
+    return false;
 }
 
 void StemPointDetection::resetStemPoints() {
-	int index_largest_cluster = -1;
-	size_t max_size =0;
-	for (size_t i = 0; i < clusters->size (); ++i)
-	  {
-		if((*clusters)[i].indices.size ()>max_size)
-		{std::cout << (*clusters)[i].indices.size () << "\n";
-			max_size= (*clusters)[i].indices.size ();
-			index_largest_cluster = i;
-		}
-
-	  }
-	std::cout<< "index largest cluster" << index_largest_cluster<< "\n";
-	std::cout<< "largest cluster size" << (*clusters)[index_largest_cluster].indices.size()<< "\n";
-	stem_pts_new.clear();
-	for (size_t i = 0; i < stem_pts_old.size(); i++) {
-		stem_pts_new.push_back(false);
-	}
-	if(index_largest_cluster>-1)
-	{
-	for (size_t j = 0; j < (*clusters)[index_largest_cluster].indices.size(); ++j){
-		stem_pts_new[(*clusters)[index_largest_cluster].indices[j]] = true;
-	//std::cout<< "ffoo\n";
-	  
-	}
-	}
+    stem_pts_new.clear();
+    for (size_t i = 0; i < stem_pts_old.size(); i++)
+    {
+        stem_pts_new.push_back(false);
+    }
+    for (size_t i = 0; i < clusters->size (); i++)
+    {
+        for (size_t j = 0; j < (*clusters)[i].indices.size(); j++)
+        {
+            stem_pts_new[(*clusters)[i].indices[j]] = true;
+        }
+    }
 }

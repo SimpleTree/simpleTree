@@ -38,6 +38,8 @@
 #include <pcl/segmentation/conditional_euclidean_clustering.h>
 #include <pcl/common/common_headers.h>
 #include <pcl/point_types.h>
+#include <pcl/console/time.h>
+#include <QString>
 typedef pcl::PointXYZRGBA PointD;
 typedef pcl::PointCloud<PointD> PointCloudD;
 typedef pcl::PointXYZINormal PointI;
@@ -48,7 +50,7 @@ bool
 class StemPointDetection {
 public:
 	StemPointDetection(PointCloudI::Ptr cloud,	std::vector<bool> stem_pts_old
-			, float max_distance =0.05, float max_intens =1);
+            , float max_distance =0.05, float max_intens =0.5f);
 	virtual ~StemPointDetection();
 
 	const std::vector<bool>& getStemPtsNew() const {
@@ -58,8 +60,10 @@ public:
 	void setStemPtsNew(const std::vector<bool>& stemPtsNew) {
 		stem_pts_new = stemPtsNew;
 	}
+    QString result;
 
 private:
+    pcl::console::TicToc tt;
 	PointCloudI::Ptr cloud;
 	std::vector<bool> stem_pts_old;
 	std::vector<bool> stem_pts_new;
