@@ -115,7 +115,7 @@
 #include "../../build/ui_method_dialog.h"
 #include "../../build/ui_allign_dialog.h"
 #include "../../build/ui_crown_dialog.h"
-#include "../../build/ui_eigen_dialog.h"
+
 
 typedef pcl::PointXYZRGBA PointD;
 typedef pcl::PointCloud<PointD> PointCloudD;
