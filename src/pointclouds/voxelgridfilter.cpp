@@ -8,11 +8,9 @@ VoxelGridFilter::VoxelGridFilter(float cell_size , float split_size)
 
 
 boost::shared_ptr<PointCloudI>
-VoxelGridFilter::extractSubCloud(PointI min, PointI max)
+VoxelGridFilter::extractSubCloud(PointI min, PointI max,pcl::octree::OctreePointCloudSearch<PointI> & octree )
 {
-    pcl::octree::OctreePointCloudSearch<PointI> octree ( 0.02f );
-    octree.setInputCloud ( input );
-    octree.addPointsFromInputCloud ();
+
     boost::shared_ptr<PointCloudI> sub_cloud (new PointCloudI);
     std::vector<int> pointIdxBoxSearch;
     Eigen::Vector3f min_pt ( min.x, min.y, min.z );
@@ -50,6 +48,10 @@ VoxelGridFilter::down_sample(boost::shared_ptr<PointCloudI> cloud)
 void
 VoxelGridFilter::voxel_grid_filter ()
 {
+    pcl::octree::OctreePointCloudSearch<PointI> octree ( 0.02f );
+    octree.setInputCloud ( input );
+    octree.addPointsFromInputCloud ();
+
     output.reset(new PointCloudI);
     PointI p1;
     PointI p2;
@@ -82,7 +84,7 @@ VoxelGridFilter::voxel_grid_filter ()
                 max.x = xCurrent + split_size;
                 max.y = yCurrent + split_size;
                 max.z = zCurrent + split_size;
-                boost::shared_ptr<PointCloudI> sub_cloud = extractSubCloud(min,max);
+                boost::shared_ptr<PointCloudI> sub_cloud = extractSubCloud(min,max,octree);
                 boost::shared_ptr<PointCloudI> sub_downsampled = down_sample(sub_cloud);
                 * output += * sub_downsampled;
                 zCurrent += split_size;

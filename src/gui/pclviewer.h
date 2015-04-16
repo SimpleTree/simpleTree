@@ -102,7 +102,7 @@
 #include "../method/method_coefficients.h"
 #include "../gui/allign.h"
 #include "../pointclouds/voxelgridfilter.h"
-
+#include "../../src/gui/curvature/curvaturedialog.h"
 #include "../../build/ui_pclviewer.h"
 #include "../../build/ui_radius_dialog.h"
 #include "../../build/ui_intensity_dialog.h"
@@ -126,6 +126,7 @@ typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 
 class SetCoefficients;
 class AllignPointCloudDialog;
+class CurvatureDialog;
 
 namespace Ui {
 class PCLViewer;
@@ -147,6 +148,7 @@ class PCLViewer: public QMainWindow,public  boost::enable_shared_from_this<PCLVi
 Q_OBJECT
 private:
     boost::shared_ptr<AllignPointCloudDialog> allign;
+    boost::shared_ptr<CurvatureDialog> curvature;
 
 
 //    boost::shared_ptr<PointCloudI> cloud_source;
@@ -223,6 +225,8 @@ public:
 	bool crop_box_is_active;
 	bool crop_sphere_is_active;
 //	bool allign_clouds_is_active;
+    void
+    writeLine();
     boost::shared_ptr<Ui_dialog_init_allign> allign_dialog_ptr;
 	
 	explicit
@@ -261,6 +265,8 @@ public:
     convertPointCloud(PointCloudI::Ptr  cloud, int r, int g, int b);
 
 public slots:
+    void
+    curvature_dialog();
 //    void
 //    allign_rotate_translate();
 //    void

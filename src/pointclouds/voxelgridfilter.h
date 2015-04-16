@@ -38,7 +38,7 @@ private:
     float split_size;
 
     boost::shared_ptr<PointCloudI>
-    extractSubCloud(PointI min, PointI max);
+    extractSubCloud(PointI min, PointI max,pcl::octree::OctreePointCloudSearch<PointI> & octree );
 
     boost::shared_ptr<PointCloudI>
     down_sample(boost::shared_ptr<PointCloudI> cloud);

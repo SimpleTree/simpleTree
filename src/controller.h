@@ -52,6 +52,7 @@ typedef pcl::PointXYZINormal PointI;
 typedef pcl::PointCloud<PointI> PointCloudI;
 typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 
+
 class PCLViewer;
 namespace simpleTree
 {
@@ -99,38 +100,38 @@ class Controller : public boost::enable_shared_from_this<Controller>
 
 //   void setGuiPtr(boost::shared_ptr<PCLViewer>);
 
-    const std::vector<float>&
-    getE1 () const
+    std::vector<float>&
+    getE1 ()
     {
       return e1;
     }
 
     void
-    setE1 (const std::vector<float>& e1)
+    setE1 ( std::vector<float>& e1)
     {
       this->e1 = e1;
     }
 
-    const std::vector<float>&
-    getE2 () const
+    std::vector<float>&
+    getE2 ()
     {
       return e2;
     }
 
     void
-    setE2 (const std::vector<float>& e2)
+    setE2 ( std::vector<float>& e2)
     {
       this->e2 = e2;
     }
 
-    const std::vector<float>&
-    getE3 () const
+     std::vector<float>&
+    getE3 ()
     {
       return e3;
     }
 
     void
-    setE3 (const std::vector<float>& e3)
+    setE3 ( std::vector<float>& e3)
     {
       this->e3 = e3;
     }

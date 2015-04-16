@@ -12,7 +12,8 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/pointclouds/voxelgridfilter.cpp
+set (project_SOURCES src/gui/curvature/curvaturedialog.cpp
+                     src/pointclouds/voxelgridfilter.cpp
                      src/pointclouds/allignpointcloud.cpp
                      src/export/exportply.cpp
                      src/export/writecsv.cpp
@@ -31,7 +32,9 @@ set (project_SOURCES src/pointclouds/voxelgridfilter.cpp
                      src/gui/allign.cpp)
 
 
-set (project_HEADERS src/pointclouds/allignpointcloud.h src/pointclouds/voxelgridfilter.h
+set (project_HEADERS src/pointclouds/allignpointcloud.h
+                     src/gui/curvature/curvaturedialog.h
+                     src/pointclouds/voxelgridfilter.h
                      src/controller.h
                      src/gui/allign.h
                      src/export/writecsv.h
@@ -47,7 +50,8 @@ set (project_HEADERS src/pointclouds/allignpointcloud.h src/pointclouds/voxelgri
 		     src/Model/Segment.h 
 		     src/Model/Tree.h)
 
-set (project_FORMS   src/gui/pclviewer.ui 
+set (project_FORMS   src/gui/curvature/curvature_dialog.ui
+                     src/gui/pclviewer.ui
                      src/gui/eigen_dialog.ui
 					 src/gui/allign_dialog.ui
 					 src/gui/method_dialog.ui

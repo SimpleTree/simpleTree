@@ -184,6 +184,7 @@ ui ( new Ui::PCLViewer ) {
     connect ( ui->background_button,SIGNAL(clicked()),this,SLOT(set_background()));
     connect ( ui->screenshotbutton,SIGNAL(clicked()),this,SLOT(screenshot()));
     connect ( ui->icp_button,SIGNAL ( clicked() ),this,SLOT ( compute_ICP() ) );
+    connect ( ui->eigen_value_button, SIGNAL (clicked()), this, SLOT(curvature_dialog()));
     viewer->resetCamera ();
     computeBoundingBox ();
     pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( cloud );
@@ -198,7 +199,6 @@ ui ( new Ui::PCLViewer ) {
     sphere_dialog_ui_ptr.reset ( new Ui_crop_sphere_dialog );
     crop_box_is_active = false;
     reset_crown_is_active = false;
-   // allign_clouds_is_active = false;
     box_dialog_ui_ptr.reset ( new Ui_crop_box_dialog );
     method_dialog_ptr.reset ( new Ui_method_dialog );
     cb_args.box_dialog_ptr = box_dialog_ui_ptr;
@@ -208,10 +208,17 @@ ui ( new Ui::PCLViewer ) {
 
 }
 
+void
+PCLViewer::curvature_dialog()
+{
+    curvature.reset(new CurvatureDialog(this));
+    curvature->setViewer(shared_from_this());
+    curvature->init();
+}
+
 
 void PCLViewer::compute_ICP() {
     allign.reset(new AllignPointCloudDialog(this));
-    //boost::shared_ptr<AllignPointCloud> allign (new AllignPointCloud(this));
     allign->setViewer(viewer);
     allign->setUi(ui);
     allign->setGuiPtr(shared_from_this());
@@ -354,10 +361,6 @@ void PCLViewer::changeTreeColor() {
                     ui->qvtkWidget->update ();
                 }
             }
-
-            else {
-                std::cout << "Error in PCLViewer ::changeTreeColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
-            }
             break;
         }
         case 1: {
@@ -387,10 +390,6 @@ void PCLViewer::changeTreeColor() {
 		    
                 }
             }
-
-            else {
-                std::cout << "Error in PCLViewer ::changeTreeColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
-            }
             break;
         }
         case 2: {
@@ -406,8 +405,6 @@ void PCLViewer::changeTreeColor() {
                         min = segments.at ( i )->branchID ;
                     }
                 }
-                std::cout << "min" <<  min ;
-                std::cout << "max" <<  max ;
                 std::vector<double> r_vec;
                 std::vector<double> g_vec;
                 std::vector<double> b_vec;
@@ -436,10 +433,6 @@ void PCLViewer::changeTreeColor() {
                     viewer->addText ( "Branches are colored differently", 10, 150,20, 0, 0.2, 0.4, "cylinder_text" );
                     ui->qvtkWidget->update ();
                 }
-            }
-
-            else {
-                std::cout << "Error in PCLViewer ::changeTreeColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
             }
             break;
         }
@@ -486,14 +479,10 @@ void PCLViewer::changeTreeColor() {
                     ui->qvtkWidget->update ();
                 }
             }
-
-            else {
-                std::cout << "Error in PCLViewer ::changeTreeColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
-            }
             break;
         }
         default:
-            std::cout << "Error in PCLViewer ::changePointColor xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
+            ;
         }
     }
 
@@ -625,7 +614,6 @@ PCLViewer::compute_reference () {
     std::cout << height << "height\n";
     std::cout << oldMinHeight << "oldheight\n";
     for ( size_t i = 0; i < cloud->points.size (); i++ ) {
-//      PointI p = cloud->points.at(i);
         cloud->points.at ( i ).z = cloud->points.at ( i ).z + height - oldMinHeight;
     }
     getControl ()->setCloudPtr ( cloud );
@@ -637,14 +625,11 @@ void
 PCLViewer::reference_cloud () {
     {
         if ( getControl ()->getCloudPtr () != 0 ) {
-            //    boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
             QDialog * reference_dialog = new QDialog ( this, 0 );
             Ui_Dialog_Reference refer;
             refer.setupUi ( reference_dialog );
 
             connect ( refer.box_height, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_reference_height ( double ) ) );
-//      connect (refer.box_maxIntens, SIGNAL(valueChanged(double)), this, SLOT(set_intensity_outlier_maxIntens(double)));
-
             connect ( refer.abort, SIGNAL ( clicked() ), reference_dialog, SLOT ( reject() ) );
             connect ( refer.compute, SIGNAL ( clicked() ), this, SLOT ( compute_reference() ) );
             connect ( refer.compute, SIGNAL ( clicked() ), reference_dialog, SLOT ( accept() ) );
@@ -1452,6 +1437,12 @@ PCLViewer::euclideanClustering () {
                                "Please load a Point Cloud first" ),
                                QMessageBox::Ok );
     }
+}
+
+void
+PCLViewer::writeLine()
+{
+    writeConsole( "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 }
 
 void
