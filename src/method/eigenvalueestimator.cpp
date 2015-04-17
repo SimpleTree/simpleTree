@@ -46,16 +46,19 @@ EigenValueEstimator::EigenValueEstimator (PointCloudI::Ptr cloud_in,
   this->cloud = cloud_in;
   pcl::octree::OctreePointCloudSearch<PointI> octree (0.02f);
 
-    octree.setInputCloud (cloud);
-    octree.addPointsFromInputCloud ();
+    //octree.setInputCloud (cloud);
+    //octree.addPointsFromInputCloud ();
+
+    pcl::KdTreeFLANN<PointI> kdtree;
+    kdtree.setInputCloud(cloud);
 
   for(size_t i = 0; i < cloud->points.size(); i++)
   {
     PointI p = cloud->points.at(i);
     std::vector<int> pointIdxRadiusSearch;
     std::vector<float> pointRadiusSquaredDistance;
-    octree.radiusSearch (p, range, pointIdxRadiusSearch, pointRadiusSquaredDistance);
-
+    //octree.radiusSearch (p, range, pointIdxRadiusSearch, pointRadiusSquaredDistance);
+    kdtree.nearestKSearch(p,100,pointIdxRadiusSearch, pointRadiusSquaredDistance);
 
     Eigen::Matrix3f covariance_matrix;
     Eigen::Vector4f xyz_centroid;

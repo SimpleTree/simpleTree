@@ -7,6 +7,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
+#include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/common/centroid.h>
+
+#include <Eigen/Eigenvalues>
+
 #include "../../../build/ui_curvature_dialog.h"
 #include "../../../src/gui/pclviewer.h"
 

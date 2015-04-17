@@ -38,6 +38,7 @@
 
 #include <pcl/point_cloud.h>
 #include <pcl/octree/octree.h>
+#include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/common/centroid.h>
 #include <Eigen/Eigenvalues>
 #include <pcl/console/time.h>

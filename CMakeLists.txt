@@ -29,14 +29,14 @@ set (project_SOURCES src/gui/curvature/curvaturedialog.cpp
 		     src/Model/Cylinder.cpp 
 		     src/Model/Segment.cpp 
                      src/Model/Tree.cpp
-                     src/gui/allign.cpp)
+                     src/gui/allign/allign.cpp)
 
 
 set (project_HEADERS src/pointclouds/allignpointcloud.h
                      src/gui/curvature/curvaturedialog.h
                      src/pointclouds/voxelgridfilter.h
                      src/controller.h
-                     src/gui/allign.h
+                     src/gui/allign/allign.h
                      src/export/writecsv.h
                      src/export/exportply.h
 		     src/gui/pclviewer.h
@@ -53,7 +53,7 @@ set (project_HEADERS src/pointclouds/allignpointcloud.h
 set (project_FORMS   src/gui/curvature/curvature_dialog.ui
                      src/gui/pclviewer.ui
                      src/gui/eigen_dialog.ui
-					 src/gui/allign_dialog.ui
+                                         src/gui/allign/allign_dialog.ui
 					 src/gui/method_dialog.ui
 					 src/gui/radius_dialog.ui
 					 src/gui/intensity_dialog.ui

@@ -100,7 +100,7 @@
 #include "../method/StemPointDetection.h"
 #include "../method/set_coefficients.h"
 #include "../method/method_coefficients.h"
-#include "../gui/allign.h"
+#include "../gui/allign/allign.h"
 #include "../pointclouds/voxelgridfilter.h"
 #include "../../src/gui/curvature/curvaturedialog.h"
 #include "../../build/ui_pclviewer.h"

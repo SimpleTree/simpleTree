@@ -258,44 +258,73 @@ CurvatureDialog::init()
 {
     if(getViewer()->getControl()->getCloudPtr()!=0)
     {
-        if(getViewer()->getControl()->getE1().size()==getViewer()->getControl()->getCloudPtr()->points.size())
+        if(getViewer()->getControl()->getE1().size()!=getViewer()->getControl()->getCloudPtr()->points.size())
         {
-            e1 = getViewer()->getControl()->getE1();
-            e2 = getViewer()->getControl()->getE2();
-            e3 = getViewer()->getControl()->getE3();
-            min_e1 = *(std::min_element(e1.begin(),e1.end()));
-            max_e1 = *(std::max_element(e1.begin(),e1.end()));
-            min_e2 = *(std::min_element(e2.begin(),e2.end()));
-            max_e2 = *(std::max_element(e2.begin(),e2.end()));
-            min_e3 = *(std::min_element(e3.begin(),e3.end()));
-            max_e3 = *(std::max_element(e3.begin(),e3.end()));
-            resetViewer();
-            dialog.reset ( new Ui_Dialog_Eigen );
-            dialog->setupUi ( this );
-            connect( dialog->PCA1Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC1()));
-            connect( dialog->PCA1Max, SIGNAL(sliderMoved(int)),this,SLOT(minPC1()));
-            connect( dialog->PCA2Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC2()));
-            connect( dialog->PCA2Max, SIGNAL(sliderMoved(int)),this,SLOT(maxPC2()));
-            connect( dialog->PCA3Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC3()));
-            connect( dialog->PCA3Max, SIGNAL(sliderMoved(int)),this,SLOT(maxPC3()));
-//            connect( dialog->PCA1Min, SIGNAL(sliderReleased()),this,SLOT(minPC1()));
-//            connect( dialog->PCA1Max, SIGNAL(sliderReleased()),this,SLOT(minPC1()));
-//            connect( dialog->PCA2Min, SIGNAL(sliderReleased()),this,SLOT(minPC2()));
-//            connect( dialog->PCA2Max, SIGNAL(sliderReleased()),this,SLOT(maxPC2()));
-//            connect( dialog->PCA3Min, SIGNAL(sliderReleased()),this,SLOT(minPC3()));
-//            connect( dialog->PCA3Max, SIGNAL(sliderReleased()),this,SLOT(maxPC3()));
-            connect( this, SIGNAL(rejected()),this,SLOT(abort()));
-            connect( dialog->abort, SIGNAL(clicked()),this,SLOT(abort()));
-            connect( dialog->compute, SIGNAL(clicked()),this,SLOT(save()));
-            this->setModal(false);
-            this->show();
+            std::vector<bool> isStem;
+            e1.clear();
+            e2.clear();
+            e3.clear();
+            EigenValueEstimator es ( getViewer()->getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
+            getViewer()->getControl ()->setE1 ( e1 );
+            getViewer()->getControl ()->setE2 ( e2 );
+            getViewer()->getControl ()->setE3 ( e3 );
         }
-        else
-        {
-            QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Curvature information found\n"
-                                                                    "Please compute PCA first" ),
-                                   QMessageBox::Ok );
-        }
+        e1 = getViewer()->getControl()->getE1();
+        e2 = getViewer()->getControl()->getE2();
+        e3 = getViewer()->getControl()->getE3();
+        min_e1 = *(std::min_element(e1.begin(),e1.end()));
+        max_e1 = *(std::max_element(e1.begin(),e1.end()));
+        min_e2 = *(std::min_element(e2.begin(),e2.end()));
+        max_e2 = *(std::max_element(e2.begin(),e2.end()));
+        min_e3 = *(std::min_element(e3.begin(),e3.end()));
+        max_e3 = *(std::max_element(e3.begin(),e3.end()));
+        resetViewer();
+        dialog.reset ( new Ui_Dialog_Eigen );
+        dialog->setupUi ( this );
+        connect( dialog->PCA1Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC1()));
+        connect( dialog->PCA1Max, SIGNAL(sliderMoved(int)),this,SLOT(minPC1()));
+        connect( dialog->PCA2Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC2()));
+        connect( dialog->PCA2Max, SIGNAL(sliderMoved(int)),this,SLOT(maxPC2()));
+        connect( dialog->PCA3Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC3()));
+        connect( dialog->PCA3Max, SIGNAL(sliderMoved(int)),this,SLOT(maxPC3()));
+        connect( this, SIGNAL(rejected()),this,SLOT(abort()));
+        connect( dialog->abort, SIGNAL(clicked()),this,SLOT(abort()));
+        connect( dialog->compute, SIGNAL(clicked()),this,SLOT(save()));
+        this->setModal(false);
+        this->show();
+
+//        if(getViewer()->getControl()->getE1().size()==getViewer()->getControl()->getCloudPtr()->points.size())
+//        {
+//            e1 = getViewer()->getControl()->getE1();
+//            e2 = getViewer()->getControl()->getE2();
+//            e3 = getViewer()->getControl()->getE3();
+//            min_e1 = *(std::min_element(e1.begin(),e1.end()));
+//            max_e1 = *(std::max_element(e1.begin(),e1.end()));
+//            min_e2 = *(std::min_element(e2.begin(),e2.end()));
+//            max_e2 = *(std::max_element(e2.begin(),e2.end()));
+//            min_e3 = *(std::min_element(e3.begin(),e3.end()));
+//            max_e3 = *(std::max_element(e3.begin(),e3.end()));
+//            resetViewer();
+//            dialog.reset ( new Ui_Dialog_Eigen );
+//            dialog->setupUi ( this );
+//            connect( dialog->PCA1Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC1()));
+//            connect( dialog->PCA1Max, SIGNAL(sliderMoved(int)),this,SLOT(minPC1()));
+//            connect( dialog->PCA2Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC2()));
+//            connect( dialog->PCA2Max, SIGNAL(sliderMoved(int)),this,SLOT(maxPC2()));
+//            connect( dialog->PCA3Min, SIGNAL(sliderMoved(int)),this,SLOT(minPC3()));
+//            connect( dialog->PCA3Max, SIGNAL(sliderMoved(int)),this,SLOT(maxPC3()));
+//            connect( this, SIGNAL(rejected()),this,SLOT(abort()));
+//            connect( dialog->abort, SIGNAL(clicked()),this,SLOT(abort()));
+//            connect( dialog->compute, SIGNAL(clicked()),this,SLOT(save()));
+//            this->setModal(false);
+//            this->show();
+//        }
+//        else
+//        {
+//            QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Curvature information found\n"
+//                                                                    "Please compute PCA first" ),
+//                                   QMessageBox::Ok );
+//        }
 
 
     }

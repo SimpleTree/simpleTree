@@ -82,7 +82,7 @@ class SphereFollowing
     int maxIterations;
     int iteration = 0;
     int maxDistToModel = 30;
-    bool use_ransac_for_sphere = false;
+    bool use_ransac_for_sphere = true;
     std::vector<float>
     distancesToModel (PointCloudI::Ptr treeCloud);
     PointCloudI::Ptr
