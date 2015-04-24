@@ -45,7 +45,6 @@ namespace simpleTree {
         this->cloud_Ptr = cloud_Ptr;
         this->name = name;
         QString str;
-        // float f = tt.toc () / 1000;
         str.append ( "Building a tree model for " ).append ( QString::number ( cylinders.size () ) ).append ( " detected cylinders.\n" );
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
@@ -59,12 +58,10 @@ namespace simpleTree {
         rootSegment->addCylinder ( rootCylinder );
         buildTree ( rootSegment, getRootCylinder () );
         mergeCylinders ();
-        //mergeCylinders ();
-       // mergeCylinders ();
         improveBranchJunctions ();
         improveFit ();
         closeGaps ();
-        int cylinders_size = getAllCylinders ().size ();
+        int cylinders_size = getCylinders ().size ();
         int removed_cylinders_size = cylinders.size () - cylinders_size;
 
         str = "";
@@ -543,7 +540,7 @@ namespace simpleTree {
         pcl::octree::OctreePointCloudSearch<PointI> octree ( octreeResolution );
         octree.setInputCloud ( cloud_Ptr );
         octree.addPointsFromInputCloud ();
-        std::vector<boost::shared_ptr<Cylinder> > cylinders = getAllCylinders ();
+        std::vector<boost::shared_ptr<Cylinder> > cylinders = getCylinders ();
         for ( std::vector<boost::shared_ptr<Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
 
             boost::shared_ptr<Cylinder> cylinder = *it;
@@ -604,7 +601,7 @@ namespace simpleTree {
         seg.setMethodType ( SACMETHOD_TYPE );
         seg.setNormalDistanceWeight ( 0.12 );
         seg.setMaxIterations ( 1000 );
-        seg.setDistanceThreshold ( 0.04 );
+        seg.setDistanceThreshold ( 0.05 );
         seg.setRadiusLimits ( 0, 2.2 );
         seg.setInputCloud ( cylinderPoints );
         seg.setInputNormals ( cylinderPoints );
@@ -736,7 +733,7 @@ namespace simpleTree {
         pcl::octree::OctreePointCloudSearch<PointI> octree ( octreeResolution );
         octree.setInputCloud ( cloud_Ptr );
         octree.addPointsFromInputCloud ();
-        std::vector<boost::shared_ptr<Cylinder> > cylinders = getAllCylinders ();
+        std::vector<boost::shared_ptr<Cylinder> > cylinders = getCylinders ();
         int counterNoImprovement = 0;
         int counterRANSAC = 0;
         int counterMedian = 0;
@@ -896,7 +893,7 @@ namespace simpleTree {
     void
     Tree::setCylinders () {
         std::vector<Cylinder> cylinders;
-        std::vector<boost::shared_ptr<Cylinder> > cylinders_ptr = getAllCylinders ( true );
+        std::vector<boost::shared_ptr<Cylinder> > cylinders_ptr = getCylinders ( true );
         for ( std::vector<boost::shared_ptr<Cylinder> >::iterator it = cylinders_ptr.begin (); it != cylinders_ptr.end (); it++ ) {
             boost::shared_ptr<Cylinder> cylinder_ptr = *it;
             cylinders.push_back ( *cylinder_ptr );
@@ -1037,7 +1034,7 @@ namespace simpleTree {
     }
 
     std::vector<boost::shared_ptr<Cylinder> >
-    Tree::getAllCylinders ( bool removeOneLengthLeaveSegments ) {
+    Tree::getCylinders ( bool removeOneLengthLeaveSegments ) {
         std::vector<boost::shared_ptr<Cylinder> > cylinders;
         std::vector<boost::shared_ptr<Segment> > allSegments = getSegments ();
         for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allSegments.begin (); it != allSegments.end (); it++ ) {

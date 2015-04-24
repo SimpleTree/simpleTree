@@ -12,7 +12,10 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/gui/curvature/curvaturedialog.cpp
+set (project_SOURCES src/gui/statistics/visustatistics.cpp
+                     src/Model/modelAdjustment/allometry.cpp
+                     src/pointclouds/bufferpointcloud.cpp
+                     src/gui/curvature/curvaturedialog.cpp
                      src/pointclouds/voxelgridfilter.cpp
                      src/pointclouds/allignpointcloud.cpp
                      src/export/exportply.cpp
@@ -32,7 +35,11 @@ set (project_SOURCES src/gui/curvature/curvaturedialog.cpp
                      src/gui/allign/allign.cpp)
 
 
-set (project_HEADERS src/pointclouds/allignpointcloud.h
+set (project_HEADERS src/gui/guisubclass.h
+                     src/gui/statistics/visustatistics.h
+                     src/Model/modelAdjustment/allometry.h
+                     src/pointclouds/bufferpointcloud.h
+                     src/pointclouds/allignpointcloud.h
                      src/gui/curvature/curvaturedialog.h
                      src/pointclouds/voxelgridfilter.h
                      src/controller.h

@@ -207,7 +207,7 @@ namespace simpleTree
       std::vector<boost::shared_ptr<Segment> >
       getChildGenerationSegments (boost::shared_ptr<Segment> segment);
       std::vector<boost::shared_ptr<Cylinder> >
-      getAllCylinders (bool removeOneLengthLeaveSegments = false);
+      getCylinders (bool removeOneLengthLeaveSegments = false);
 
       void
       mergeCylinders (int numberIterations = 1);

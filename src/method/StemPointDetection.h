@@ -72,6 +72,9 @@ private:
 	float max_distance;
 	float max_intens;
 	void copyCloud();
+    PointCloudI::Ptr downsampled;
+    PointCloudI::Ptr
+    down_sample();
 
 	void
 	resetStemPoints();

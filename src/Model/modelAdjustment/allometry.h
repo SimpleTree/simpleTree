@@ -32,83 +32,56 @@
 * POSSIBILITY OF SUCH DAMAGE.
 *
 */
-#ifndef CURVATUREDIALOG_H
-#define CURVATUREDIALOG_H
+#ifndef ALLOMETRY_H
+#define ALLOMETRY_H
 
-#include <QDialog>
-#include <QMessageBox>
+#include <vector>
+
+#include<math.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include "../Tree.h"
 
-#include <pcl/kdtree/kdtree_flann.h>
-#include <pcl/common/centroid.h>
-#include <pcl/common/common.h>
-#include <pcl/point_types.h>
-
-#include <Eigen/Eigenvalues>
-
-#include "../../../build/ui_curvature_dialog.h"
-#include "../../../src/gui/pclviewer.h"
-
-#include "../../../src/gui/guisubclass.h"
+class Tree;
+namespace simpleTree {
 
 
-typedef pcl::PointXYZRGBA PointD;
-typedef pcl::PointCloud<PointD> PointCloudD;
-typedef pcl::PointXYZINormal PointI;
-typedef pcl::PointCloud<PointI> PointCloudI;
-
-class CurvatureDialog : public QDialog, public GuiSubClass
+class Allometry
 {
-    Q_OBJECT
-public:
-    explicit CurvatureDialog(QWidget *parent = 0);
-    void
-    setViewer(boost::shared_ptr<PCLViewer> guiPtr);
-    boost::shared_ptr<PCLViewer>
-    getViewer();
-    void
-    init();
 private:
+    float fac = 1.3f;
+    float coeff_a, coeff_b;
+    boost::weak_ptr<Tree> tree;
+    std::vector<float> vec_x;
+    std::vector<float> vec_y;
+    std::vector<float> model_x;
+    std::vector<float> model_y;
+    std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders;
 
-    std::vector<float> e1,e2,e3;
-    float
-    min_e1,max_e1,min_e2,max_e2,min_e3,max_e3;
-    float
-    min_pca1,max_pca1,min_pca2,max_pca2,min_pca3,max_pca3;
-    boost::shared_ptr<Ui_Dialog_Eigen> dialog;
-    boost::weak_ptr<PCLViewer> viewer;
-    boost::shared_ptr<PointCloudD> visu_cloud;
-    void
-    resetViewer();
-    void
-    updateViewer();
-    void
-    setGreen(PointD & p);
-    void
-    setRed(PointD & p);
+    float getYFromX(float x);
+    float getXFromY(float y);
 
-signals:
+public:
+    Allometry();
 
-public slots:
     void
-    minPC1();
+    improveTree();
+
+    boost::shared_ptr<Tree>
+    getTree();
+
     void
-    maxPC1();
+    setTree(boost::shared_ptr<Tree> tree);
+
     void
-    minPC2();
+    setCoefficients(float a, float b);
+
     void
-    maxPC2();
-    void
-    minPC3();
-    void
-    maxPC3();
-    void
-    abort();
-    void
-    save();
+    getModelData(std::vector<float> & x, std::vector<float> & y,std::vector<float> & x_model, std::vector<float> & y_model,float max_y, float max_x);
+
 
 };
 
-#endif // CURVATUREDIALOG_H
+}
+#endif // ALLOMETRY_H

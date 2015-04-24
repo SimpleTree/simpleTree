@@ -187,8 +187,8 @@ void SphereFollowing::computeCylindersFromTree(PointCloudI::Ptr& treeCloud) {
 					QString::number(remainingPoints->size())).append(
 					" points.\n");
 			getControl()->getGuiPtr()->writeConsole(str);
-			std::cout << "Not fitted by cylinders were "
-					<< remainingPoints->size() << " points." << std::endl;
+        //	std::cout << "Not fitted by cylinders were "
+            //		<< remainingPoints->size() << " points." << std::endl;
 			std::vector<PointCloudI::Ptr> clusters = clusterPoints(
 					remainingPoints,true);
 			for (size_t i = 0; i < clusters.size(); i++) {
@@ -240,6 +240,7 @@ std::vector<PointCloudI::Ptr> SphereFollowing::intersectionSphereSurface(
 		pcl::octree::OctreePointCloudSearch<PointI>& octree,
 		pcl::ModelCoefficients sphere, PointCloudI::Ptr &cloud_in) {
 	std::vector<PointCloudI::Ptr> both_clouds;
+  //  std::cout << "startsphere" << sphere <<std::endl;
 	PointCloudI::Ptr pointsOnSphereSurface_stem(new PointCloudI);
 	PointCloudI::Ptr pointsOnSphereSurface_branch(new PointCloudI);
 	PointI searchPoint;
@@ -255,6 +256,7 @@ std::vector<PointCloudI::Ptr> SphereFollowing::intersectionSphereSurface(
 			* (sphere.values[3] + SphereFollowing::epsilon_sphere);
 	octree.radiusSearch(searchPoint, radius, pointIdxRadiusSearch,
 			pointRadiusSquaredDistance);
+  //  std::cout << pointIdxRadiusSearch.size() << std::endl;
 	for (size_t i = 0; i < pointIdxRadiusSearch.size(); i++) {
 		if (pointRadiusSquaredDistance[i] > minSquaredDist
 				&& pointRadiusSquaredDistance[i] < maxSquaredDist) {
@@ -276,6 +278,7 @@ std::vector<PointCloudI::Ptr> SphereFollowing::intersectionSphereSurface(
 	}
 	both_clouds.push_back(pointsOnSphereSurface_stem);
 	both_clouds.push_back(pointsOnSphereSurface_branch);
+  //  std::cout << "start" <<std::endl;
 	return both_clouds;
 }
 
@@ -292,7 +295,7 @@ bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 	}
 
 	for (size_t i = 0; i < cloud_in.points.size(); i++) {
-		if (cloud_in.points[i].z < (minSize + 0.06)
+        if (cloud_in.points[i].z < (minSize + 0.1)
 				&& cloud_in.points[i].z >= minSize) {
 			cloud_out.push_back(cloud_in.points[i]);
 		}
@@ -301,7 +304,7 @@ bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 }
 
 pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
-		PointCloudI::Ptr cluster, float& radius, bool isStem) {
+        PointCloudI::Ptr cluster, float& radius, bool isStem) {
 	float x, y, z, x2, y2, z2, r;
 	x = 0;
 	y = 0;
@@ -332,59 +335,39 @@ pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
 			distances.begin() + distances.size() / 2, distances.end());
 	r = distances[distances.size() / 2];
 
-    if (r > 0.025&&use_ransac_for_sphere) {
-		pcl::ModelCoefficients::Ptr coefficients_cylinder(
-				new pcl::ModelCoefficients);
+    if (r > 0.035&&use_ransac_for_sphere) {
+        pcl::ModelCoefficients::Ptr coefficients_circle3d(
+                new pcl::ModelCoefficients);
 
-		pcl::SACSegmentationFromNormals<PointI, PointI> seg;
-		pcl::PointIndices::Ptr inliers_cylinder(new pcl::PointIndices);
-		// pcl::compute3DCentroid(cluster);
+        pcl::SACSegmentationFromNormals<PointI, PointI> seg;
+        pcl::PointIndices::Ptr inliers_cylinder(new pcl::PointIndices);
 
-		seg.setOptimizeCoefficients(true);
-		seg.setModelType(pcl::SACMODEL_CIRCLE3D);
-		//seg.setNormalDistanceWeight (0.1);
-		seg.setMethodType(pcl::SAC_MLESAC);
-		//eg.setMethodType (pcl::SAC_RMSAC);
-		seg.setMaxIterations(100);
-		seg.setDistanceThreshold(0.03);
-		seg.setInputCloud(cluster);
-		seg.setInputNormals(cluster);
+        seg.setOptimizeCoefficients(true);
+        seg.setModelType(pcl::SACMODEL_CIRCLE3D);
+        seg.setMethodType(pcl::SAC_MLESAC);
+        seg.setMaxIterations(100);
+        seg.setDistanceThreshold(0.05);
+        seg.setInputCloud(cluster);
+        seg.setInputNormals(cluster);
 
-		// Obtain the cylinder inliers and coefficients
-		seg.segment(*inliers_cylinder, *coefficients_cylinder);
-		x = coefficients_cylinder->values[0];
-		y = coefficients_cylinder->values[1];
-		z = coefficients_cylinder->values[2];
-		x2 = coefficients_cylinder->values[4];
-		y2 = coefficients_cylinder->values[5];
-		z2 = coefficients_cylinder->values[6];
-
-		pcl::ModelCoefficientsPtr coefficients_line(new pcl::ModelCoefficients);
-		coefficients_line->values.push_back(x);
-		coefficients_line->values.push_back(y);
-		coefficients_line->values.push_back(z);
-		coefficients_line->values.push_back(x2);
-		coefficients_line->values.push_back(y2);
-		coefficients_line->values.push_back(z2);
-
-		PointCloudI::Ptr cloud_projected(new PointCloudI);
-
-		// Create the filtering object
-		pcl::ProjectInliers<PointI> proj;
-		proj.setModelType(pcl::SACMODEL_LINE);
-		proj.setInputCloud(cluster);
-		proj.setModelCoefficients(coefficients_line);
-		proj.filter(*cloud_projected);
-
-        if(coefficients_cylinder->values[3]< r*4)
+        // Obtain the cylinder inliers and coefficients
+        seg.segment(*inliers_cylinder, *coefficients_circle3d);
+        if(coefficients_circle3d->values.size()!=0)
         {
-		x = cloud_projected->points[0].x;
-		y = cloud_projected->points[0].y;
-		z = cloud_projected->points[0].z;
-        r = coefficients_cylinder->values[3];
+
+
+
+        if(coefficients_circle3d->values[3]< r*3)
+        {
+
+            x = coefficients_circle3d->values[0];
+            y = coefficients_circle3d->values[1];
+            z = coefficients_circle3d->values[2];
+            r = coefficients_circle3d->values[3];
+        }
         }
 
-	}
+    }
 	pcl::ModelCoefficients coeffs;
 	coeffs.values.clear();
 	coeffs.values.push_back(x);
@@ -461,9 +444,11 @@ void SphereFollowing::computeCylindersFromCluster(
 
 	PointCloudI::Ptr startCloud(new PointCloudI);
 	lowestZCluster(*pointCluster, *startCloud);
-	float start_radius = 0.1;
+   // std::cout << startCloud->points.size() << "start cluster" << std::endl;
+    float start_radius = 0.5;
 	pcl::ModelCoefficients startSphere = fitSphereToCluster(startCloud,
 	                                                        start_radius,true);
+
 	nextLevelSpheres.push_back(startSphere);
 	if (!isFirstRun) {
 		addConnectionCylinder(startSphere,start_radius);
@@ -473,12 +458,15 @@ void SphereFollowing::computeCylindersFromCluster(
 		currentSphere = (nextLevelSpheres.front());
 		nextLevelSpheres.pop_front();
 		while (currentSphere.values.size() > 0) {
+
 			oldSphere = currentSphere;
 			spheres.push_back(currentSphere);
 			std::vector<PointCloudI::Ptr> sphereSurface =
 					intersectionSphereSurface(octree, currentSphere,
 							pointCluster);
-			if (!sphereSurface[0]->points.empty()) {
+
+            if ( !sphereSurface[0]->points.empty()) {
+
 				bool hasNextLevelSphere = false;
 				std::vector<PointCloudI::Ptr> clusters = clusterPoints(
 						sphereSurface[0],true);
@@ -616,6 +604,7 @@ void SphereFollowing::computeCylindersFromCluster(
 					currentSphere.values.clear();
 				}
 			} else if (!sphereSurface[1]->points.empty()) {
+                                        //    std::cout << sphereSurface[1]->points.size() << std::endl;
 				std::vector<PointCloudI::Ptr> clusters = clusterPoints(
 						sphereSurface[1],false);
 				if (!clusters.empty()) {

@@ -87,7 +87,7 @@ void WriteCSV::exportAll() {
 
     myfile.open ( a );
     myfile << "fileName , startX, startY, startZ, endX, endY, endZ, volume, radius, length, GrowthVolume, SegmentID, ParentSegmentID, BranchID, BranchOrder, median Radius Segment, volume to Root,  \n";
-    std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = this->tree->getAllCylinders ();
+    std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = this->tree->getCylinders ();
     for ( std::vector<boost::shared_ptr<simpleTree::Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
         boost::shared_ptr<simpleTree::Cylinder> cylinder = *it;
         if ( cylinder->getSegment()->getParent() !=0 ) {
@@ -248,7 +248,7 @@ void WriteCSV::exportAll() {
 
         myfile.open ( a );
         myfile << "id , radius, volume" << std::endl;
-        std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = this->tree->getAllCylinders ();
+        std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = this->tree->getCylinders ();
         for ( std::vector<boost::shared_ptr<simpleTree::Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
             boost::shared_ptr<simpleTree::Cylinder> cylinder = *it;
             myfile << fileName << " , " << cylinder->getRadius () << " , " << this->tree->getGrowthVolume ( cylinder ) << std::endl;
