@@ -576,7 +576,7 @@ PCLViewer::computeAustralia()
         getControl ()->setCloudPtr ( cloud_filtered );
 
 
-        height = 0.1;
+        float  height = 0.1;
         PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
         Eigen::Vector4f min_pt;
         Eigen::Vector4f max_pt;
@@ -651,9 +651,9 @@ PCLViewer::computeAustralia()
             QCoreApplication::processEvents ();
             boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), this->getControl ()->getCloudPtr (),
                     this->getControl ()->getTreeID (), this->control );
-            simpleTree::Allometry allom;
-            allom.setTree(tree);
-            allom.improveTree();
+//            simpleTree::Allometry allom;
+//            allom.setTree(tree);
+//            allom.improveTree();
             float f = tt.toc () / 1000;
 
             str.append ( "Done tree structure in " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
@@ -791,42 +791,15 @@ PCLViewer::compute_complete_folder () {
 
 }
 
-void
-PCLViewer::set_reference_height ( double h ) {
-    height = h;
-}
-
-void
-PCLViewer::compute_reference () {
-    PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
-    Eigen::Vector4f min_pt;
-    Eigen::Vector4f max_pt;
-    pcl::getMinMax3D ( *cloud, min_pt, max_pt );
-    float oldMinHeight = ( min_pt[2] );
-    std::cout << height << "height\n";
-    std::cout << oldMinHeight << "oldheight\n";
-    for ( size_t i = 0; i < cloud->points.size (); i++ ) {
-        cloud->points.at ( i ).z = cloud->points.at ( i ).z + height - oldMinHeight;
-    }
-    getControl ()->setCloudPtr ( cloud );
-    height = 0.2;
-
-}
 
 void
 PCLViewer::reference_cloud () {
     {
         if ( getControl ()->getCloudPtr () != 0 ) {
-            QDialog * reference_dialog = new QDialog ( this, 0 );
-            Ui_Dialog_Reference refer;
-            refer.setupUi ( reference_dialog );
 
-            connect ( refer.box_height, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_reference_height ( double ) ) );
-            connect ( refer.abort, SIGNAL ( clicked() ), reference_dialog, SLOT ( reject() ) );
-            connect ( refer.compute, SIGNAL ( clicked() ), this, SLOT ( compute_reference() ) );
-            connect ( refer.compute, SIGNAL ( clicked() ), reference_dialog, SLOT ( accept() ) );
-	    reference_dialog->setModal(true);
-            reference_dialog->show ();
+            reference_height_dialog.reset(new ReferenceHeightDialog(this));
+            reference_height_dialog->setViewer(shared_from_this());
+            reference_height_dialog->init();
 
         } else {
             QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Point Cloud found\n"

@@ -58,35 +58,64 @@ typedef pcl::PointCloud<PointI> PointCloudI;
 class AllignPointCloud
 {
 public:
+    /** \brief empty constructor
+     * */
     AllignPointCloud();
 
+    /** \brief sets the source point cloud
+     * \param the source_cloud
+     * */
     void
     setInputSource(PointCloudI::Ptr);
 
+    /** \brief returns a shared pointer to the source_cloud
+     * */
     PointCloudI::Ptr
     getSource();
 
+    /** \brief returns a shared pointer to the target_cloud
+     * */
     PointCloudI::Ptr
     getTarget();
 
+    /** \brief returns a shared pointer to the final_cloud
+     * */
     PointCloudI::Ptr
     getFinal();
 
+    /** \brief sets the target point cloud
+     * \param the target_cloud
+     * */
     void
     setInputTarget(PointCloudI::Ptr);
 
+    /** \brief sets the final point cloud
+     * \param the final_cloud
+     * */
     void
     setInputFinal(PointCloudI::Ptr);
 
+    /** \brief Transform both cloud_source's and cloud_target's estimated root point to the coordinate system center
+     * */
     void
     initialAllign();
 
+    /** \brief Computes the Iterative Closest point algorithm. Initial allignment is necesarry
+     * */
     void
     ICP();
 
     QString
     result_str;
 
+    /** \brief Computes a transformation with given x,y,z and a rotation around angle angleInDegree for a given cloud tree
+     * \param tree: the input point cloud
+     * \param angleInDeGree: the rotation angle in DegreeMeasureConcept
+     * \param x: the x-translation
+     * \param y: the y-translation
+     * \param z: the z-translation
+     * \return: the transformed point cloud
+     * */
     template <typename PointT>
     boost::shared_ptr<pcl::PointCloud<PointT> >
     transform(boost::shared_ptr<pcl::PointCloud<PointT> >  tree, int angleInDegree, int x, int y, int z)
@@ -104,7 +133,11 @@ public:
         pcl::transformPointCloud (*tree, *transformed_cloud, transform);
         return transformed_cloud;
     }
-
+    /** \brief Computes a transformation with given x,y,z of an Vector4f point for a given cloud
+     * \param cloud: the input point cloud
+     * \param dest: The Vector4f storing x,y,z translation info
+     * \return: the transformed point cloud
+     * */
     template <typename PointT>
     boost::shared_ptr<pcl::PointCloud<PointT> >
     transform(boost::shared_ptr<pcl::PointCloud<PointT> >  cloud,Eigen::Vector4f dest)
@@ -122,22 +155,36 @@ public:
 
 private:
 
-
+    /** \brief a weak pointer to the dialog
+     * */
     boost::weak_ptr<QDialog> allign_dialog;
 
+    /** \brief Converts the weak pointer to a shared pointer of the dialog
+     * \return the shared pointer of the dialog class
+     * */
     boost::shared_ptr<QDialog>
     getDialog();
 
 
-
+    /** \brief the thickness of the point cloud slice to compute the intial allignment from
+     * */
     const float slice_thickness = 0.05f;
 
+    /** \brief a shared pointer of the target cloud
+     * */
     boost::shared_ptr<PointCloudI> cloud_target;
+
+    /** \brief a shared pointer of the source cloud
+     * */
     boost::shared_ptr<PointCloudI> cloud_source;
+
+    /** \brief a shared pointer of the final cloud
+     * */
     boost::shared_ptr<PointCloudI> cloud_final;
 
 
-
+    /** \brief a shared pointer of the target cloud
+     * */
     void
     import(boost::shared_ptr<PointCloudI> & cloud, QString & name);
 

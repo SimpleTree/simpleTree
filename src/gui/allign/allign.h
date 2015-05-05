@@ -67,26 +67,46 @@ class AllignPointCloudDialog
 {
     Q_OBJECT
 public:
+    /** \brief Default contrstructor
+     * \param parent: The parent QT class (main UI class)
+     * */
     AllignPointCloudDialog(QWidget * parent = 0);
+
+    /** \brief connects this with the main UI class
+     * */
     void
     setViewer(boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer);
+
     void
     setUi(Ui::PCLViewer * ui);
     void
     setGuiPtr(boost::shared_ptr<PCLViewer> guiPtr);
+
+    /** \brief Lets the user choose target and source point cloud.
+     * */
     void
     init();
 
+    /** \brief Computes cloud_final from cloud_source with given x,y,z for translation and angle for rotation around z-axis
+     * */
     void
     rotate_translate();
 
 private:
+
+    /** \brief a shared pointer to the allignPointCloud class to compute the translation and rotation of point cloud
+     * */
     boost::shared_ptr<AllignPointCloud> allign_point_cloud;
     //boost::shared_ptr<QDialog> allign_dialog;
 
+    /** \brief Visualizes cloud_source, cloud_target and cloud_final
+     * \param show_final: if set to true cloud_final is visualized, otherwise only cloud_source and cloud_target are visualized
+     * */
     void
     visualizeClouds(bool show_final = false);
 
+    /** \brief The thickness of the point cloud cut
+     * */
     const float slice_height = 0.05f;
 
     QString name_source;
@@ -95,51 +115,99 @@ private:
 
     Ui::PCLViewer *ui;
 
+    /** \brief a weak pointer to the main UI class
+     * */
     boost::weak_ptr<PCLViewer>
     gui_ptr;
+
+    /** \brief Converts the weak pointer to a shared pointer of the main UI class
+     * \return a shared pointer to the main UI class
+     * */
     boost::shared_ptr<PCLViewer>
     getGuiPtr();
 
+    /** \brief a weak pointer to the main UI class
+     * */
     boost::weak_ptr<pcl::visualization::PCLVisualizer> viewer;
 
+    /** \brief A shared pointer of the UI QT class
+     * */
     boost::shared_ptr<Ui_dialog_init_allign>
     dialog;
 
-
+    /** \brief Let the user choose a file from a dialog and stores name and path
+     * \param name: the name of the point cloud
+     * \param path: the path of the point cloud
+     * */
     void
     selectFile(QString & name, QString & path);
 
+    /** \brief Imports a point cloud
+     * \param cloud: the shared pointer of the point cloud where the cloud is saved to
+     * \param name: the name of the stored point cloud
+     * */
     void
     import(boost::shared_ptr<PointCloudI> & cloud, QString & name);
 
+    /** \brief Opens a save dialog to store cloud_final to
+     * \param name: the suggested name
+     * \param cloud: the shared pointer to cloud_final
+     * */
     void
     saveFile(QString name, PointCloudI::Ptr cloud);
 
+    /** \brief removes all visualized clouds and sets the visualization to cloud_final if successful allignment and to cloud source otherwise
+     * */
     void
     resetVisualization();
 
 public slots:
 
+    /** \brief closes the dialog
+     * */
     void
     abort();
+
+    /** \brief saves cloud_final and cloud_target
+     * */
     void
     save();
+
+    /** \brief Slot for rotation around the z-axis
+     * */
     void
     rotate_slider();
+    /** \brief Slot for rotation around the z-axis
+     * */
     void
     rotate_spinbox();
+    /** \brief Slot for x- axis translation
+     * */
     void
     x_slider();
+    /** \brief Slot for x- axis translation
+     * */
     void
     x_spinbox();
+    /** \brief Slot for y- axis translation
+     * */
     void
     y_slider();
+    /** \brief Slot for y- axis translation
+     * */
     void
     y_spinbox();
+    /** \brief Slot for z- axis translation
+     * */
     void
     z_slider();
+    /** \brief Slot for z- axis translation
+     * */
     void
     z_spinbox();
+
+    /** \brief Slot to call Iterative closest points.
+     * */
     void
     ICP();
 };

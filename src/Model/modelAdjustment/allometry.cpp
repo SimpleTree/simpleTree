@@ -48,9 +48,10 @@ Allometry::improveTree()
         boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
         float x = cylinder->getRadius();
         float y = getTree()->getGrowthVolume ( cylinder );
-        if ((getXFromY(y)>(x*fac) || getXFromY(y)<(x/fac) ) && y > 0.03)
+        if ((getXFromY(y)>(x*fac) || getXFromY(y)<(x/fac) ) )
+            //if ((getXFromY(y)>(x*fac) || getXFromY(y)<(x/fac) ) && y > 0.03)
         {
-            cylinder->values[6] = std::max(getXFromY(y),0.045f);
+            cylinder->values[6] = std::max(getXFromY(y),0.05f);
         }
     }
 }

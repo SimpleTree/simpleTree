@@ -63,49 +63,118 @@ class CurvatureDialog : public QDialog, public GuiSubClass
 {
     Q_OBJECT
 public:
+
+    /** \brief Default contrstructor
+     * \param parent: The parent QT class (main UI class)
+     * */
     explicit CurvatureDialog(QWidget *parent = 0);
+
+    /** \brief connects this with the main UI class
+     * */
     void
     setViewer(boost::shared_ptr<PCLViewer> guiPtr);
+
+    /** \brief returns the main UI class as a shared pointer
+     * \return the shared pointer of main UI class
+     * */
     boost::shared_ptr<PCLViewer>
     getViewer();
+
+    /** \brief Computes the principal components for the point cloud and connects signal with slots
+     * */
     void
     init();
 private:
 
+    /** \brief Vectors which store the first, second and third principal component of all points in control stored point cloud.
+     * */
     std::vector<float> e1,e2,e3;
+
+    /** \brief Relative threshold values for the principal components
+     * */
     float
     min_e1,max_e1,min_e2,max_e2,min_e3,max_e3;
+
+    /** \brief Minimum and maximum principal component values of all computed PCA values.
+     * */
     float
     min_pca1,max_pca1,min_pca2,max_pca2,min_pca3,max_pca3;
+
+    /** \brief A shared pointer to the UI component
+     * */
     boost::shared_ptr<Ui_Dialog_Eigen> dialog;
+
+    /** \brief A weak pointer to the UI class
+     * */
     boost::weak_ptr<PCLViewer> viewer;
+
+    /** \brief A shared pointer to the used point cloud.
+     * */
     boost::shared_ptr<PointCloudD> visu_cloud;
+
+
+    /** \brief Clears the viewer and resets the visualization to the point cloud stored in the control class.
+     * */
     void
     resetViewer();
+
+    /** \brief Updates the visualized point cloud according to the set thresholds of the PCA values.
+     * */
     void
     updateViewer();
+
+    /** \brief Colorize a point (p) with green color.
+     *  \param p: Point to set the RGBA-Value to green (102,102,0,255).
+     * */
     void
     setGreen(PointD & p);
+
+    /** \brief Colorize a point (p) with red color.
+     *  \param p: Point to set the RGBA-Value to red (178,10,10,50).
+     * */
     void
     setRed(PointD & p);
 
 signals:
 
 public slots:
+    /** \brief Resets the minimum relative value of the first principal component and updates the visualization.
+     * */
     void
     minPC1();
+
+    /** \brief Resets the maximum relative value of the first principal component and updates the visualization.
+     * */
     void
     maxPC1();
+
+    /** \brief Resets the minimum relative value of the second principal component and updates the visualization.
+     * */
     void
     minPC2();
+
+    /** \brief Resets the maximum relative value of the second principal component and updates the visualization.
+     * */
     void
     maxPC2();
+
+    /** \brief Resets the minimum relative value of the third principal component and updates the visualization.
+     * */
     void
     minPC3();
+
+    /** \brief Resets the maximum relative value of the third principal component and updates the visualization.
+     * */
     void
     maxPC3();
+
+    /** \brief Closes the dialog
+     * */
     void
     abort();
+
+    /** \brief Stores the remaining cloud after threshold deletion in the control class.
+     * */
     void
     save();
 

@@ -96,6 +96,7 @@
 
 #include "../export/writecsv.h"
 #include "../export/exportply.h"
+#include "../../src/gui/reference/referenceheightdialog.h"
 
 #include "../method/StemPointDetection.h"
 #include "../method/set_coefficients.h"
@@ -112,7 +113,7 @@
 #include "../../build/ui_euclidean_dialog.h"
 #include "../../build/ui_crop_sphere_dialog.h"
 #include "../../build/ui_crop_box_dialog.h"
-#include "../../build/ui_reference_dialog.h"
+//#include "../../build/ui_reference_dialog.h"
 #include "../../build/ui_method_dialog.h"
 #include "../../build/ui_allign_dialog.h"
 #include "../../build/ui_crown_dialog.h"
@@ -128,6 +129,7 @@ typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 class SetCoefficients;
 class AllignPointCloudDialog;
 class CurvatureDialog;
+class ReferenceHeightDialog;
 
 namespace Ui {
 class PCLViewer;
@@ -159,6 +161,8 @@ private:
 	boost::shared_ptr<SetCoefficients> coeff_ptr;
 	boost::shared_ptr<simpleTree::Tree> tree_ptr;
 	boost::shared_ptr<PointCloudI> allign_cloud;
+
+    boost::shared_ptr<ReferenceHeightDialog> reference_height_dialog;
     std::vector<boost::shared_ptr<PointCloudD> > intensity_clouds;
 	Method_Coefficients method_coefficients;
 
@@ -176,7 +180,7 @@ private:
 	int point_color;
 	int tree_color = 0;
 
-	float height = 0.2;
+    //float height = 0.2;
 
     float hull_radius = 0.1f;
 
@@ -296,12 +300,8 @@ public slots:
     void
     set_method_coeff();
 
-	void
-	set_reference_height(double h);
-	void
-	compute_reference();
-	void
-	reference_cloud();
+    void
+    reference_cloud();
 
 	void
 	set_crop_box_x(double x);

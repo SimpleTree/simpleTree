@@ -12,7 +12,8 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/gui/statistics/visustatistics.cpp
+set (project_SOURCES src/gui/reference/referenceheightdialog.cpp
+                     src/gui/statistics/visustatistics.cpp
                      src/Model/modelAdjustment/allometry.cpp
                      src/pointclouds/bufferpointcloud.cpp
                      src/gui/curvature/curvaturedialog.cpp
@@ -35,7 +36,8 @@ set (project_SOURCES src/gui/statistics/visustatistics.cpp
                      src/gui/allign/allign.cpp)
 
 
-set (project_HEADERS src/gui/guisubclass.h
+set (project_HEADERS src/gui/reference/referenceheightdialog.h
+                     src/gui/guisubclass.h
                      src/gui/statistics/visustatistics.h
                      src/Model/modelAdjustment/allometry.h
                      src/pointclouds/bufferpointcloud.h
@@ -57,7 +59,8 @@ set (project_HEADERS src/gui/guisubclass.h
 		     src/Model/Segment.h 
 		     src/Model/Tree.h)
 
-set (project_FORMS   src/gui/curvature/curvature_dialog.ui
+set (project_FORMS   src/gui/reference/reference_dialog.ui
+                     src/gui/curvature/curvature_dialog.ui
                      src/gui/pclviewer.ui
                      src/gui/eigen_dialog.ui
                                          src/gui/allign/allign_dialog.ui
