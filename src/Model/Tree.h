@@ -125,8 +125,7 @@ namespace simpleTree
       improveBranchJunctions ();
       void
       improveByMedianCheck ();
-      void
-      improveFit ();
+
       void
       closeGaps();
       void
@@ -139,6 +138,9 @@ namespace simpleTree
       setIDforSegments();
 
     public:
+      void
+      improveFit ();
+
       void
       resetRoot();
       void

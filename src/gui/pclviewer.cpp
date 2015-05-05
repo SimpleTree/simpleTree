@@ -654,6 +654,7 @@ PCLViewer::computeAustralia()
 //            simpleTree::Allometry allom;
 //            allom.setTree(tree);
 //            allom.improveTree();
+//            tree->improveFit();
             float f = tt.toc () / 1000;
 
             str.append ( "Done tree structure in " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
