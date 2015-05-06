@@ -97,6 +97,8 @@
 #include "../export/writecsv.h"
 #include "../export/exportply.h"
 #include "../../src/gui/reference/referenceheightdialog.h"
+#include "../../src/gui/cropsphere/cropspheredialog.h"
+#include "../../src/gui/cropbox/cropboxdialog.h"
 
 #include "../method/StemPointDetection.h"
 #include "../method/set_coefficients.h"
@@ -111,9 +113,7 @@
 #include "../../build/ui_statistical_dialog.h"
 #include "../../build/ui_voxel_grid_dialog.h"
 #include "../../build/ui_euclidean_dialog.h"
-#include "../../build/ui_crop_sphere_dialog.h"
 #include "../../build/ui_crop_box_dialog.h"
-//#include "../../build/ui_reference_dialog.h"
 #include "../../build/ui_method_dialog.h"
 #include "../../build/ui_allign_dialog.h"
 #include "../../build/ui_crown_dialog.h"
@@ -130,6 +130,8 @@ class SetCoefficients;
 class AllignPointCloudDialog;
 class CurvatureDialog;
 class ReferenceHeightDialog;
+class CropSphereDialog;
+class CropBoxDialog;
 
 namespace Ui {
 class PCLViewer;
@@ -143,8 +145,8 @@ class Controller;
 class PCLViewer;
 struct callback_args {
 	// structure used to pass arguments to the callback function
-	boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ptr;
-    boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ptr;
+    boost::shared_ptr<CropBoxDialog> box_dialog_ptr;
+    boost::shared_ptr<CropSphereDialog> sphere_dialog_ptr;
 	PCLViewer * viewer;
 };
 class PCLViewer: public QMainWindow,public  boost::enable_shared_from_this<PCLViewer>  {
@@ -155,12 +157,13 @@ private:
 
 
 	callback_args cb_args;
-	boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ui_ptr;
-	boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ui_ptr;
+    boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ui_ptr;
 	boost::shared_ptr<Ui_method_dialog> method_dialog_ptr;
 	boost::shared_ptr<SetCoefficients> coeff_ptr;
 	boost::shared_ptr<simpleTree::Tree> tree_ptr;
 	boost::shared_ptr<PointCloudI> allign_cloud;
+    boost::shared_ptr<CropSphereDialog> crop_sphere_dialog;
+    boost::shared_ptr<CropBoxDialog> crop_box_dialog;
 
     boost::shared_ptr<ReferenceHeightDialog> reference_height_dialog;
     std::vector<boost::shared_ptr<PointCloudD> > intensity_clouds;
@@ -169,11 +172,12 @@ private:
 
 	pcl::console::TicToc tt;
 
-	pcl::ModelCoefficients deleteSphere;
+
 	pcl::ModelCoefficients deleteBox;
 
-	float minX, minY, minZ, maxX, maxY, maxZ, extension = 1, centerX = 0,
-			centerY = 0, centerZ = 0;
+    float minX, minY, minZ, maxX, maxY, maxZ, extension = 1;
+    float centerX = 0,
+            centerY = 0, centerZ = 0;
 	float fac = 2.5;
 	int point_color_max = 6;
 	int tree_color_max = 4;
@@ -303,39 +307,28 @@ public slots:
     void
     reference_cloud();
 
-	void
-	set_crop_box_x(double x);
-	void
-	set_crop_box_y(double y);
-	void
-	set_crop_box_z(double z);
-	void
-	set_crop_box_x_length(double x);
-	void
-	set_crop_box_y_length(double y);
-	void
-	set_crop_box_z_length(double z);
+//	void
+//	set_crop_box_x(double x);
+//	void
+//	set_crop_box_y(double y);
+//	void
+//	set_crop_box_z(double z);
+//	void
+//	set_crop_box_x_length(double x);
+//	void
+//	set_crop_box_y_length(double y);
+//	void
+//	set_crop_box_z_length(double z);
 	void
 	crop_box();
-	void
-	compute_crop_box();
-	void
-	abort_crop_box();
+//	void
+//	compute_crop_box();
+//	void
+//	abort_crop_box();
 
-	void
-	set_crop_sphere_x(double x);
-	void
-	set_crop_sphere_y(double y);
-	void
-	set_crop_sphere_z(double z);
-	void
-	set_crop_sphere_r(double r);
-	void
-	cropsphere();
-	void
-	compute_crop_sphere();
-	void
-	abort_crop_sphere();
+
+    void
+    cropsphere();
 
 	void
 	set_voxel_grid_size(double size);

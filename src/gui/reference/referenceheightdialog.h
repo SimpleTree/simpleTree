@@ -14,6 +14,9 @@ class ReferenceHeightDialog : public QDialog, public GuiSubClass
 {
     Q_OBJECT
 public:
+    /** \brief Default contrstructor
+     * \param parent: The parent QT class (main UI class)
+     * */
     explicit ReferenceHeightDialog(QWidget *parent = 0);
 
     /** \brief connects this with the main UI class
@@ -27,6 +30,8 @@ public:
     boost::shared_ptr<PCLViewer>
     getViewer();
 
+    /** \brief connects the dialog buttons
+     * */
     void
     init();
 
@@ -35,6 +40,8 @@ private:
      * */
     boost::weak_ptr<PCLViewer> viewer;
 
+    /** \brief height to which the minimum z-coordinate of the point cloud should be set to
+     * */
     float height = 0.2f;
 
 
@@ -42,9 +49,15 @@ private:
 signals:
 
 public slots:
+    /** \brief sets the height
+     * \param h: the height
+     * */
     void
     set_reference_height ( double h );
 
+    /** \brief performs a translation along the z-axis to set the minium z-Coordinate of the
+     * point cloud to the height
+     * */
     void
     compute_reference ();
 

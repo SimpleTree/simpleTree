@@ -45,21 +45,20 @@ pp_callback ( const pcl::visualization::PointPickingEvent& event,
     if ( event.getPointIndex () != -1 ) {
         PCLViewer * viewer = data->viewer;
         if ( viewer->crop_sphere_is_active ) {
-            boost::shared_ptr<Ui_crop_sphere_dialog> sphere_dialog_ptr = data->sphere_dialog_ptr;
-            Ui_crop_sphere_dialog * dia = &*sphere_dialog_ptr;
+            boost::shared_ptr<CropSphereDialog> dialog = data->sphere_dialog_ptr;
             float x, y, z;
             event.getPoint ( x, y, z );
-            dia->box_x->setValue ( x );
-            dia->box_y->setValue ( y );
-            dia->box_z->setValue ( z );
+            dialog->dialog->box_x->setValue ( x );
+            dialog->dialog->box_y->setValue ( y );
+            dialog->dialog->box_z->setValue ( z );
         } else if ( viewer->crop_box_is_active ) {
-            boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ptr = data->box_dialog_ptr;
-            Ui_crop_box_dialog * dia = &*box_dialog_ptr;
+            boost::shared_ptr<CropBoxDialog> dialog = data->box_dialog_ptr;
+
             float x, y, z;
             event.getPoint ( x, y, z );
-            dia->box_x->setValue ( x );
-            dia->box_y->setValue ( y );
-            dia->box_z->setValue ( z );
+            dialog->dialog->box_x->setValue ( x );
+            dialog->dialog->box_y->setValue ( y );
+            dialog->dialog->box_z->setValue ( z );
         } else  if (viewer->reset_crown_is_active) {
 
             float x, y, z;
@@ -197,13 +196,13 @@ ui ( new Ui::PCLViewer ) {
     ui->qvtkWidget->update ();
     plot ();
     crop_sphere_is_active = false;
-    sphere_dialog_ui_ptr.reset ( new Ui_crop_sphere_dialog );
+    //sphere_dialog_ui_ptr.reset ( new Ui_crop_sphere_dialog );
     crop_box_is_active = false;
     reset_crown_is_active = false;
     box_dialog_ui_ptr.reset ( new Ui_crop_box_dialog );
     method_dialog_ptr.reset ( new Ui_method_dialog );
-    cb_args.box_dialog_ptr = box_dialog_ui_ptr;
-    cb_args.sphere_dialog_ptr = sphere_dialog_ui_ptr;
+    cb_args.box_dialog_ptr = crop_box_dialog;
+    cb_args.sphere_dialog_ptr = crop_sphere_dialog;
     cb_args.viewer = this;
     viewer->registerPointPickingCallback ( pp_callback, ( void* ) &cb_args );
 
@@ -566,13 +565,12 @@ PCLViewer::computeAustralia()
             }
         }
 
-        int size_before = getControl ()->getCloudPtr ()->points.size ();
+
         int size_after = cloud_filtered->points.size ();
         cloud_filtered->width = size_after;
         cloud_filtered->height = 1;
-        float a = size_before;
-        float b = size_after;
-        float percentage = ( 100.0f * b ) / ( a );
+
+
         getControl ()->setCloudPtr ( cloud_filtered );
 
 
@@ -810,192 +808,15 @@ PCLViewer::reference_cloud () {
     }
 }
 
-void
-PCLViewer::set_crop_box_x ( double x ) {
-    if ( crop_box_is_active ) {
-        deleteBox.values.at ( 0 ) = x;
-        viewer->removeShape ( "deleteBox" );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteBox.values.at ( 0 ), deleteBox.values.at ( 1 ), deleteBox.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-PCLViewer::set_crop_box_y ( double y ) {
-    if ( crop_box_is_active ) {
-        deleteBox.values.at ( 1 ) = y;
-        viewer->removeShape ( "deleteBox" );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteBox.values.at ( 0 ), deleteBox.values.at ( 1 ), deleteBox.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
 
-PCLViewer::set_crop_box_z ( double z ) {
-    if ( crop_box_is_active ) {
-        deleteBox.values.at ( 2 ) = z;
-        viewer->removeShape ( "deleteBox" );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteBox.values.at ( 0 ), deleteBox.values.at ( 1 ), deleteBox.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-PCLViewer::set_crop_box_x_length ( double x ) {
-    if ( crop_box_is_active ) {
-        deleteBox.values.at ( 7 ) = x;
-        viewer->removeShape ( "deleteBox" );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteBox.values.at ( 0 ), deleteBox.values.at ( 1 ), deleteBox.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-PCLViewer::set_crop_box_y_length ( double y ) {
-    if ( crop_box_is_active ) {
-        deleteBox.values.at ( 8 ) = y;
-        viewer->removeShape ( "deleteBox" );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteBox.values.at ( 0 ), deleteBox.values.at ( 1 ), deleteBox.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-PCLViewer::set_crop_box_z_length ( double z ) {
-    if ( crop_box_is_active ) {
-        deleteBox.values.at ( 9 ) = z;
-        viewer->removeShape ( "deleteBox" );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteBox.values.at ( 0 ), deleteBox.values.at ( 1 ), deleteBox.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-
-void
-PCLViewer::compute_crop_box () {
-    viewer->removeShape ( "deleteBox" );
-    viewer->removeCoordinateSystem 	 ();
-
-    pcl::octree::OctreePointCloudSearch<PointI> octree ( 0.02f );
-    octree.setInputCloud ( getControl ()->getCloudPtr () );
-    octree.addPointsFromInputCloud ();
-    PointI p1;
-    p1.x = deleteBox.values.at ( 0 ) - deleteBox.values.at ( 7 ) / 2;
-    p1.y = deleteBox.values.at ( 1 ) - deleteBox.values.at ( 8 ) / 2;
-    p1.z = deleteBox.values.at ( 2 ) - deleteBox.values.at ( 9 ) / 2;
-    PointI p2;
-    p2.x = deleteBox.values.at ( 0 ) + deleteBox.values.at ( 7 ) / 2;
-    p2.y = deleteBox.values.at ( 1 ) + deleteBox.values.at ( 8 ) / 2;
-    p2.z = deleteBox.values.at ( 2 ) + deleteBox.values.at ( 9 ) / 2;
-
-    std::vector<int> pointIdxBoxSearch;
-    PointCloudI::Ptr cloud_filtered ( new PointCloudI );
-    Eigen::Vector3f min_pt ( p1.x, p1.y, p1.z );
-    Eigen::Vector3f max_pt ( p2.x, p2.y, p2.z );
-    octree.boxSearch ( min_pt, max_pt, pointIdxBoxSearch );
-    pcl::ExtractIndices<PointI> extract;
-    pcl::PointIndices::Ptr inliers ( new pcl::PointIndices () );
-    inliers->indices = pointIdxBoxSearch;
-    extract.setInputCloud ( getControl ()->getCloudPtr () );
-    extract.setIndices ( inliers );
-    extract.setNegative ( true );
-    extract.filter ( *cloud_filtered );
-    getControl ()->setCloudPtr ( cloud_filtered );
-    viewer->removeShape ( "deleteBox" );
-    viewer->removeCoordinateSystem 	 ();
-    crop_box_is_active = false;
-
-}
-void
-PCLViewer::abort_crop_box () {
-    viewer->removeShape ( "deleteBox" );
-    viewer->removeCoordinateSystem 	 ();
-    crop_box_is_active = false;
-}
 
 void
 PCLViewer::crop_box () {
     if ( getControl ()->getCloudPtr () != 0 ) {
-        deleteBox.values.clear ();
-        deleteBox.values.push_back ( centerX );
-        deleteBox.values.push_back ( centerY );
-        deleteBox.values.push_back ( centerZ );
-        deleteBox.values.push_back ( 0 );
-        deleteBox.values.push_back ( 0 );
-        deleteBox.values.push_back ( 0 );
-        deleteBox.values.push_back ( 0 );
-        deleteBox.values.push_back ( 0.15f );
-        deleteBox.values.push_back ( 0.15f );
-        deleteBox.values.push_back ( 0.15f );
-        viewer->addCoordinateSystem ( 1, centerX, centerY, centerZ );
-        viewer->addCube ( deleteBox, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteBox" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteBox" );
-        ui->qvtkWidget->update ();
-//          viewer->registerPointPickingCallback (pp_callback,(void*)&viewer);
-
-        //    boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
-        QDialog *box_dialog_ptr = new QDialog ( this, 0 );
-        //QDialog * sphere_dialog = new QDialog(0, 0);
-//                  Ui_crop_sphere_dialog sphere;
-
-        box_dialog_ui_ptr->setupUi ( &*box_dialog_ptr );
-
-        connect ( box_dialog_ui_ptr->box_x, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_box_x ( double ) ) );
-        connect ( box_dialog_ui_ptr->box_y, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_box_y ( double ) ) );
-        connect ( box_dialog_ui_ptr->box_z, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_box_z ( double ) ) );
-        connect ( box_dialog_ui_ptr->box_x_size, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_box_x_length ( double ) ) );
-        connect ( box_dialog_ui_ptr->box_y_size, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_box_y_length ( double ) ) );
-        connect ( box_dialog_ui_ptr->box_z_size, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_box_z_length ( double ) ) );
-        connect ( box_dialog_ui_ptr->abort, SIGNAL ( clicked() ), this, SLOT ( abort_crop_box() ) );
-        connect ( box_dialog_ui_ptr->abort, SIGNAL ( clicked() ), &*box_dialog_ptr, SLOT ( reject() ) );
-        connect ( box_dialog_ui_ptr->compute, SIGNAL ( clicked() ), this, SLOT ( compute_crop_box() ) );
-        connect ( box_dialog_ui_ptr->compute, SIGNAL ( clicked() ), &*box_dialog_ptr, SLOT ( accept() ) );
-        //      viewer->registerPointPickingCallback (pp_callback,(void*)this);
-        // viewer->registerPointPickingCallback (pp_callback, (void*) &*sphere_dialog_ui_ptr);
-        crop_box_is_active = true;
-	box_dialog_ptr->setModal(false);
-        box_dialog_ptr->show ();
+        crop_box_dialog.reset(new CropBoxDialog);
+        crop_box_dialog->setViewer(shared_from_this());
+        crop_box_dialog->init();
+        cb_args.box_dialog_ptr = crop_box_dialog;
 
     } else {
         QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Point Cloud found\n"
@@ -1006,147 +827,12 @@ PCLViewer::crop_box () {
 }
 
 void
-PCLViewer::set_crop_sphere_x ( double x ) {
-    if ( crop_sphere_is_active ) {
-        deleteSphere.values.at ( 0 ) = x;
-        viewer->removeShape ( "deleteSphere" );
-        viewer->addSphere ( deleteSphere, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteSphere" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteSphere.values.at ( 0 ), deleteSphere.values.at ( 1 ), deleteSphere.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-PCLViewer::set_crop_sphere_y ( double y ) {
-    if ( crop_sphere_is_active ) {
-        deleteSphere.values.at ( 1 ) = y;
-        viewer->removeShape ( "deleteSphere" );
-        viewer->addSphere ( deleteSphere, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteSphere" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteSphere.values.at ( 0 ), deleteSphere.values.at ( 1 ), deleteSphere.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-
-PCLViewer::set_crop_sphere_z ( double z ) {
-    if ( crop_sphere_is_active ) {
-        deleteSphere.values.at ( 2 ) = z;
-        viewer->removeShape ( "deleteSphere" );
-        viewer->addSphere ( deleteSphere, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteSphere" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteSphere.values.at ( 0 ), deleteSphere.values.at ( 1 ), deleteSphere.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-void
-PCLViewer::set_crop_sphere_r ( double r ) {
-    if ( crop_sphere_is_active ) {
-        deleteSphere.values.at ( 3 ) = r;
-        viewer->removeShape ( "deleteSphere" );
-        viewer->addSphere ( deleteSphere, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteSphere" );
-        viewer->removeCoordinateSystem 	 ();
-        viewer->addCoordinateSystem ( 1, deleteSphere.values.at ( 0 ), deleteSphere.values.at ( 1 ), deleteSphere.values.at ( 2 ) );
-        ui->qvtkWidget->update ();
-    }
-}
-
-void
-PCLViewer::compute_crop_sphere () {
-    viewer->removeShape ( "deleteSphere" );
-    viewer->removeCoordinateSystem 	 ();
-
-    pcl::octree::OctreePointCloudSearch<PointI> octree ( 0.02f );
-    octree.setInputCloud ( getControl ()->getCloudPtr () );
-    octree.addPointsFromInputCloud ();
-    PointI p;
-    p.x = deleteSphere.values.at ( 0 );
-    p.y = deleteSphere.values.at ( 1 );
-    p.z = deleteSphere.values.at ( 2 );
-    float r = deleteSphere.values.at ( 3 );
-    std::vector<int> pointIdxRadiusSearch;
-    std::vector<float> pointRadiusSquaredDistance;
-    PointCloudI::Ptr cloud_filtered ( new PointCloudI );
-    octree.radiusSearch ( p, r, pointIdxRadiusSearch, pointRadiusSquaredDistance );
-    pcl::ExtractIndices<PointI> extract;
-    pcl::PointIndices::Ptr inliers ( new pcl::PointIndices () );
-    inliers->indices = pointIdxRadiusSearch;
-    extract.setInputCloud ( getControl ()->getCloudPtr () );
-    extract.setIndices ( inliers );
-    extract.setNegative ( true );
-    extract.filter ( *cloud_filtered );
-    getControl ()->setCloudPtr ( cloud_filtered );
-    viewer->removeShape ( "deleteSphere" );
-    viewer->removeCoordinateSystem 	 ();
-    crop_sphere_is_active = false;
-
-}
-void
-PCLViewer::abort_crop_sphere () {
-    viewer->removeShape ( "deleteSphere" );
-    viewer->removeCoordinateSystem 	 ();
-    crop_sphere_is_active = false;
-}
-
-void
 PCLViewer::cropsphere () {
     if ( getControl ()->getCloudPtr () != 0 ) {
-        deleteSphere.values.clear ();
-        deleteSphere.values.push_back ( centerX );
-        deleteSphere.values.push_back ( centerY );
-        deleteSphere.values.push_back ( centerZ );
-        deleteSphere.values.push_back ( 0.5f );
-        viewer->addCoordinateSystem ( 1, centerX, centerY, centerZ );
-        viewer->addSphere ( deleteSphere, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                              "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_COLOR, 0.8, 0.2, 0, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_SHADING, pcl::visualization::PCL_VISUALIZER_SHADING_GOURAUD, "deleteSphere" );
-        viewer->setShapeRenderingProperties ( pcl::visualization::PCL_VISUALIZER_OPACITY, 0.3, "deleteSphere" );
-        ui->qvtkWidget->update ();
-//		      viewer->registerPointPickingCallback (pp_callback,(void*)&viewer);
-
-        //		boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
-        QDialog *sphere_dialog_ptr = new QDialog ( this, 0 );
-        //QDialog * sphere_dialog = new QDialog(0, 0);
-//		              Ui_crop_sphere_dialog sphere;
-
-        sphere_dialog_ui_ptr->setupUi ( &*sphere_dialog_ptr );
-
-        connect ( sphere_dialog_ui_ptr->box_x, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_sphere_x ( double ) ) );
-        connect ( sphere_dialog_ui_ptr->box_y, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_sphere_y ( double ) ) );
-        connect ( sphere_dialog_ui_ptr->box_z, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_sphere_z ( double ) ) );
-        connect ( sphere_dialog_ui_ptr->box_r, SIGNAL ( valueChanged ( double ) ), this, SLOT ( set_crop_sphere_r ( double ) ) );
-        connect ( sphere_dialog_ui_ptr->abort, SIGNAL ( clicked() ), this, SLOT ( abort_crop_sphere() ) );
-        connect ( sphere_dialog_ui_ptr->abort, SIGNAL ( clicked() ), &*sphere_dialog_ptr, SLOT ( reject() ) );
-        connect ( sphere_dialog_ui_ptr->compute, SIGNAL ( clicked() ), this, SLOT ( compute_crop_sphere() ) );
-        connect ( sphere_dialog_ui_ptr->compute, SIGNAL ( clicked() ), &*sphere_dialog_ptr, SLOT ( accept() ) );
-        //      viewer->registerPointPickingCallback (pp_callback,(void*)this);
-
-        crop_sphere_is_active = true;
-	sphere_dialog_ptr->setModal(false);
-        sphere_dialog_ptr->show ();
-
+        crop_sphere_dialog.reset(new CropSphereDialog);
+        crop_sphere_dialog->setViewer(shared_from_this());
+        crop_sphere_dialog->init();
+        cb_args.sphere_dialog_ptr = crop_sphere_dialog;
     } else {
         QMessageBox::warning ( this, tr ( "Simple Tree" ), tr ( "No Point Cloud found\n"
                                "Please load a Point Cloud first" ),

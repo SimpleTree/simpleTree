@@ -305,7 +305,7 @@ bool SphereFollowing::lowestZCluster(PointCloudI cloud_in,
 
 pcl::ModelCoefficients SphereFollowing::fitSphereToCluster(
         PointCloudI::Ptr cluster, float& radius, bool isStem) {
-	float x, y, z, x2, y2, z2, r;
+    float x, y, z ,r;
 	x = 0;
 	y = 0;
 	z = 0;

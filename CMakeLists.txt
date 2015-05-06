@@ -12,7 +12,9 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/gui/reference/referenceheightdialog.cpp
+set (project_SOURCES src/gui/cropbox/cropboxdialog.cpp
+                     src/gui/cropsphere/cropspheredialog.cpp
+                     src/gui/reference/referenceheightdialog.cpp
                      src/gui/statistics/visustatistics.cpp
                      src/Model/modelAdjustment/allometry.cpp
                      src/pointclouds/bufferpointcloud.cpp
@@ -36,7 +38,9 @@ set (project_SOURCES src/gui/reference/referenceheightdialog.cpp
                      src/gui/allign/allign.cpp)
 
 
-set (project_HEADERS src/gui/reference/referenceheightdialog.h
+set (project_HEADERS src/gui/cropbox/cropboxdialog.h
+                     src/gui/cropsphere/cropspheredialog.h
+                     src/gui/reference/referenceheightdialog.h
                      src/gui/guisubclass.h
                      src/gui/statistics/visustatistics.h
                      src/Model/modelAdjustment/allometry.h
@@ -59,7 +63,9 @@ set (project_HEADERS src/gui/reference/referenceheightdialog.h
 		     src/Model/Segment.h 
 		     src/Model/Tree.h)
 
-set (project_FORMS   src/gui/reference/reference_dialog.ui
+set (project_FORMS   src/gui/cropbox/crop_box_dialog.ui
+                     src/gui/cropsphere/crop_sphere_dialog.ui
+                     src/gui/reference/reference_dialog.ui
                      src/gui/curvature/curvature_dialog.ui
                      src/gui/pclviewer.ui
                      src/gui/eigen_dialog.ui

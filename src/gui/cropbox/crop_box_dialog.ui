@@ -202,7 +202,7 @@
     <double>0.001000000000000</double>
    </property>
    <property name="value">
-    <double>0.005000000000000</double>
+    <double>0.035000000000000</double>
    </property>
   </widget>
   <widget class="QDoubleSpinBox" name="box_y_size">
@@ -230,7 +230,7 @@
     <double>0.001000000000000</double>
    </property>
    <property name="value">
-    <double>0.005000000000000</double>
+    <double>0.035000000000000</double>
    </property>
   </widget>
   <widget class="QDoubleSpinBox" name="box_z_size">
@@ -258,7 +258,7 @@
     <double>0.001000000000000</double>
    </property>
    <property name="value">
-    <double>0.005000000000000</double>
+    <double>0.035000000000000</double>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
