@@ -62,26 +62,16 @@ namespace simpleTree
     this->depth = depth;
   }
 
-QString
+  QString
   Cylinder::toString ()
   {
       QString str;
       pcl::PointXYZ start = getStart ();
       pcl::PointXYZ end = getEnd ();
       str.append(QString::number(start.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));
-      str.append(QString::number(end.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));
+      str.append(QString::number(end.x)).append(QString(",")).append(QString::number(end.y)).append(QString(",")).append(QString::number(end.z)).append(QString(","));
       str.append(QString::number(getVolume())).append(QString(",")).append(QString::number(getRadius())).append(QString(",")).append(QString::number(getLength()));
       return str;
-//    std::string str = "";
-//    std::ostringstream stream;
-//    pcl::PointXYZ start = getStart ();
-//    pcl::PointXYZ end = getEnd ();
-//    stream << start.x << " , " << start.y << " , " << start.z;
-//    stream << " , " << end.x << " , " << end.y << " , " << end.z;
-//    stream << " , " << getVolume ();
-//    stream << " , " << getRadius ();
-//    stream << " , " << getLength ();
-//    return stream.str ();
   }
 
   pcl::PointXYZ
@@ -99,7 +89,7 @@ QString
   }
 
   float
-  Cylinder::getBoundingSphereRadius ()
+  Cylinder::getHalfSize ()
   {
     float r = getRadius ();  //length and radius are in centimeter
     float x = getLength () / 2;
@@ -107,7 +97,7 @@ QString
   }
 
   PointI
-  Cylinder::centerPoint ()
+  Cylinder::getCenterPoint ()
   {
     PointI center;
     center.x = values[0] + (values[3] / 2);
@@ -166,25 +156,13 @@ QString
         && (values[3] == cylinder2.values[3]) && (values[4] == cylinder2.values[4]) && (values[5] == cylinder2.values[5]) && (values[6] == cylinder2.values[6]));
   }
 
-//   bool
-//   Cylinder::isChildOf (const Cylinder& parent)
-//   {
-//     return ( (values[0] == (parent.values[0] + parent.values[3])) && (values[1] == (parent.values[1] + parent.values[4]))
-//         && (values[2] == (parent.values[2] + parent.values[5])));
-//   }
-// 
-//   bool
-//   Cylinder::isParentOf (const Cylinder& child)
-//   {
-//     return ( ( (values[0] + values[3]) == child.values[0]) && ( (values[1] + values[4]) == child.values[1]) && ( (values[2] + values[5]) == child.values[2]));
-//   }
 
   bool
   Cylinder::isChildOf (const Cylinder& parent)
   {
-    return (std::abs ( (values[0] - (parent.values[0] + parent.values[3])) < minDist)
-        && std::abs ( (values[1] - (parent.values[1] + parent.values[4])) < minDist)
-        && std::abs ( (values[2] - (parent.values[2] + parent.values[5])) < minDist));
+    return (std::abs  (values[0] - (parent.values[0] + parent.values[3])) < minDist
+        && std::abs  (values[1] - (parent.values[1] + parent.values[4])) < minDist
+        && std::abs  (values[2] - (parent.values[2] + parent.values[5])) < minDist);
   }
 
   bool
@@ -205,9 +183,67 @@ QString
       {
         children.push_back (cylinder);
       }
-
     }
     return children;
+  }
+
+  PointI
+  Cylinder::projectToAxis(const PointI& p)
+  {
+      pcl::ModelCoefficients::Ptr coefficients_line (new pcl::ModelCoefficients);
+      coefficients_line->values.reserve(6);
+      coefficients_line->values[0] = values[0];
+      coefficients_line->values[1] = values[1];
+      coefficients_line->values[2] = values[2];
+      coefficients_line->values[3] = values[3];
+      coefficients_line->values[4] = values[4];
+      coefficients_line->values[5] = values[5];
+
+      pcl::PointCloud<PointI>::Ptr cloud_projected (new pcl::PointCloud<PointI>);
+      pcl::PointCloud<PointI>::Ptr cloud_toProject (new pcl::PointCloud<PointI>);
+
+      cloud_toProject->push_back (p);
+
+      pcl::ProjectInliers<PointI> proj;
+      proj.setModelType (pcl::SACMODEL_LINE);
+      proj.setInputCloud (cloud_toProject);
+      proj.setModelCoefficients (coefficients_line);
+      proj.filter (*cloud_projected);
+      return cloud_projected->points[0];
+
+
+  }
+
+  float
+  Cylinder::getDistOnAxis(const PointI &point)
+  {
+      PointI point_proj = projectToAxis(point);
+
+      PointI start;
+      start.x = values[0];
+      start.y = values[1];
+      start.z = values[2];
+
+      PointI end;
+      end.x = values[0] + values[3];
+      end.y = values[1] + values[4];
+      end.z = values[2] + values[5];
+
+      float distStartToEnd = pcl::euclideanDistance<PointI, PointI> (start, end);
+      float distToStart = pcl::euclideanDistance<PointI, PointI> (start, point_proj);
+      float distToEnd = pcl::euclideanDistance<PointI, PointI> (end, point_proj);
+
+      float distOnAxis = 0;
+      if (distStartToEnd > distToStart && distStartToEnd > distToEnd)
+      {
+        distOnAxis = 0;
+      }
+      else
+      {
+        distOnAxis = std::min<float> (distToEnd, distToStart);
+      }
+
+      return distOnAxis;
   }
 
   float
@@ -216,57 +252,16 @@ QString
     Eigen::Vector4f pt (point.x, point.y, point.z, 0);
     Eigen::Vector4f pointOnLine (values[0], values[1], values[2], 0);
     Eigen::Vector4f axis (values[3], values[4], values[5], 0);
-    float dist = sqrt (pcl::sqrPointToLineDistance (pt, pointOnLine, axis));
+    float distToAxis = sqrt (pcl::sqrPointToLineDistance (pt, pointOnLine, axis));
 
-    pcl::ModelCoefficients::Ptr coefficients_line (new pcl::ModelCoefficients);
-    coefficients_line->values.push_back (values[0]);
-    coefficients_line->values.push_back (values[1]);
-    coefficients_line->values.push_back (values[2]);
-    coefficients_line->values.push_back (values[3]);
-    coefficients_line->values.push_back (values[4]);
-    coefficients_line->values.push_back (values[5]);
+    float distOnAxis = getDistOnAxis(point);
 
-    pcl::PointCloud<PointI>::Ptr cloud_projected (new pcl::PointCloud<PointI>);
-    pcl::PointCloud<PointI>::Ptr cloud_toProject (new pcl::PointCloud<PointI>);
-
-    cloud_toProject->push_back (point);
-
-    // Create the filtering object
-    pcl::ProjectInliers<PointI> proj;
-    proj.setModelType (pcl::SACMODEL_LINE);
-    proj.setInputCloud (cloud_toProject);
-    proj.setModelCoefficients (coefficients_line);
-    proj.filter (*cloud_projected);
-    PointI point_proj = cloud_projected->points[0];
-
-    PointI start;
-    start.x = values[0];
-    start.y = values[1];
-    start.z = values[2];
-    PointI end;
-    end.x = values[0] + values[3];
-    end.y = values[1] + values[4];
-    end.z = values[2] + values[5];
-
-    float distStartToEnd = pcl::euclideanDistance<PointI, PointI> (start, end);
-    float distToStart = pcl::euclideanDistance<PointI, PointI> (start, point_proj);
-    float distToEnd = pcl::euclideanDistance<PointI, PointI> (end, point_proj);
-
-    float distOnAxis = 0;
-    if (distStartToEnd > distToStart && distStartToEnd > distToEnd)
-    {
-      distOnAxis = 0;
-    }
-    else
-    {
-      distOnAxis = std::min<float> (distToEnd, distToStart);
-    }
     float multiplier = 1;
-    if (dist < values[6])
+    if (distToAxis < values[6])
     {
       multiplier = -1;
     }
-    float distToHull = dist - values[6];
+    float distToHull = distToAxis - values[6];
 
     float distToCylinder = sqrt (distToHull * distToHull + distOnAxis * distOnAxis);
     return (distToCylinder * multiplier);

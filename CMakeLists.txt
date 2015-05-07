@@ -12,7 +12,8 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/gui/cropbox/cropboxdialog.cpp
+set (project_SOURCES src/Model/childcylinderextraction.cpp
+                     src/gui/cropbox/cropboxdialog.cpp
                      src/gui/cropsphere/cropspheredialog.cpp
                      src/gui/reference/referenceheightdialog.cpp
                      src/gui/statistics/visustatistics.cpp
@@ -38,7 +39,8 @@ set (project_SOURCES src/gui/cropbox/cropboxdialog.cpp
                      src/gui/allign/allign.cpp)
 
 
-set (project_HEADERS src/gui/cropbox/cropboxdialog.h
+set (project_HEADERS src/Model/childcylinderextraction.h
+                     src/gui/cropbox/cropboxdialog.h
                      src/gui/cropsphere/cropspheredialog.h
                      src/gui/reference/referenceheightdialog.h
                      src/gui/guisubclass.h

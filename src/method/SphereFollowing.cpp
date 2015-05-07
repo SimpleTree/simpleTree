@@ -120,8 +120,8 @@ std::vector<int> SphereFollowing::indexOfPointsNearCylinder(
 		pcl::octree::OctreePointCloudSearch<PointI>& octree,
 		boost::shared_ptr<simpleTree::Cylinder>& cylinder,
 		float factorEnLarge) {
-	PointI queryPoint = cylinder->centerPoint();
-	float radius = cylinder->getBoundingSphereRadius();
+	PointI queryPoint = cylinder->getCenterPoint();
+    float radius = cylinder->getHalfSize();
 	std::vector<int> pointIdxRadiusSearch;
 	std::vector<float> pointRadiusSquaredDistance;
     octree.radiusSearch(queryPoint, radius + factorEnLarge,

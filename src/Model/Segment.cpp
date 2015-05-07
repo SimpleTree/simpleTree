@@ -68,8 +68,6 @@ namespace simpleTree
   Segment::toString ()
   {
       QString str;
-//    std::string str = "";
-//    std::ostringstream stream;
     pcl::PointXYZ start = getStart ();
     pcl::PointXYZ end = getEnd ();
     str.append(QString::number(start.x)).append(QString(",")).append(QString::number(start.y)).append(QString(",")).append(QString::number(start.z)).append(QString(","));

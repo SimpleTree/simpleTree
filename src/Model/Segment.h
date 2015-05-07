@@ -65,6 +65,8 @@ namespace simpleTree
       float
       getLength ();
 
+
+
     public:
       void
       setChildren(std::vector<boost::shared_ptr<Segment> > children);
@@ -79,7 +81,6 @@ namespace simpleTree
       void
       setDepth (float depth);
       Segment ();
-//         Segment ( boost::weak_ptr<Segment> parentSegment );
       virtual
       ~Segment ();
       std::vector<boost::shared_ptr<Cylinder> >&

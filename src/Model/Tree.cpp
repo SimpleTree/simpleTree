@@ -487,27 +487,8 @@ namespace simpleTree {
         std::vector<boost::shared_ptr<Cylinder> > cylinders = getStemCylinders ();
         for ( std::vector<boost::shared_ptr<Cylinder> >::iterator it = cylinders.begin (); it != cylinders.end (); it++ ) {
             boost::shared_ptr<Cylinder> cylinder = *it;
-	    length += cylinder->getLength ();
-//             if ( it + 1 != cylinders.end () ) {
-//                 boost::shared_ptr<Cylinder> cylinderNext = * ( it + 1 );
-//                 float x1, x2, y1, y2, z1, z2;
-//                 x1 = cylinder->values[0];
-//                 y1 = cylinder->values[1];
-//                 z1 = cylinder->values[2];
-//                 x2 = cylinderNext->values[0];
-//                 y2 = cylinderNext->values[1];
-//                 z2 = cylinderNext->values[2];
-//                 float dist = sqrt ( ( x2 - x1 ) * ( x2 - x1 ) + ( y2 - y1 ) * ( y2 - y1 ) + ( z2 - z1 ) * ( z2 - z1 ) );
-//                 length += dist;
-//             } else {
-//                 length += cylinder->getLength ();
-//             }
+            length += cylinder->getLength ();
         }
-
-        /*
-         * add the minimum height of the model;
-         */
-	std::cout << "height above ground" << getHeightAboveGround()<< std::endl;
         length += getHeightAboveGround ();
         return length;
     }
@@ -553,7 +534,6 @@ namespace simpleTree {
                 }
             }
         }
-        std::cout << tt.toc () / 1000 << " seconds for distance to model computation \n";
         return distances;
     }
 
@@ -561,8 +541,8 @@ namespace simpleTree {
     Tree::indexOfPointsNearCylinder ( pcl::octree::OctreePointCloudSearch<PointI>& octree,
                                       boost::shared_ptr<Cylinder>& cylinder,
                                       float factorEnLarge ) {
-        PointI queryPoint = cylinder->centerPoint ();
-        float radius = cylinder->getBoundingSphereRadius ();
+        PointI queryPoint = cylinder->getCenterPoint ();
+        float radius = cylinder->getHalfSize ();
         std::vector<int> pointIdxRadiusSearch;
         std::vector<float> pointRadiusSquaredDistance;
         float r = std::max<float> ( radius * factorEnLarge, minSearchRadius );
@@ -579,8 +559,8 @@ namespace simpleTree {
     Tree::pointsNearCylinder ( pcl::octree::OctreePointCloudSearch<PointI> &octree,
                                boost::shared_ptr<Cylinder> &cylinder,
                                float factorEnLarge ) {
-        PointI queryPoint = cylinder->centerPoint ();
-        float radius = cylinder->getBoundingSphereRadius ();
+        PointI queryPoint = cylinder->getCenterPoint ();
+        float radius = cylinder->getHalfSize ();
         std::vector<int> pointIdxRadiusSearch;
         std::vector<float> pointRadiusSquaredDistance;
         octree.radiusSearch ( queryPoint, radius * factorEnLarge, pointIdxRadiusSearch, pointRadiusSquaredDistance );
@@ -763,12 +743,6 @@ namespace simpleTree {
             " cylinders were improved with median method, " ).append ( QString::number ( counterNoImprovement ) ).append ( "cylinders were not improved at all.\n" );
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
-
-//	std::cout << tt.toc() / 1000 << " seconds for fit improvement" << std::endl;
-//	std::cout << counterRANSAC << " cylinders were improved by RANSAC, "
-//			<< counterMedian << " cylinders were improved with median moethod, "
-//			<< counterNoImprovement << " cylinders were not improved at all."
-//			<< std::endl;
     }
 
     void
