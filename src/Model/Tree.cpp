@@ -49,14 +49,20 @@ namespace simpleTree {
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
         setCylinders ( cylinders );
+        child_Cylinder_Extraction.reset(new ChildCylinderExtraction(this->cylinders));
         Cylinder rootCylinder = cylinders.at ( 0 );
         rootSegment = boost::make_shared<Segment> ();
         rootSegment->addCylinder ( rootCylinder );
+
         buildTree ( rootSegment, getRootCylinder () );
+        //std::cout << this->cylinders.size() << "vor Lösungsch" << std::endl;
         setCylinders ();
+        //std::cout << this->cylinders.size() << "nach Lösungsch" << std::endl;
+        child_Cylinder_Extraction.reset(new ChildCylinderExtraction(this->cylinders));
         rootSegment = boost::make_shared<Segment> ();
         rootSegment->addCylinder ( rootCylinder );
         buildTree ( rootSegment, getRootCylinder () );
+        reorderTree();
         mergeCylinders ();
         improveBranchJunctions ();
         improveFit ();
@@ -987,23 +993,76 @@ namespace simpleTree {
     void
     Tree::buildTree ( boost::shared_ptr<Segment> currentSegment,
                       boost::shared_ptr<Cylinder> currentCylinder ) {
-        //std::cout << currentCylinder->values[2] << std::endl;
-        //std::cout << "bu hao!!!!" << std::endl;
-        std::vector<Cylinder> children = currentCylinder->getChildren ( cylinders );
-        if ( children.size () == 1 ) {
-            Cylinder child = children.at ( 0 );
-            currentSegment->addCylinder ( child );
-            buildTree ( currentSegment, boost::make_shared<Cylinder> ( child ) );
-        } else if ( children.size () > 1 ) {
-            for ( std::vector<Cylinder>::iterator it = children.begin (); it != children.end (); it++ ) {
-                Cylinder child = *it;
-                boost::shared_ptr<Segment> childSegment = boost::make_shared<Segment> ();
-                childSegment->addCylinder ( child );
-                childSegment->connectWithParent ( currentSegment );
-                buildTree ( childSegment, boost::make_shared<Cylinder> ( child ) );
 
+//          std::cout << "----------------" << std::endl;
+
+//        //if(this->cylinders.size()>11)
+//        {
+//            std::vector<Cylinder>  children = child_Cylinder_Extraction->getChildren(currentCylinder);
+
+
+//            if ( children.size () == 1 ) {
+//                Cylinder child = (children.at ( 0 ));
+//                currentSegment->addCylinder ( child );
+//                buildTree ( currentSegment, boost::make_shared<Cylinder> ( child ) );
+//            } else if ( children.size () > 1 ) {
+//                for ( std::vector<Cylinder>::iterator it = children.begin (); it != children.end (); it++ ) {
+//                    Cylinder child = (*it);
+//                    boost::shared_ptr<Segment> childSegment = boost::make_shared<Segment> ();
+//                    childSegment->addCylinder ( child );
+//                    childSegment->connectWithParent ( currentSegment );
+//                    buildTree ( childSegment, boost::make_shared<Cylinder> ( child ) );
+
+//                }
+//            }
+
+//            std::cout << children.size() << " children mit kdtree"<<std::endl;
+//            for(size_t i = 0; i < children.size() ; i++)
+//            {
+//                Cylinder cylinder = children.at(i);
+//                std::cout << cylinder.toString().toStdString() << std::endl;
+//            }
+//        }
+       // else
+        {
+            std::vector<Cylinder>  children = child_Cylinder_Extraction->getChildren(currentCylinder);
+            //std::vector<Cylinder> children = currentCylinder->getChildren ( cylinders );
+//            if(children2.size()!=children.size())
+//            {
+//                std::cout << "fopooooasds" << std::endl;
+//            }
+//            else
+//            {
+//            //std::cout << children.size()<< "children ohne kdtree"<< std::endl;
+//            for(size_t i = 0; i < children.size() ; i++)
+//            {
+//                Cylinder cylinder = children.at(i);
+//                Cylinder cylinder2 = children2.at(i);
+//                std::cout << "---------------" <<std::endl;
+//                std::cout << cylinder.toString().toStdString() << std::endl;
+//                std::cout << cylinder2.toString().toStdString() << std::endl;
+////                if(!(cylinder==cylinder2))
+////                {
+////                    //std::cout << "baaaaaaa" << std::endl;
+////                }
+//                //std::cout << cylinder.toString().toStdString() << std::endl;
+//            }
+//            }
+            if ( children.size () == 1 ) {
+                Cylinder child = children.at ( 0 );
+                currentSegment->addCylinder ( child );
+                buildTree ( currentSegment, boost::make_shared<Cylinder> ( child ) );
+            } else if ( children.size () > 1 ) {
+                for ( std::vector<Cylinder>::iterator it = children.begin (); it != children.end (); it++ ) {
+                    Cylinder child = *it;
+                    boost::shared_ptr<Segment> childSegment = boost::make_shared<Segment> ();
+                    childSegment->addCylinder ( child );
+                    childSegment->connectWithParent ( currentSegment );
+                    buildTree ( childSegment, boost::make_shared<Cylinder> ( child ) );
+                }
             }
         }
+
 
     }
 

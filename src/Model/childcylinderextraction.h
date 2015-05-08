@@ -10,21 +10,40 @@
 #include "Tree.h"
 #include "Cylinder.h"
 
+typedef pcl::PointXYZINormal PointI;
+typedef pcl::PointCloud<PointI> PointCloudI;
+
 namespace simpleTree {
 class ChildCylinderExtraction
 {
 private:
-    boost::shared_ptr<Tree> tree;
-    std::vector<boost::shared_ptr<Cylinder> > cylinders;
-    boost::shared_ptr<pcl::KdTreeFLANN<PointI> > kdtree;
-    int knn = 10;
+    //boost::shared_ptr<Tree> tree;
+    std::vector<Cylinder > cylinders;
+    boost::shared_ptr<PointCloudI> cloud_cylinder_centers;
 
+    boost::shared_ptr<pcl::KdTreeFLANN<PointI> > kdtree;
+    //int knn = 100;
+    std::vector<int> pointIdxKnnSearch;
+    std::vector<float> pointIdxKnnSquaredDistance;
     pcl::PointCloud<PointI>
     generateCloud();
 
+    void
+    fillKdTree();
+
+    float radius = std::numeric_limits<float>::min();
+
+
+
+
+
+
 
 public:
-    ChildCylinderExtraction(boost::shared_ptr<Tree> tree);
+    ChildCylinderExtraction(std::vector<Cylinder>  & cylinders);
+
+    std::vector<Cylinder>
+    getChildren (boost::shared_ptr<Cylinder>  cylinder);
 };
 
 }
