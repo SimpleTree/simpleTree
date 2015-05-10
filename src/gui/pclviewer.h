@@ -268,6 +268,15 @@ public:
 
 public slots:
     void
+    computeQuercus();
+
+    void
+    computePineFast();
+    void
+    computePine();
+    void
+    computeEry();
+    void
     computeAustralia();
     void
     curvature_dialog();

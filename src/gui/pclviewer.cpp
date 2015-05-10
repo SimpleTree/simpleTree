@@ -185,6 +185,10 @@ ui ( new Ui::PCLViewer ) {
     connect ( ui->icp_button,SIGNAL ( clicked() ),this,SLOT ( compute_ICP() ) );
     connect ( ui->eigen_value_button, SIGNAL (clicked()), this, SLOT(curvature_dialog()));
     connect ( ui->australia_button, SIGNAL(clicked()),this, SLOT(computeAustralia()));
+    connect ( ui->ery_button, SIGNAL(clicked()),this, SLOT(computeEry()));
+    connect ( ui->pine_button, SIGNAL(clicked()),this, SLOT(computePine()));
+    connect ( ui->pine_button_fast, SIGNAL(clicked()),this, SLOT(computePineFast()));
+    connect ( ui->quercus_button, SIGNAL(clicked()),this, SLOT(computeQuercus()));
     viewer->resetCamera ();
     computeBoundingBox ();
     pcl::visualization::PointCloudColorHandlerRGBAField<PointD> rgba ( cloud );
@@ -678,6 +682,1249 @@ PCLViewer::computeAustralia()
     writeConsole(timestr);
 
 }
+
+void
+PCLViewer::computeQuercus()
+{
+        pcl::console::TicToc tt2;
+        tt2.tic();
+    method_coefficients.name = "Quercus";
+    method_coefficients.sphere_radius_multiplier = 3.0f;
+    method_coefficients.epsilon_cluster_branch = 0.02f;
+    method_coefficients.epsilon_cluster_stem = 0.03f;
+    method_coefficients.epsilon_sphere = 0.02f;
+    method_coefficients.minPts_ransac_stem = 500;
+    method_coefficients.minPts_ransac_branch = 1111200;
+    method_coefficients.minPts_cluster_stem = 12;
+    method_coefficients.minPts_cluster_branch = 3;
+    method_coefficients.min_radius_sphere_stem = 0.07f;
+    method_coefficients.min_radius_sphere_branch = 0.025f;
+            tt.tic ();
+    QString error;
+    QDir dir ( "../data/quercus" );
+    std::cout << dir.absolutePath().toStdString();
+    QStringList filters;
+    filters << "*.pcd" ;
+    dir.setNameFilters ( filters );
+    dir.setFilter ( QDir::Files );
+    QStringList files = dir.entryList ();
+    for ( int i = 0; i < files.size (); i++ ) {
+        dir = QString("../data/quercus");
+        QString file_abs = dir.absolutePath().append ( "/" ).append ( files.at ( i ) );
+        std::cout << file_abs.toStdString();
+        int index = file_abs.lastIndexOf ( "/" );
+        int size = file_abs.size ();
+        int position = size - index - 1;
+        QString file = file_abs.right ( position );
+        getControl ()->setTreeID ( file.toStdString () );
+        std::string file_str = file_abs.toStdString ();
+        std::string abort;
+        std::cout << file_str << std::endl;
+        QCoreApplication::processEvents ();
+        if ( file_str != abort ) {
+            ImportPCD import ( file_str, control );
+            getControl ()->setCloudPtr( import.getCloud () );
+            plotIntensityHist ();
+        }
+
+        {
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::VoxelGrid<PointI> sor;
+            QString str = "";
+
+            str.append ( "Voxel grid filtering starts.\n, all points inside a voxel with " ).append ( QString::number ( 0,0035 ) ).append (
+                " side length are merged to one point.\n" );
+            writeConsole ( str );
+
+            VoxelGridFilter voxel(0.0035,1);
+            voxel.setInput(getControl()->getCloudPtr());
+            voxel.voxel_grid_filter();
+            cloud_filtered = voxel.getOutput();
+            {
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+               writeConsole ( QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            }
+
+            getControl ()->setCloudPtr ( cloud_filtered );
+        }
+
+
+
+
+
+//        curvature.reset(new CurvatureDialog(this));
+//        curvature->setViewer(shared_from_this());
+//        curvature->init();
+//        curvature->dialog->PCA1Max->setValue(45);
+//        curvature->dialog->PCA2Min->setValue(55);
+//        curvature->dialog->PCA3Max->setValue(45);
+//        curvature->save();
+        {
+            QString str = "";
+
+            str.append ( "Statistical outlier removal starts.\n All points whith a mean distance larger than " ).append ( QString::number ( 0.5 ) ).append (
+                " times the average distance to its  " ).append ( QString::number ( 30 ) ).append ( " nearest neighbors are deleted.\n" );
+            writeConsole ( str );
+
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::StatisticalOutlierRemoval<PointI> sor;
+            sor.setInputCloud ( getControl ()->getCloudPtr () );
+            sor.setMeanK ( 30 );
+            sor.setStddevMulThresh ( 0.5 );
+            sor.filter ( *cloud_filtered );
+
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+            writeConsole (
+                QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                    QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        }
+
+        {
+        euclidean_clustering_minsize = 100;
+        euclidean_clustering_tolerance = 0.02;
+        euclidean_clustering_clusternumber = 1;
+        std::vector<pcl::PointIndices> cluster_indices;
+        pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> );
+        tree->setInputCloud ( getControl ()->getCloudPtr () );
+        pcl::EuclideanClusterExtraction<PointI> ec;
+        ec.setClusterTolerance ( euclidean_clustering_tolerance ); // 2cm
+        ec.setMinClusterSize ( euclidean_clustering_minsize );
+        ec.setSearchMethod ( tree );
+        ec.setInputCloud ( getControl ()->getCloudPtr () );
+        ec.extract ( cluster_indices );
+        PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+        if ( cluster_indices.size () > 0 ) {
+            int i = std::min<int> ( euclidean_clustering_clusternumber, cluster_indices.size () );
+            if(euclidean_clustering_clusternumber == 1)
+            {
+                pcl::PointIndices largestCluster = cluster_indices.at(0);
+                int largest_cluster_size = largestCluster.indices.size();
+                int size = largest_cluster_size;
+                float center_z = std::numeric_limits<float>::max();
+                int j = 0;
+                while(j<cluster_indices.size()&&cluster_indices.at(j).indices.size()>largest_cluster_size/3)
+                {
+                    PointCloudI::Ptr tempCloud (new PointCloudI);
+                    largestCluster= cluster_indices.at ( j );
+                    for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                        tempCloud->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+                    Eigen::Vector4f xyz_centroid;
+                    pcl::compute3DCentroid<PointI> (*tempCloud, xyz_centroid);
+                    float z  = xyz_centroid[2];
+                    if(z<center_z)
+                    {
+                        center_z = z;
+                        cloud_filtered = tempCloud;
+                    }
+                    j++;
+
+                }
+            }
+            else
+            {
+            for ( int j = 0; j < i; j++ ) {
+                pcl::PointIndices largestCluster;
+                largestCluster= cluster_indices.at ( j );
+                for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                    cloud_filtered->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+            }
+            }
+        }
+
+        int size_after = cloud_filtered->points.size ();
+        cloud_filtered->width = size_after;
+        cloud_filtered->height = 1;
+
+
+        getControl ()->setCloudPtr ( cloud_filtered );
+        }
+
+        {
+            QString str = "";
+
+            str.append ( "Statistical outlier removal starts.\n All points whith a mean distance larger than " ).append ( QString::number ( 1 ) ).append (
+                " times the average distance to its  " ).append ( QString::number ( 30 ) ).append ( " nearest neighbors are deleted.\n" );
+            writeConsole ( str );
+
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::StatisticalOutlierRemoval<PointI> sor;
+            sor.setInputCloud ( getControl ()->getCloudPtr () );
+            sor.setMeanK ( 30 );
+            sor.setStddevMulThresh ( 0.5 );
+            sor.filter ( *cloud_filtered );
+
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+            writeConsole (
+                QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                    QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        }
+
+        {
+        euclidean_clustering_minsize = 100;
+        euclidean_clustering_tolerance = 0.02;
+        euclidean_clustering_clusternumber = 1;
+        std::vector<pcl::PointIndices> cluster_indices;
+        pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> );
+        tree->setInputCloud ( getControl ()->getCloudPtr () );
+        pcl::EuclideanClusterExtraction<PointI> ec;
+        ec.setClusterTolerance ( euclidean_clustering_tolerance ); // 2cm
+        ec.setMinClusterSize ( euclidean_clustering_minsize );
+        ec.setSearchMethod ( tree );
+        ec.setInputCloud ( getControl ()->getCloudPtr () );
+        ec.extract ( cluster_indices );
+        PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+        if ( cluster_indices.size () > 0 ) {
+            int i = std::min<int> ( euclidean_clustering_clusternumber, cluster_indices.size () );
+            if(euclidean_clustering_clusternumber == 1)
+            {
+                pcl::PointIndices largestCluster = cluster_indices.at(0);
+                int largest_cluster_size = largestCluster.indices.size();
+                int size = largest_cluster_size;
+                float center_z = std::numeric_limits<float>::max();
+                int j = 0;
+                while(j<cluster_indices.size()&&cluster_indices.at(j).indices.size()>largest_cluster_size/3)
+                {
+                    PointCloudI::Ptr tempCloud (new PointCloudI);
+                    largestCluster= cluster_indices.at ( j );
+                    for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                        tempCloud->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+                    Eigen::Vector4f xyz_centroid;
+                    pcl::compute3DCentroid<PointI> (*tempCloud, xyz_centroid);
+                    float z  = xyz_centroid[2];
+                    if(z<center_z)
+                    {
+                        center_z = z;
+                        cloud_filtered = tempCloud;
+                    }
+                    j++;
+
+                }
+            }
+            else
+            {
+            for ( int j = 0; j < i; j++ ) {
+                pcl::PointIndices largestCluster;
+                largestCluster= cluster_indices.at ( j );
+                for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                    cloud_filtered->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+            }
+            }
+        }
+
+        int size_after = cloud_filtered->points.size ();
+        cloud_filtered->width = size_after;
+        cloud_filtered->height = 1;
+
+
+        getControl ()->setCloudPtr ( cloud_filtered );
+        }
+
+{
+        float  height = 0.1;
+        PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
+        Eigen::Vector4f min_pt;
+        Eigen::Vector4f max_pt;
+        pcl::getMinMax3D ( *cloud, min_pt, max_pt );
+        float oldMinHeight = ( min_pt[2] );
+        for ( size_t i = 0; i < cloud->points.size (); i++ ) {
+            cloud->points.at ( i ).z = cloud->points.at ( i ).z + height - oldMinHeight;
+        }
+        getControl ()->setCloudPtr ( cloud );
+
+
+}
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+
+        ui->qvtkWidget->update ();
+        getControl ()->getGuiPtr ()->writeConsole ( "\n" );
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        this->updateProgress ( 0 );
+        QCoreApplication::processEvents ();
+        computeNormals ( getControl ()->getCloudPtr () );
+        getControl ()->getGuiPtr ()->updateProgress ( 40 );
+        QCoreApplication::processEvents ();
+        CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
+        getControl ()->setCurvaturePtr ( principalCurvatures );
+        getControl ()->getGuiPtr ()->updateProgress ( 70 );
+        QCoreApplication::processEvents ();
+        {
+        //    std::ostringstream stream;
+          //  stream << "../data/" << getControl()->getTreeID() << ".asc";
+
+        QString str ("../data/");
+        str.append(QString::fromStdString(getControl()->getTreeId()));
+        pcl::io::savePCDFileASCII (str.toStdString(), *getControl()->getCloudPtr());
+
+        }
+        {
+            PointCloudI::Ptr cloud_filtered (new PointCloudI);
+            pcl::VoxelGrid<PointI> sor;
+            sor.setInputCloud (getControl()->getCloudPtr());
+            sor.setLeafSize (0.001f, 0.001f, 0.001f);
+            sor.filter (*cloud_filtered);
+            getControl()->setCloudPtr(cloud_filtered);
+        }
+        {
+
+
+        std::vector<float> e1;
+        std::vector<float> e2;
+        std::vector<float> e3;
+        std::vector<bool> isStem;
+
+        EigenValueEstimator es ( getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
+                std::cout << "es done" <<std::endl;
+        getControl()->getGuiPtr()->writeConsole("test");
+        StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
+                std::cout << "stem detect done" <<std::endl;
+        getControl ()->setE1 ( e1 );
+        getControl ()->setE2 ( e2 );
+        getControl ()->setE3 ( e3 );
+        getControl ()->setIsStem ( detect.getStemPtsNew () );
+        getControl ()->getGuiPtr ()->updateProgress ( 100 );
+        QString str;
+        float f = tt.toc () / 1000;
+        str.append ( "Computed PCA analysis in  " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        QCoreApplication::processEvents ();
+        if ( getControl ()->getCloudPtr () != 0 ) {
+            pcl::console::TicToc tt;
+            tt.tic ();
+            QString str = "\n";
+            writeConsole ( str );
+
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            updateProgress ( 0 );
+            QString str2 = coeff_ptr->struct_to_qstring ( method_coefficients );
+            writeConsole ( str2 );
+            QCoreApplication::processEvents ();
+                                    std::cout << "stem detect done 1" <<std::endl;
+            SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), control, 1, method_coefficients );
+            writeConsole ( str );
+            updateProgress ( 50 );
+            QCoreApplication::processEvents ();
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                        std::cout << "stem detect done 2" <<std::endl;
+            tt.tic ();
+            writeConsole ( str );
+            QCoreApplication::processEvents ();
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            QCoreApplication::processEvents ();
+            boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), this->getControl ()->getCloudPtr (),
+                    this->getControl ()->getTreeID (), this->control );
+
+
+                        simpleTree::Allometry allom;
+                        allom.setTree(tree);
+                        allom.setCoefficients(2.79,3.82);
+                        allom.improveTree();
+            float f = tt.toc () / 1000;
+
+            str.append ( "Done tree structure in " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+            writeConsole ( str );
+            updateProgress ( 100 );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            getControl ()->setTreePtr ( tree );
+            error.append(QString::fromStdString(getControl ()->getTreeID ())).append(",").append(QString::number(tree->getVolume())).append(",").append(QString::number(tree->getDBH())).append(",").append(QString::number(tree->getBaseDiameter())).append("\n");
+        }
+
+        ui->qvtkWidget->update ();
+        if ( getControl ()->getTreePtr () != 0 ) {
+            ExportPly tree_ply ( getControl ()->getTreePtr ()->getCylinders (), getControl ()->getTreeID (), "tree" );
+            WriteCSV write ( getControl ()->getTreePtr (), getControl ()->getTreeID () );
+        }
+std::cout << "stem detect done 4" <<std::endl;
+        ui->qvtkWidget->update ();
+        }
+    }
+    writeConsole(error);
+    QString timestr("running complete folder took ");
+    timestr.append(QString::number(tt2.toc()/1000)).append(QString(" seconds.\n"));
+    writeConsole(timestr);
+
+}
+
+void
+PCLViewer::computePine()
+{
+        pcl::console::TicToc tt2;
+        tt2.tic();
+    method_coefficients.name = "Pine";
+    method_coefficients.sphere_radius_multiplier = 3.0f;
+    method_coefficients.epsilon_cluster_branch = 0.02f;
+    method_coefficients.epsilon_cluster_stem = 0.03f;
+    method_coefficients.epsilon_sphere = 0.02f;
+    method_coefficients.minPts_ransac_stem = 200;
+    method_coefficients.minPts_ransac_branch = 1111200;
+    method_coefficients.minPts_cluster_stem = 12;
+    method_coefficients.minPts_cluster_branch = 3;
+    method_coefficients.min_radius_sphere_stem = 0.07f;
+    method_coefficients.min_radius_sphere_branch = 0.025f;
+            tt.tic ();
+    QString error;
+    QDir dir ( "../data/pine" );
+    std::cout << dir.absolutePath().toStdString();
+    QStringList filters;
+    filters << "*.pcd" ;
+    dir.setNameFilters ( filters );
+    dir.setFilter ( QDir::Files );
+    QStringList files = dir.entryList ();
+    for ( int i = 0; i < files.size (); i++ ) {
+        dir = QString("../data/pine");
+        QString file_abs = dir.absolutePath().append ( "/" ).append ( files.at ( i ) );
+        std::cout << file_abs.toStdString();
+        int index = file_abs.lastIndexOf ( "/" );
+        int size = file_abs.size ();
+        int position = size - index - 1;
+        QString file = file_abs.right ( position );
+        getControl ()->setTreeID ( file.toStdString () );
+        std::string file_str = file_abs.toStdString ();
+        std::string abort;
+        std::cout << file_str << std::endl;
+        QCoreApplication::processEvents ();
+        if ( file_str != abort ) {
+            ImportPCD import ( file_str, control );
+            getControl ()->setCloudPtr( import.getCloud () );
+            plotIntensityHist ();
+        }
+
+        {
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::VoxelGrid<PointI> sor;
+            QString str = "";
+
+            str.append ( "Voxel grid filtering starts.\n, all points inside a voxel with " ).append ( QString::number ( voxel_grid_size ) ).append (
+                " side length are merged to one point.\n" );
+            writeConsole ( str );
+
+            VoxelGridFilter voxel(0.005,1);
+            voxel.setInput(getControl()->getCloudPtr());
+            voxel.voxel_grid_filter();
+            cloud_filtered = voxel.getOutput();
+            {
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+               writeConsole ( QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            }
+
+        //    sor.setInputCloud ( getControl ()->getCloudPtr () );
+        //    sor.setLeafSize ( voxel_grid_size, voxel_grid_size, voxel_grid_size );
+        //    sor.filter ( *cloud_filtered );
+
+        //    int size_before = getControl ()->getCloudPtr ()->points.size ();
+        //    int size_after = cloud_filtered->points.size ();
+        //    float a = size_before;
+        //    float b = size_after;
+        //    float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+        }
+
+//        {
+//            QString str = "";
+//            str.append ( "Intensity outlier removal starts witn minimum Intensity = " ).append ( QString::number ( intensity_outlier_minIntens ) ).append (
+//                " and maximum Intensity = " ).append ( QString::number ( intensity_outlier_maxIntens ) ).append ( "\n" );
+//            writeConsole ( str );
+//            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+
+//            pcl::ConditionAnd<PointI>::Ptr intens_cond ( new pcl::ConditionAnd<PointI> () );
+//            intens_cond->addComparison (
+//                pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::GT, 160 ) ) );
+//            intens_cond->addComparison (
+//                pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::LT, 255 ) ) );
+//            // build the filter
+//        //		    pcl::ConditionalRemoval<PointI> condrem (intens_cond);
+//            pcl::ConditionalRemoval<PointI> condrem;
+//            condrem.setCondition ( intens_cond );
+//            condrem.setInputCloud ( getControl ()->getCloudPtr () );
+//            //condrem.setKeepOrganized(true);
+//            // apply filter
+//            condrem.filter ( *cloud_filtered );
+
+//            int size_before = getControl ()->getCloudPtr ()->points.size ();
+//            int size_after = cloud_filtered->points.size ();
+//            float a = size_before;
+//            float b = size_after;
+//            float percentage = ( 100.0f * b ) / ( a );
+//            getControl ()->setCloudPtr ( cloud_filtered );
+//            writeConsole (
+//                QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+//                    QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+//            }
+
+
+
+
+        curvature.reset(new CurvatureDialog(this));
+        curvature->setViewer(shared_from_this());
+        curvature->init();
+        curvature->dialog->PCA1Max->setValue(45);
+        curvature->dialog->PCA2Min->setValue(55);
+        curvature->dialog->PCA3Max->setValue(45);
+        curvature->save();
+        {
+            QString str = "";
+
+            str.append ( "Statistical outlier removal starts.\n All points whith a mean distance larger than " ).append ( QString::number ( statistical_outlier_stdmult ) ).append (
+                " times the average distance to its  " ).append ( QString::number ( statistical_outlier_knn ) ).append ( " nearest neighbors are deleted.\n" );
+            writeConsole ( str );
+
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::StatisticalOutlierRemoval<PointI> sor;
+            sor.setInputCloud ( getControl ()->getCloudPtr () );
+            sor.setMeanK ( 30 );
+            sor.setStddevMulThresh ( 0.9 );
+            sor.filter ( *cloud_filtered );
+
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+            writeConsole (
+                QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                    QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        }
+
+
+        euclidean_clustering_minsize = 100;
+        euclidean_clustering_tolerance = 0.05;
+        euclidean_clustering_clusternumber = 1;
+
+
+
+
+
+
+        std::vector<pcl::PointIndices> cluster_indices;
+        pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> );
+        tree->setInputCloud ( getControl ()->getCloudPtr () );
+        pcl::EuclideanClusterExtraction<PointI> ec;
+        ec.setClusterTolerance ( euclidean_clustering_tolerance ); // 2cm
+        ec.setMinClusterSize ( euclidean_clustering_minsize );
+        ec.setSearchMethod ( tree );
+        ec.setInputCloud ( getControl ()->getCloudPtr () );
+        ec.extract ( cluster_indices );
+        PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+        if ( cluster_indices.size () > 0 ) {
+            int i = std::min<int> ( euclidean_clustering_clusternumber, cluster_indices.size () );
+            if(euclidean_clustering_clusternumber == 1)
+            {
+                pcl::PointIndices largestCluster = cluster_indices.at(0);
+                int largest_cluster_size = largestCluster.indices.size();
+                int size = largest_cluster_size;
+                float center_z = std::numeric_limits<float>::max();
+                int j = 0;
+                while(j<cluster_indices.size()&&cluster_indices.at(j).indices.size()>largest_cluster_size/3)
+                {
+                    PointCloudI::Ptr tempCloud (new PointCloudI);
+                    largestCluster= cluster_indices.at ( j );
+                    for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                        tempCloud->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+                    Eigen::Vector4f xyz_centroid;
+                    pcl::compute3DCentroid<PointI> (*tempCloud, xyz_centroid);
+                    float z  = xyz_centroid[2];
+                    if(z<center_z)
+                    {
+                        center_z = z;
+                        cloud_filtered = tempCloud;
+                    }
+                    j++;
+
+                }
+            }
+            else
+            {
+            for ( int j = 0; j < i; j++ ) {
+                pcl::PointIndices largestCluster;
+                largestCluster= cluster_indices.at ( j );
+                for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                    cloud_filtered->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+            }
+            }
+        }
+
+        int size_after = cloud_filtered->points.size ();
+        cloud_filtered->width = size_after;
+        cloud_filtered->height = 1;
+
+
+        getControl ()->setCloudPtr ( cloud_filtered );
+
+{
+        float  height = 0.1;
+        PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
+        Eigen::Vector4f min_pt;
+        Eigen::Vector4f max_pt;
+        pcl::getMinMax3D ( *cloud, min_pt, max_pt );
+        float oldMinHeight = ( min_pt[2] );
+        for ( size_t i = 0; i < cloud->points.size (); i++ ) {
+            cloud->points.at ( i ).z = cloud->points.at ( i ).z + height - oldMinHeight;
+        }
+        getControl ()->setCloudPtr ( cloud );
+
+
+}
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+
+        ui->qvtkWidget->update ();
+        getControl ()->getGuiPtr ()->writeConsole ( "\n" );
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        this->updateProgress ( 0 );
+        QCoreApplication::processEvents ();
+        computeNormals ( getControl ()->getCloudPtr () );
+        getControl ()->getGuiPtr ()->updateProgress ( 40 );
+        QCoreApplication::processEvents ();
+        CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
+        getControl ()->setCurvaturePtr ( principalCurvatures );
+        getControl ()->getGuiPtr ()->updateProgress ( 70 );
+        QCoreApplication::processEvents ();
+        {
+        //    std::ostringstream stream;
+          //  stream << "../data/" << getControl()->getTreeID() << ".asc";
+
+        QString str ("../data/");
+        str.append(QString::fromStdString(getControl()->getTreeId()));
+        pcl::io::savePCDFileASCII (str.toStdString(), *getControl()->getCloudPtr());
+
+        }
+        {
+            PointCloudI::Ptr cloud_filtered (new PointCloudI);
+            pcl::VoxelGrid<PointI> sor;
+            sor.setInputCloud (getControl()->getCloudPtr());
+            sor.setLeafSize (0.001f, 0.001f, 0.001f);
+            sor.filter (*cloud_filtered);
+            getControl()->setCloudPtr(cloud_filtered);
+        }
+        {
+
+
+        std::vector<float> e1;
+        std::vector<float> e2;
+        std::vector<float> e3;
+        std::vector<bool> isStem;
+
+        EigenValueEstimator es ( getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
+                std::cout << "es done" <<std::endl;
+        getControl()->getGuiPtr()->writeConsole("test");
+        StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
+                std::cout << "stem detect done" <<std::endl;
+        getControl ()->setE1 ( e1 );
+        getControl ()->setE2 ( e2 );
+        getControl ()->setE3 ( e3 );
+        getControl ()->setIsStem ( detect.getStemPtsNew () );
+        getControl ()->getGuiPtr ()->updateProgress ( 100 );
+        QString str;
+        float f = tt.toc () / 1000;
+        str.append ( "Computed PCA analysis in  " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        QCoreApplication::processEvents ();
+        if ( getControl ()->getCloudPtr () != 0 ) {
+            pcl::console::TicToc tt;
+            tt.tic ();
+            QString str = "\n";
+            writeConsole ( str );
+
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            updateProgress ( 0 );
+            QString str2 = coeff_ptr->struct_to_qstring ( method_coefficients );
+            writeConsole ( str2 );
+            QCoreApplication::processEvents ();
+                                    std::cout << "stem detect done 1" <<std::endl;
+            SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), control, 1, method_coefficients );
+            writeConsole ( str );
+            updateProgress ( 50 );
+            QCoreApplication::processEvents ();
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                        std::cout << "stem detect done 2" <<std::endl;
+            tt.tic ();
+            writeConsole ( str );
+            QCoreApplication::processEvents ();
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            QCoreApplication::processEvents ();
+            boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), this->getControl ()->getCloudPtr (),
+                    this->getControl ()->getTreeID (), this->control );
+
+//            simpleTree::Allometry allom;
+//            allom.setTree(tree);
+//            allom.improveTree();
+//            tree->improveFit();
+//                        simpleTree::Allometry allom;
+//                        allom.setTree(tree);
+//                        allom.setCoefficientsallom.improveTree();(2.79,3.82);
+
+            float f = tt.toc () / 1000;
+
+            str.append ( "Done tree structure in " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+            writeConsole ( str );
+            updateProgress ( 100 );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            getControl ()->setTreePtr ( tree );
+            error.append(QString::fromStdString(getControl ()->getTreeID ())).append(",").append(QString::number(tree->getVolume())).append(",").append(QString::number(tree->getDBH())).append(",").append(QString::number(tree->getBaseDiameter())).append("\n");
+        }
+
+        ui->qvtkWidget->update ();
+        if ( getControl ()->getTreePtr () != 0 ) {
+            ExportPly tree_ply ( getControl ()->getTreePtr ()->getCylinders (), getControl ()->getTreeID (), "tree" );
+            WriteCSV write ( getControl ()->getTreePtr (), getControl ()->getTreeID () );
+        }
+std::cout << "stem detect done 4" <<std::endl;
+        ui->qvtkWidget->update ();
+        }
+    }
+    writeConsole(error);
+    QString timestr("running complete folder took ");
+    timestr.append(QString::number(tt2.toc()/1000)).append(QString(" seconds.\n"));
+    writeConsole(timestr);
+
+}
+
+void
+PCLViewer::computePineFast()
+{
+
+            pcl::console::TicToc tt2;
+            tt2.tic();
+        method_coefficients.name = "Pine";
+        method_coefficients.sphere_radius_multiplier = 3.0f;
+        method_coefficients.epsilon_cluster_branch = 0.025f;
+        method_coefficients.epsilon_cluster_stem = 0.035;
+        method_coefficients.epsilon_sphere = 0.02f;
+        method_coefficients.minPts_ransac_stem = 200;
+        method_coefficients.minPts_ransac_branch = 1111200;
+        method_coefficients.minPts_cluster_stem = 3;
+        method_coefficients.minPts_cluster_branch = 5;
+        method_coefficients.min_radius_sphere_stem = 0.07f;
+        method_coefficients.min_radius_sphere_branch = 0.025f;
+                tt.tic ();
+        QString error;
+        QDir dir ( "../data/pine/manual" );
+        std::cout << dir.absolutePath().toStdString();
+        QStringList filters;
+        filters << "*.pcd" ;
+        dir.setNameFilters ( filters );
+        dir.setFilter ( QDir::Files );
+        QStringList files = dir.entryList ();
+        for ( int i = 0; i < files.size (); i++ ) {
+            dir = QString("../data/pine/manual");
+            QString file_abs = dir.absolutePath().append ( "/" ).append ( files.at ( i ) );
+            std::cout << file_abs.toStdString();
+            int index = file_abs.lastIndexOf ( "/" );
+            int size = file_abs.size ();
+            int position = size - index - 1;
+            QString file = file_abs.right ( position );
+            getControl ()->setTreeID ( file.toStdString () );
+            std::string file_str = file_abs.toStdString ();
+            std::string abort;
+            std::cout << file_str << std::endl;
+            QCoreApplication::processEvents ();
+            if ( file_str != abort ) {
+                ImportPCD import ( file_str, control );
+                getControl ()->setCloudPtr( import.getCloud () );
+                plotIntensityHist ();
+            }
+
+
+
+            {
+
+
+            std::vector<float> e1;
+            std::vector<float> e2;
+            std::vector<float> e3;
+            std::vector<bool> isStem;
+
+            EigenValueEstimator es ( getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
+                    std::cout << "es done" <<std::endl;
+            getControl()->getGuiPtr()->writeConsole("test");
+            StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
+                    std::cout << "stem detect done" <<std::endl;
+            getControl ()->setE1 ( e1 );
+            getControl ()->setE2 ( e2 );
+            getControl ()->setE3 ( e3 );
+            getControl ()->setIsStem ( detect.getStemPtsNew () );
+            getControl ()->getGuiPtr ()->updateProgress ( 100 );
+            QString str;
+            float f = tt.toc () / 1000;
+            str.append ( "Computed PCA analysis in  " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            QCoreApplication::processEvents ();
+            if ( getControl ()->getCloudPtr () != 0 ) {
+                pcl::console::TicToc tt;
+                tt.tic ();
+                QString str = "\n";
+                writeConsole ( str );
+
+                getControl ()->getGuiPtr ()->writeConsole (
+                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                updateProgress ( 0 );
+                QString str2 = coeff_ptr->struct_to_qstring ( method_coefficients );
+                writeConsole ( str2 );
+                QCoreApplication::processEvents ();
+                                        std::cout << "stem detect done 1" <<std::endl;
+                SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), control, 1, method_coefficients );
+                writeConsole ( str );
+                updateProgress ( 50 );
+                QCoreApplication::processEvents ();
+                getControl ()->getGuiPtr ()->writeConsole (
+                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                            std::cout << "stem detect done 2" <<std::endl;
+                tt.tic ();
+                writeConsole ( str );
+                QCoreApplication::processEvents ();
+                getControl ()->getGuiPtr ()->writeConsole (
+                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                QCoreApplication::processEvents ();
+                boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), this->getControl ()->getCloudPtr (),
+                        this->getControl ()->getTreeID (), this->control );
+
+
+//                            simpleTree::Allometry allom;
+//                            allom.setTree(tree);
+//                            allom.setCoefficients(98.34,2.612);
+//                            allom.improveTree();
+                float f = tt.toc () / 1000;
+
+                str.append ( "Done tree structure in " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+                writeConsole ( str );
+                updateProgress ( 100 );
+                getControl ()->getGuiPtr ()->writeConsole (
+                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                getControl ()->setTreePtr ( tree );
+                error.append(QString::fromStdString(getControl ()->getTreeID ())).append(",").append(QString::number(tree->getVolume())).append(",").append(QString::number(tree->getDBH())).append(",").append(QString::number(tree->getBaseDiameter())).append("\n");
+            }
+
+            ui->qvtkWidget->update ();
+            if ( getControl ()->getTreePtr () != 0 ) {
+                ExportPly tree_ply ( getControl ()->getTreePtr ()->getCylinders (), getControl ()->getTreeID (), "tree" );
+                WriteCSV write ( getControl ()->getTreePtr (), getControl ()->getTreeID () );
+            }
+    std::cout << "stem detect done 4" <<std::endl;
+            ui->qvtkWidget->update ();
+            }
+        }
+        writeConsole(error);
+        QString timestr("running complete folder took ");
+        timestr.append(QString::number(tt2.toc()/1000)).append(QString(" seconds.\n"));
+        writeConsole(timestr);
+
+    }
+
+
+
+void
+PCLViewer::computeEry()
+{
+        pcl::console::TicToc tt2;
+        tt2.tic();
+    method_coefficients.name = "Ery";
+    method_coefficients.sphere_radius_multiplier = 3.0f;
+    method_coefficients.epsilon_cluster_branch = 0.02f;
+    method_coefficients.epsilon_cluster_stem = 0.03f;
+    method_coefficients.epsilon_sphere = 0.02f;
+    method_coefficients.minPts_ransac_stem = 200;
+    method_coefficients.minPts_ransac_branch = 1111200;
+    method_coefficients.minPts_cluster_stem = 12;
+    method_coefficients.minPts_cluster_branch = 3;
+    method_coefficients.min_radius_sphere_stem = 0.07f;
+    method_coefficients.min_radius_sphere_branch = 0.025f;
+            tt.tic ();
+    QString error;
+    QDir dir ( "../data/ery" );
+    std::cout << dir.absolutePath().toStdString();
+    QStringList filters;
+    filters << "*.pcd" ;
+    dir.setNameFilters ( filters );
+    dir.setFilter ( QDir::Files );
+    QStringList files = dir.entryList ();
+    for ( int i = 0; i < files.size (); i++ ) {
+        dir = QString("../data/ery");
+        QString file_abs = dir.absolutePath().append ( "/" ).append ( files.at ( i ) );
+        std::cout << file_abs.toStdString();
+        int index = file_abs.lastIndexOf ( "/" );
+        int size = file_abs.size ();
+        int position = size - index - 1;
+        QString file = file_abs.right ( position );
+        getControl ()->setTreeID ( file.toStdString () );
+        std::string file_str = file_abs.toStdString ();
+        std::string abort;
+        std::cout << file_str << std::endl;
+        QCoreApplication::processEvents ();
+        if ( file_str != abort ) {
+            ImportPCD import ( file_str, control );
+            getControl ()->setCloudPtr( import.getCloud () );
+            plotIntensityHist ();
+        }
+
+        {
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::VoxelGrid<PointI> sor;
+            QString str = "";
+
+            str.append ( "Voxel grid filtering starts.\n, all points inside a voxel with " ).append ( QString::number ( voxel_grid_size ) ).append (
+                " side length are merged to one point.\n" );
+            writeConsole ( str );
+
+            VoxelGridFilter voxel(0.005,1);
+            voxel.setInput(getControl()->getCloudPtr());
+            voxel.voxel_grid_filter();
+            cloud_filtered = voxel.getOutput();
+            {
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+               writeConsole ( QString ( "Downsampling done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            }
+
+        //    sor.setInputCloud ( getControl ()->getCloudPtr () );
+        //    sor.setLeafSize ( voxel_grid_size, voxel_grid_size, voxel_grid_size );
+        //    sor.filter ( *cloud_filtered );
+
+        //    int size_before = getControl ()->getCloudPtr ()->points.size ();
+        //    int size_after = cloud_filtered->points.size ();
+        //    float a = size_before;
+        //    float b = size_after;
+        //    float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+        }
+
+        std::vector<int> histData;
+        PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
+
+        for ( size_t i = 0; i < cloud->points.size (); i++ ) {
+            double d = cloud->points[i].intensity;
+            histData.push_back ( d );
+        }
+
+        int *b=new int [256];
+            std::fill_n(b,256,0); // Put n times 0 in b
+
+            for (int i=0;i<histData.size();i++)
+            {
+                b[histData[i]] +=1;
+            }
+            int max_index = -1;
+            int max = std::numeric_limits<int>::min();
+            for(int i = 0; i < 256; i++)
+            {
+                if (b[i]>=max){
+                    max = b[i];
+                    max_index = i;
+                }
+            }
+            delete[] b;
+
+            if(max_index>-1)
+            {
+                max_index+=15;
+            QString str = "";
+            str.append ( "Intensity outlier removal starts witn minimum Intensity = " ).append ( QString::number ( intensity_outlier_minIntens ) ).append (
+                " and maximum Intensity = " ).append ( QString::number ( intensity_outlier_maxIntens ) ).append ( "\n" );
+            writeConsole ( str );
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+
+            pcl::ConditionAnd<PointI>::Ptr intens_cond ( new pcl::ConditionAnd<PointI> () );
+            intens_cond->addComparison (
+                pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::GT, max_index ) ) );
+            intens_cond->addComparison (
+                pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::LT, 255 ) ) );
+            // build the filter
+        //		    pcl::ConditionalRemoval<PointI> condrem (intens_cond);
+            pcl::ConditionalRemoval<PointI> condrem;
+            condrem.setCondition ( intens_cond );
+            condrem.setInputCloud ( getControl ()->getCloudPtr () );
+            //condrem.setKeepOrganized(true);
+            // apply filter
+            condrem.filter ( *cloud_filtered );
+
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+            writeConsole (
+                QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                    QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            }
+
+
+
+        curvature.reset(new CurvatureDialog(this));
+        curvature->setViewer(shared_from_this());
+        curvature->init();
+        curvature->dialog->PCA1Max->setValue(60);
+        curvature->dialog->PCA2Min->setValue(25);
+        curvature->dialog->PCA3Max->setValue(60);
+        curvature->save();
+        {
+            QString str = "";
+
+            str.append ( "Statistical outlier removal starts.\n All points whith a mean distance larger than " ).append ( QString::number ( statistical_outlier_stdmult ) ).append (
+                " times the average distance to its  " ).append ( QString::number ( statistical_outlier_knn ) ).append ( " nearest neighbors are deleted.\n" );
+            writeConsole ( str );
+
+            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+            pcl::StatisticalOutlierRemoval<PointI> sor;
+            sor.setInputCloud ( getControl ()->getCloudPtr () );
+            sor.setMeanK ( 30 );
+            sor.setStddevMulThresh ( 2 );
+            sor.filter ( *cloud_filtered );
+
+            int size_before = getControl ()->getCloudPtr ()->points.size ();
+            int size_after = cloud_filtered->points.size ();
+            float a = size_before;
+            float b = size_after;
+            float percentage = ( 100.0f * b ) / ( a );
+            getControl ()->setCloudPtr ( cloud_filtered );
+            writeConsole (
+                QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+                    QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        }
+
+
+        euclidean_clustering_minsize = 100;
+        euclidean_clustering_tolerance = 0.05;
+        euclidean_clustering_clusternumber = 1;
+
+
+
+
+
+
+
+        std::vector<pcl::PointIndices> cluster_indices;
+        pcl::search::KdTree<PointI>::Ptr tree ( new pcl::search::KdTree<PointI> );
+        tree->setInputCloud ( getControl ()->getCloudPtr () );
+        pcl::EuclideanClusterExtraction<PointI> ec;
+        ec.setClusterTolerance ( euclidean_clustering_tolerance ); // 2cm
+        ec.setMinClusterSize ( euclidean_clustering_minsize );
+        ec.setSearchMethod ( tree );
+        ec.setInputCloud ( getControl ()->getCloudPtr () );
+        ec.extract ( cluster_indices );
+        PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+        if ( cluster_indices.size () > 0 ) {
+            int i = std::min<int> ( euclidean_clustering_clusternumber, cluster_indices.size () );
+            if(euclidean_clustering_clusternumber == 1)
+            {
+                pcl::PointIndices largestCluster = cluster_indices.at(0);
+                int largest_cluster_size = largestCluster.indices.size();
+                int size = largest_cluster_size;
+                float center_z = std::numeric_limits<float>::max();
+                int j = 0;
+                while(j<cluster_indices.size()&&cluster_indices.at(j).indices.size()>largest_cluster_size/3)
+                {
+                    PointCloudI::Ptr tempCloud (new PointCloudI);
+                    largestCluster= cluster_indices.at ( j );
+                    for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                        tempCloud->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+                    Eigen::Vector4f xyz_centroid;
+                    pcl::compute3DCentroid<PointI> (*tempCloud, xyz_centroid);
+                    float z  = xyz_centroid[2];
+                    if(z<center_z)
+                    {
+                        center_z = z;
+                        cloud_filtered = tempCloud;
+                    }
+                    j++;
+
+                }
+            }
+            else
+            {
+            for ( int j = 0; j < i; j++ ) {
+                pcl::PointIndices largestCluster;
+                largestCluster= cluster_indices.at ( j );
+                for ( std::vector<int>::const_iterator pit = largestCluster.indices.begin (); pit != largestCluster.indices.end (); pit++ )
+                    cloud_filtered->points.push_back ( getControl ()->getCloudPtr ()->points[*pit] ); //*
+            }
+            }
+        }
+
+        int size_after = cloud_filtered->points.size ();
+        cloud_filtered->width = size_after;
+        cloud_filtered->height = 1;
+
+
+        getControl ()->setCloudPtr ( cloud_filtered );
+
+{
+        float  height = 0.1;
+        PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
+        Eigen::Vector4f min_pt;
+        Eigen::Vector4f max_pt;
+        pcl::getMinMax3D ( *cloud, min_pt, max_pt );
+        float oldMinHeight = ( min_pt[2] );
+        for ( size_t i = 0; i < cloud->points.size (); i++ ) {
+            cloud->points.at ( i ).z = cloud->points.at ( i ).z + height - oldMinHeight;
+        }
+        getControl ()->setCloudPtr ( cloud );
+
+
+}
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+
+        ui->qvtkWidget->update ();
+        getControl ()->getGuiPtr ()->writeConsole ( "\n" );
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        this->updateProgress ( 0 );
+        QCoreApplication::processEvents ();
+        computeNormals ( getControl ()->getCloudPtr () );
+        getControl ()->getGuiPtr ()->updateProgress ( 40 );
+        QCoreApplication::processEvents ();
+        CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
+        getControl ()->setCurvaturePtr ( principalCurvatures );
+        getControl ()->getGuiPtr ()->updateProgress ( 70 );
+        QCoreApplication::processEvents ();
+        {
+        //    std::ostringstream stream;
+          //  stream << "../data/" << getControl()->getTreeID() << ".asc";
+
+        QString str ("../data/");
+        str.append(QString::fromStdString(getControl()->getTreeId()));
+        pcl::io::savePCDFileASCII (str.toStdString(), *getControl()->getCloudPtr());
+
+        }
+        {
+            PointCloudI::Ptr cloud_filtered (new PointCloudI);
+            pcl::VoxelGrid<PointI> sor;
+            sor.setInputCloud (getControl()->getCloudPtr());
+            sor.setLeafSize (0.001f, 0.001f, 0.001f);
+            sor.filter (*cloud_filtered);
+            getControl()->setCloudPtr(cloud_filtered);
+        }
+        {
+
+
+        std::vector<float> e1;
+        std::vector<float> e2;
+        std::vector<float> e3;
+        std::vector<bool> isStem;
+
+        EigenValueEstimator es ( getControl ()->getCloudPtr (), e1, e2, e3, isStem, 0.035f );
+                std::cout << "es done" <<std::endl;
+        getControl()->getGuiPtr()->writeConsole("test");
+        StemPointDetection detect ( getControl ()->getCloudPtr (), isStem );
+                std::cout << "stem detect done" <<std::endl;
+        getControl ()->setE1 ( e1 );
+        getControl ()->setE2 ( e2 );
+        getControl ()->setE3 ( e3 );
+        getControl ()->setIsStem ( detect.getStemPtsNew () );
+        getControl ()->getGuiPtr ()->updateProgress ( 100 );
+        QString str;
+        float f = tt.toc () / 1000;
+        str.append ( "Computed PCA analysis in  " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+        getControl ()->getGuiPtr ()->writeConsole (
+            "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+        QCoreApplication::processEvents ();
+        if ( getControl ()->getCloudPtr () != 0 ) {
+            pcl::console::TicToc tt;
+            tt.tic ();
+            QString str = "\n";
+            writeConsole ( str );
+
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            updateProgress ( 0 );
+            QString str2 = coeff_ptr->struct_to_qstring ( method_coefficients );
+            writeConsole ( str2 );
+            QCoreApplication::processEvents ();
+                                    std::cout << "stem detect done 1" <<std::endl;
+            SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), control, 1, method_coefficients );
+            writeConsole ( str );
+            updateProgress ( 50 );
+            QCoreApplication::processEvents ();
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+                        std::cout << "stem detect done 2" <<std::endl;
+            tt.tic ();
+            writeConsole ( str );
+            QCoreApplication::processEvents ();
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            QCoreApplication::processEvents ();
+            boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), this->getControl ()->getCloudPtr (),
+                    this->getControl ()->getTreeID (), this->control );
+
+//            simpleTree::Allometry allom;
+//            allom.setTree(tree);
+//            allom.setCoefficients(98.34,2.612);
+//            allom.improveTree();
+            //tree->improveFit();
+            float f = tt.toc () / 1000;
+
+            str.append ( "Done tree structure in " ).append ( QString::number ( f ) ).append ( " seconds.\n" );
+            writeConsole ( str );
+            updateProgress ( 100 );
+            getControl ()->getGuiPtr ()->writeConsole (
+                "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+            getControl ()->setTreePtr ( tree );
+            error.append(QString::fromStdString(getControl ()->getTreeID ())).append(",").append(QString::number(tree->getVolume())).append(",").append(QString::number(tree->getDBH())).append(",").append(QString::number(tree->getBaseDiameter())).append("\n");
+        }
+
+        ui->qvtkWidget->update ();
+        if ( getControl ()->getTreePtr () != 0 ) {
+            ExportPly tree_ply ( getControl ()->getTreePtr ()->getCylinders (), getControl ()->getTreeID (), "tree" );
+            WriteCSV write ( getControl ()->getTreePtr (), getControl ()->getTreeID () );
+        }
+std::cout << "stem detect done 4" <<std::endl;
+        ui->qvtkWidget->update ();
+        }
+    }
+    writeConsole(error);
+    QString timestr("running complete folder took ");
+    timestr.append(QString::number(tt2.toc()/1000)).append(QString(" seconds.\n"));
+    writeConsole(timestr);
+
+}
+
 
 
 void
@@ -1592,7 +2839,7 @@ PCLViewer::plotIntensityHist () {
     histData.push_back ( 0 );
     histData.push_back ( 255 );
 
-    std::cout << min << ";" << max << "\n";
+  //  std::cout << min << ";" << max << "\n";
     plotter->clearPlots ();
     plotter->setTitle ( "Intensity histogram" );
     plotter->setXTitle ( "Intensity (0-255)" );

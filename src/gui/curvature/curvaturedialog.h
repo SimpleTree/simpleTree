@@ -84,6 +84,10 @@ public:
      * */
     void
     init();
+
+    /** \brief A shared pointer to the UI component
+     * */
+    boost::shared_ptr<Ui_Dialog_Eigen> dialog;
 private:
 
     /** \brief Vectors which store the first, second and third principal component of all points in control stored point cloud.
@@ -100,9 +104,6 @@ private:
     float
     min_pca1,max_pca1,min_pca2,max_pca2,min_pca3,max_pca3;
 
-    /** \brief A shared pointer to the UI component
-     * */
-    boost::shared_ptr<Ui_Dialog_Eigen> dialog;
 
     /** \brief A weak pointer to the UI class
      * */

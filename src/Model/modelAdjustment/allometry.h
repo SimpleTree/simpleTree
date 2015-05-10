@@ -50,7 +50,7 @@ namespace simpleTree {
 class Allometry
 {
 private:
-    float fac = 1.3f;
+    float fac = 3.0f;
     float coeff_a, coeff_b;
     boost::weak_ptr<Tree> tree;
     std::vector<float> vec_x;

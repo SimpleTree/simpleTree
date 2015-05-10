@@ -190,14 +190,16 @@ namespace simpleTree
   PointI
   Cylinder::projectToAxis(const PointI& p)
   {
+      //std::cout << p << std::endl;
+      //std::cout << "foo" << std::endl;
       pcl::ModelCoefficients::Ptr coefficients_line (new pcl::ModelCoefficients);
-      coefficients_line->values.reserve(6);
-      coefficients_line->values[0] = values[0];
-      coefficients_line->values[1] = values[1];
-      coefficients_line->values[2] = values[2];
-      coefficients_line->values[3] = values[3];
-      coefficients_line->values[4] = values[4];
-      coefficients_line->values[5] = values[5];
+      coefficients_line->values.push_back(values[0]);
+      coefficients_line->values.push_back(values[1]);
+      coefficients_line->values.push_back(values[2]);
+      coefficients_line->values.push_back(values[3]);
+      coefficients_line->values.push_back(values[4]);
+      coefficients_line->values.push_back(values[5]);
+     // std::cout << coefficients_line << std::endl;
 
       pcl::PointCloud<PointI>::Ptr cloud_projected (new pcl::PointCloud<PointI>);
       pcl::PointCloud<PointI>::Ptr cloud_toProject (new pcl::PointCloud<PointI>);
@@ -209,6 +211,7 @@ namespace simpleTree
       proj.setInputCloud (cloud_toProject);
       proj.setModelCoefficients (coefficients_line);
       proj.filter (*cloud_projected);
+      //std::cout << cloud_projected->points.size() << std::endl;
       return cloud_projected->points[0];
 
 

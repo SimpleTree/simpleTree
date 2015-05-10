@@ -756,7 +756,8 @@ namespace simpleTree {
         std::vector<boost::shared_ptr<Segment> > allSegments = getSegments ();
         for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allSegments.begin (); it != allSegments.end (); it++ ) {
             boost::shared_ptr<Segment> segment = *it;
-            if(segment != this->rootSegment)
+            pcl::PointXYZ start = segment->getCylinders().at(0)->getStart();
+                    if(segment != this->rootSegment && start.z >= 1.0)
             {
             segment->correctRadiusByMedianCheck ();
             }
@@ -831,6 +832,8 @@ namespace simpleTree {
         for ( std::vector<boost::shared_ptr<Segment> >::iterator it = allSegments.begin (); it != allSegments.end (); it++ ) {
             boost::shared_ptr<Segment> segment = *it;
             if ( segment->getParent() !=0 ) {
+                if(segment!=rootSegment)
+                {
                 boost::shared_ptr<Segment> parent_segment = segment->getParent();
                 if ( parent_segment->medianRadius() <0.5*segment->medianRadius() ) {
                     for ( std::vector<boost::shared_ptr<Cylinder> >::iterator cit = segment->getCylinders().begin (); cit != segment->getCylinders().end (); cit++ ) {
@@ -838,15 +841,17 @@ namespace simpleTree {
                         cylinder->values[6] = parent_segment->medianRadius();
                     }
                 }
-            } else if ( segment->getChildren().size() !=0 ) {
-                boost::shared_ptr<Segment> child_segment = segment->getChildren().at ( 0 );
-                if ( child_segment->medianRadius() <0.5*segment->medianRadius() ) {
-                    for ( std::vector<boost::shared_ptr<Cylinder> >::iterator cit = segment->getCylinders().begin (); cit != segment->getCylinders().end (); cit++ ) {
-                        boost::shared_ptr<Cylinder>  cylinder= *cit;
-                        cylinder->values[6] = child_segment->medianRadius();
-                    }
                 }
             }
+//            else if ( segment->getChildren().size() !=0 ) {
+//                boost::shared_ptr<Segment> child_segment = segment->getChildren().at ( 0 );
+//                if ( child_segment->medianRadius() <0.5*segment->medianRadius() ) {
+//                    for ( std::vector<boost::shared_ptr<Cylinder> >::iterator cit = segment->getCylinders().begin (); cit != segment->getCylinders().end (); cit++ ) {
+//                        boost::shared_ptr<Cylinder>  cylinder= *cit;
+//                        cylinder->values[6] = child_segment->medianRadius();
+//                    }
+//                }
+//            }
 
             segment->correctBranchingSection ();
         }
@@ -996,34 +1001,34 @@ namespace simpleTree {
 
 //          std::cout << "----------------" << std::endl;
 
-//        //if(this->cylinders.size()>11)
-//        {
-//            std::vector<Cylinder>  children = child_Cylinder_Extraction->getChildren(currentCylinder);
+        if(this->cylinders.size()>11111111)
+        {
+            std::vector<Cylinder>  children = child_Cylinder_Extraction->getChildren(currentCylinder);
 
 
-//            if ( children.size () == 1 ) {
-//                Cylinder child = (children.at ( 0 ));
-//                currentSegment->addCylinder ( child );
-//                buildTree ( currentSegment, boost::make_shared<Cylinder> ( child ) );
-//            } else if ( children.size () > 1 ) {
-//                for ( std::vector<Cylinder>::iterator it = children.begin (); it != children.end (); it++ ) {
-//                    Cylinder child = (*it);
-//                    boost::shared_ptr<Segment> childSegment = boost::make_shared<Segment> ();
-//                    childSegment->addCylinder ( child );
-//                    childSegment->connectWithParent ( currentSegment );
-//                    buildTree ( childSegment, boost::make_shared<Cylinder> ( child ) );
+            if ( children.size () == 1 ) {
+                Cylinder child = (children.at ( 0 ));
+                currentSegment->addCylinder ( child );
+                buildTree ( currentSegment, boost::make_shared<Cylinder> ( child ) );
+            } else if ( children.size () > 1 ) {
+                for ( std::vector<Cylinder>::iterator it = children.begin (); it != children.end (); it++ ) {
+                    Cylinder child = (*it);
+                    boost::shared_ptr<Segment> childSegment = boost::make_shared<Segment> ();
+                    childSegment->addCylinder ( child );
+                    childSegment->connectWithParent ( currentSegment );
+                    buildTree ( childSegment, boost::make_shared<Cylinder> ( child ) );
 
-//                }
-//            }
+                }
+            }
 
-//            std::cout << children.size() << " children mit kdtree"<<std::endl;
-//            for(size_t i = 0; i < children.size() ; i++)
-//            {
-//                Cylinder cylinder = children.at(i);
-//                std::cout << cylinder.toString().toStdString() << std::endl;
-//            }
-//        }
-       // else
+            std::cout << children.size() << " children mit kdtree"<<std::endl;
+            for(size_t i = 0; i < children.size() ; i++)
+            {
+                Cylinder cylinder = children.at(i);
+                std::cout << cylinder.toString().toStdString() << std::endl;
+            }
+        }
+        else
         {
             std::vector<Cylinder>  children = child_Cylinder_Extraction->getChildren(currentCylinder);
             //std::vector<Cylinder> children = currentCylinder->getChildren ( cylinders );
