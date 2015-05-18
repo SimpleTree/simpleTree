@@ -12,7 +12,9 @@ add_definitions (${PCL_DEFINITIONS})
 
 
 
-set (project_SOURCES src/Model/childcylinderextraction.cpp
+set (project_SOURCES src/method/optimization/workerspherefollowing.cpp
+                     src/method/optimization/optimization.cpp
+                     src/Model/childcylinderextraction.cpp
                      src/gui/cropbox/cropboxdialog.cpp
                      src/gui/cropsphere/cropspheredialog.cpp
                      src/gui/reference/referenceheightdialog.cpp
@@ -39,7 +41,9 @@ set (project_SOURCES src/Model/childcylinderextraction.cpp
                      src/gui/allign/allign.cpp)
 
 
-set (project_HEADERS src/Model/childcylinderextraction.h
+set (project_HEADERS src/method/optimization/workerspherefollowing.h
+                     src/method/optimization/optimization.h
+                     src/Model/childcylinderextraction.h
                      src/gui/cropbox/cropboxdialog.h
                      src/gui/cropsphere/cropspheredialog.h
                      src/gui/reference/referenceheightdialog.h

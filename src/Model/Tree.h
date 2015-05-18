@@ -198,7 +198,7 @@ namespace simpleTree
       std::string name;
       Tree (std::vector<pcl::ModelCoefficients> cylinders,
             pcl::PointCloud<PointI>::Ptr cloud_Ptr,
-            std::string name,boost::weak_ptr<Controller> control);
+            std::string name,boost::weak_ptr<Controller> control, bool computeCrown = true);
       Tree ();
       virtual
       ~Tree ();

@@ -8,6 +8,7 @@
 #ifndef METHOD_COEFFICIENTS_H_
 #define METHOD_COEFFICIENTS_H_
 
+#include <QString>
 
 struct Method_Coefficients{
         QString name;
@@ -22,6 +23,26 @@ struct Method_Coefficients{
         int minPts_cluster_branch;
         float min_radius_sphere_stem;
         float min_radius_sphere_branch;
+
+
+        QString
+        toQString()
+        {
+          QString str;
+          str.append("Sphere radius multiplier : ").append(QString::number(sphere_radius_multiplier)).append("\n");
+          str.append("epsilon_cluster_stem : ").append(QString::number(epsilon_cluster_stem)).append("\n");
+          str.append("epsilon_cluster_branch : ").append(QString::number(epsilon_cluster_branch)).append("\n");
+          str.append("epsilon sphere : ").append(QString::number(epsilon_sphere)).append("\n");
+          str.append("minPts_ransac_stem : ").append(QString::number(minPts_ransac_stem)).append("\n");
+          str.append("minPts_ransac_branch : ").append(QString::number(minPts_ransac_branch)).append("\n");
+          str.append("minPts_cluster_stem : ").append(QString::number(minPts_cluster_stem)).append("\n");
+          str.append("minPts_cluster_branch : ").append(QString::number(minPts_cluster_branch)).append("\n");
+          str.append("min_radius_sphere_stem : ").append(QString::number(min_radius_sphere_stem)).append("\n");
+          str.append("min_radius_sphere_branch : ").append(QString::number(min_radius_sphere_branch)).append("\n");
+          return str;
+
+        }
+
 };
 
 

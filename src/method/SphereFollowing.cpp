@@ -48,7 +48,7 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
 	float f = tt.toc() / 1000;
 	str.append("Done sphere-following in ").append(QString::number(f)).append(
 			" seconds.\n");
-	getControl()->getGuiPtr()->writeConsole(str);
+//	getControl()->getGuiPtr()->writeConsole(str);
 }
 
 SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
@@ -77,7 +77,7 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
 	float f = tt.toc() / 1000;
 	str.append("Done sphere-following in ").append(QString::number(f)).append(
 			" seconds.\n");
-	getControl()->getGuiPtr()->writeConsole(str);
+    //getControl()->getGuiPtr()->writeConsole(str);
 }
 
 
@@ -94,7 +94,7 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,
 	float f = tt.toc() / 1000;
 	str.append("Done sphere-following in ").append(QString::number(f)).append(
 			" seconds.\n");
-	getControl()->getGuiPtr()->writeConsole(str);
+//	getControl()->getGuiPtr()->writeConsole(str);
 }
 
 SphereFollowing::~SphereFollowing() {
@@ -163,7 +163,7 @@ std::vector<float> SphereFollowing::distancesToModel(PointCloudI::Ptr cloud) {
 	float f = tt.toc() / 1000;
 	str.append("Distance to model computation in ").append(QString::number(f)).append(
 			" seconds.\n");
-    getControl()->getGuiPtr()->writeConsole(str);
+  //  getControl()->getGuiPtr()->writeConsole(str);
 	return distances;
 }
 
@@ -175,7 +175,7 @@ void SphereFollowing::computeCylindersFromTree(PointCloudI::Ptr& treeCloud) {
 			str.append("In the first sphere-following run ").append(
 					QString::number(cylinders.size())).append(
 					" cylinders were detected.\n");
-			getControl()->getGuiPtr()->writeConsole(str);
+    //		getControl()->getGuiPtr()->writeConsole(str);
 
 //       std::cout << "In the first sphere-following run " << cylinders.size () << " cylinders were detected." << std::endl;
 		} else {
@@ -186,7 +186,7 @@ void SphereFollowing::computeCylindersFromTree(PointCloudI::Ptr& treeCloud) {
 			str.append("Not fitted by cylinders were ").append(
 					QString::number(remainingPoints->size())).append(
 					" points.\n");
-			getControl()->getGuiPtr()->writeConsole(str);
+    //		getControl()->getGuiPtr()->writeConsole(str);
         //	std::cout << "Not fitted by cylinders were "
             //		<< remainingPoints->size() << " points." << std::endl;
 			std::vector<PointCloudI::Ptr> clusters = clusterPoints(

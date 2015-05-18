@@ -48,18 +48,27 @@ Allometry::improveTree()
         boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
         float x = cylinder->getRadius();
         float y = getTree()->getGrowthVolume ( cylinder );
+        if(cylinder->getSegment()->getParent()!= 0)
+        {
         if ( (y>(getYFromX(x)*fac)) || (y<(getYFromX(x)/fac) ) )
         {
-            if(cylinder->values[6] >= std::max(getXFromY(y),0.005f))
+            if(cylinder->values[6] >= std::max(getXFromY(y),0.0025f))
             {
-             std::cout <<x << " radius und volume "<<getTree()->getGrowthVolume ( cylinder )<<std::endl;
-             std::cout <<y << " volume und volume max"<< (getYFromX(x)*fac)*fac << " und volume min"<< (getYFromX(x)*fac) <<std::endl;
-            std::cout << cylinder->values[6] << " radius und berechnet "<<std::max(getXFromY(y),0.005f)<<std::endl;
-            std::cout << "----------------" << std::endl;
-            cylinder->values[6] = std::max(getXFromY(y),0.005f);
+                //             std::cout <<x << " radius und volume "<<getTree()->getGrowthVolume ( cylinder )<<std::endl;
+                //             std::cout <<y << " volume und volume max"<< (getYFromX(x)*fac)*fac << " und volume min"<< (getYFromX(x)*fac) <<std::endl;
+                //            std::cout << cylinder->values[6] << " radius und berechnet "<<std::max(getXFromY(y),0.005f)<<std::endl;
+                //            std::cout << "----------------" << std::endl;
+            cylinder->values[6] = std::max(getXFromY(y),0.0025f);
             }
         }
+        }
     }
+}
+
+void
+Allometry::setFac(float fac)
+{
+    this->fac = fac;
 }
 
 float

@@ -51,6 +51,8 @@
 #include "../controller.h"
 #include <pcl/filters/passthrough.h>
 
+#include "../method/optimization/optimization.h"
+
 // Visualization Toolkit (VTK)
 #include <vtkRenderWindow.h>
 #include "../method/SphereFollowing.h"
@@ -155,7 +157,6 @@ private:
     boost::shared_ptr<AllignPointCloudDialog> allign;
     boost::shared_ptr<CurvatureDialog> curvature;
 
-
 	callback_args cb_args;
     boost::shared_ptr<Ui_crop_box_dialog> box_dialog_ui_ptr;
 	boost::shared_ptr<Ui_method_dialog> method_dialog_ptr;
@@ -224,6 +225,7 @@ public:
 
     boost::shared_ptr<pcl::visualization::PCLPlotter> plotter;
 
+    float average(std::vector<float> const &v);
     Ui::PCLViewer *ui;
     void
     init();
@@ -267,6 +269,8 @@ public:
     convertPointCloud(PointCloudI::Ptr  cloud, int r, int g, int b);
 
 public slots:
+    void
+    computeQuercusFast();
     void
     computeQuercus();
 

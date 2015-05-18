@@ -66,6 +66,9 @@ public:
     Allometry();
 
     void
+    setFac(float fac);
+
+    void
     improveTree();
 
     boost::shared_ptr<Tree>

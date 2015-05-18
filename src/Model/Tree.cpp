@@ -40,7 +40,7 @@ namespace simpleTree {
     Tree::Tree ( std::vector<pcl::ModelCoefficients> cylinders,
     pcl::PointCloud<PointI>::Ptr cloud_Ptr,
     std::string name,
-    boost::weak_ptr<Controller> control ) {
+    boost::weak_ptr<Controller> control , bool computeCrown ) {
         this->control = control;
         this->cloud_Ptr = cloud_Ptr;
         this->name = name;
@@ -49,15 +49,14 @@ namespace simpleTree {
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
         setCylinders ( cylinders );
+
         child_Cylinder_Extraction.reset(new ChildCylinderExtraction(this->cylinders));
         Cylinder rootCylinder = cylinders.at ( 0 );
         rootSegment = boost::make_shared<Segment> ();
         rootSegment->addCylinder ( rootCylinder );
 
         buildTree ( rootSegment, getRootCylinder () );
-        //std::cout << this->cylinders.size() << "vor Lösungsch" << std::endl;
         setCylinders ();
-        //std::cout << this->cylinders.size() << "nach Lösungsch" << std::endl;
         child_Cylinder_Extraction.reset(new ChildCylinderExtraction(this->cylinders));
         rootSegment = boost::make_shared<Segment> ();
         rootSegment->addCylinder ( rootCylinder );
@@ -76,15 +75,18 @@ namespace simpleTree {
         getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
         reorderTree();
-
         detectStem ();
         reset_stem();
         setIDforSegments();
-        detectCrown ();
-
-        crown = boost::make_shared<Crown> ( crownPoints (), this->control );
+        if(computeCrown)
+        {
+            detectCrown ();
+            crown = boost::make_shared<Crown> ( crownPoints (), this->control );
+        }
         improveByMedianCheck ();
-        resetRoot();
+                resetRoot();
+
+
 
         str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
@@ -140,19 +142,16 @@ namespace simpleTree {
     {
         boost::shared_ptr<Cylinder> cylinder = rootSegment->getCylinders().at(0);
         float temp = cylinder->values[2];
-        cylinder->values[2] = 0;
-        cylinder->values[5] += temp;
+        cylinder->values[2] = 0.1;
+        cylinder->values[5] += (temp-0.1);
     }
 
     void Tree::setIDforSegments() {
         setBranchOrder ( getRootSegment(),0 );
-        std::cout << "1 \n";
         QCoreApplication::processEvents ();
         setSegmentID();
-        std::cout << "2 \n";
         QCoreApplication::processEvents ();
         setBranchID ( getRootSegment(),0 );
-        std::cout << "3 \n";
         QCoreApplication::processEvents ();
     }
     
@@ -1021,38 +1020,15 @@ namespace simpleTree {
                 }
             }
 
-            std::cout << children.size() << " children mit kdtree"<<std::endl;
             for(size_t i = 0; i < children.size() ; i++)
             {
                 Cylinder cylinder = children.at(i);
-                std::cout << cylinder.toString().toStdString() << std::endl;
             }
         }
         else
         {
             std::vector<Cylinder>  children = child_Cylinder_Extraction->getChildren(currentCylinder);
-            //std::vector<Cylinder> children = currentCylinder->getChildren ( cylinders );
-//            if(children2.size()!=children.size())
-//            {
-//                std::cout << "fopooooasds" << std::endl;
-//            }
-//            else
-//            {
-//            //std::cout << children.size()<< "children ohne kdtree"<< std::endl;
-//            for(size_t i = 0; i < children.size() ; i++)
-//            {
-//                Cylinder cylinder = children.at(i);
-//                Cylinder cylinder2 = children2.at(i);
-//                std::cout << "---------------" <<std::endl;
-//                std::cout << cylinder.toString().toStdString() << std::endl;
-//                std::cout << cylinder2.toString().toStdString() << std::endl;
-////                if(!(cylinder==cylinder2))
-////                {
-////                    //std::cout << "baaaaaaa" << std::endl;
-////                }
-//                //std::cout << cylinder.toString().toStdString() << std::endl;
-//            }
-//            }
+
             if ( children.size () == 1 ) {
                 Cylinder child = children.at ( 0 );
                 currentSegment->addCylinder ( child );
