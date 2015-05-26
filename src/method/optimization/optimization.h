@@ -22,24 +22,25 @@ class Optimization : public QThreadPool,  public boost::enable_shared_from_this<
 {
     Q_OBJECT
 private :
-    Method_Coefficients coefficients_start, coefficients_end;
+    Method_Coefficients coefficients_start, coefficients_end, coefficients_sd;
 
 
 
 
-
+    float a,b,fac;
     float start_dist;
     float end_dist;
     float current_dist;
+    float dist_update = 0.1f;
     pcl::console::TicToc tt;
 
-    float epsilon_cluster_branch_update = 0.01;
-    float epsilon_cluster_stem_update = 0.01;
-    float epsilon_sphere_update = 0.005;
-    float min_pts_ransac_stem_update = 100;
+//    float epsilon_cluster_branch_update = 0.01;
+//    float epsilon_cluster_stem_update = 0.01;
+//    float epsilon_sphere_update = 0.005;
+//    float min_pts_ransac_stem_update = 100;
 
-    float min_dist = 0.001;
-    int max_iterations = 4;
+    float min_dist = 0.0001;
+    int max_iterations = 8;
 
     int seeds_per_voxel = 81;
 
@@ -65,6 +66,9 @@ private :
 
         void
         make_coefficients_positive(Method_Coefficients & coeff);
+
+        void
+        update_sd();
 public:
         Method_Coefficients
         getCoefficients()
@@ -95,6 +99,15 @@ public:
 
 
 
+
+    float getFac() const;
+    void setFac(float value);
+
+    float getB() const;
+    void setB(float value);
+
+    float getA() const;
+    void setA(float value);
 
 signals:
 

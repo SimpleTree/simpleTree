@@ -1,5 +1,35 @@
 #include "workerspherefollowing.h"
 
+
+float WorkerSphereFollowing::getA() const
+{
+    return a;
+}
+
+void WorkerSphereFollowing::setA(float value)
+{
+    a = value;
+}
+
+float WorkerSphereFollowing::getB() const
+{
+    return b;
+}
+
+void WorkerSphereFollowing::setB(float value)
+{
+    b = value;
+}
+
+float WorkerSphereFollowing::getFac() const
+{
+    return fac;
+}
+
+void WorkerSphereFollowing::setFac(float value)
+{
+    fac = value;
+}
 WorkerSphereFollowing::WorkerSphereFollowing(QObject *parent)
 {
 }
@@ -15,8 +45,10 @@ WorkerSphereFollowing::run()
 
     simpleTree::Allometry allom;
     allom.setTree(tree);
-    allom.setCoefficients(2101,3.775);
-    allom.setFac(1.6);
+    allom.setCoefficients(a,b);
+    allom.setFac(fac);
+//    allom.setCoefficients(2101,3.775);
+//    allom.setFac(1.6);
     allom.improveTree();
     //control ->setTreePtr ( tree );
 
@@ -24,7 +56,6 @@ WorkerSphereFollowing::run()
     std::vector<float> distances = tree->distancesToModel ();
     meanDist = control->getGuiPtr()->average(distances);
 
-    std::cout << "in worker distance " << meanDist << std::endl;
 
 
     if(optimize->get_current_dist()>meanDist)

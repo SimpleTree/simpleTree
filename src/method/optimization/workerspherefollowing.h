@@ -17,6 +17,8 @@ class Optimization;
 
 class WorkerSphereFollowing : public QRunnable
 {
+private:
+    float a,b,fac;
 
 public:
     boost::shared_ptr<Controller> control;
@@ -43,6 +45,12 @@ public:
 
 
 
+    float getA() const;
+    void setA(float value);
+    float getB() const;
+    void setB(float value);
+    float getFac() const;
+    void setFac(float value);
 };
 
 #endif // WORKERSPHEREFOLLOWING_H
