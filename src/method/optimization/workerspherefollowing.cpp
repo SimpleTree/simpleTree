@@ -38,31 +38,39 @@ void
 WorkerSphereFollowing::run()
 {
 
+    try {
+        SphereFollowing sphereFollowing ( this->control->getCloudPtr (), control, 1, coefficients );
+        boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), control->getCloudPtr (),
+                                                                                         control->getTreeID (), this->control ,false);
 
-    SphereFollowing sphereFollowing ( this->control->getCloudPtr (), control, 1, coefficients );
-    boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), control->getCloudPtr (),
-                                                                                     control->getTreeID (), this->control ,false);
+        simpleTree::Allometry allom;
+        allom.setTree(tree);
+        allom.setCoefficients(a,b);
+        allom.setFac(fac);
 
-    simpleTree::Allometry allom;
-    allom.setTree(tree);
-    allom.setCoefficients(a,b);
-    allom.setFac(fac);
-//    allom.setCoefficients(2101,3.775);
-//    allom.setFac(1.6);
-    allom.improveTree();
-    //control ->setTreePtr ( tree );
-
-
-    std::vector<float> distances = tree->distancesToModel ();
-    meanDist = control->getGuiPtr()->average(distances);
+        allom.setMinRad(0.02);
+    //    allom.setCoefficients(2101,3.775);
+    //    allom.setFac(1.6);
+        allom.improveTree();
+        //control ->setTreePtr ( tree );
 
 
+        std::vector<float> distances = tree->distancesToModel ();
+        meanDist = control->getGuiPtr()->average(distances);
 
-    if(optimize->get_current_dist()>meanDist)
-    {
-        optimize->updateCoeff(this->coefficients, meanDist);
-        //control->setTreePtr(tree);
+
+
+        if(optimize->get_current_dist()>meanDist)
+        {
+            optimize->updateCoeff(this->coefficients, meanDist);
+            //control->setTreePtr(tree);
+        }
+    } catch (...) {
+        std::cout << "critical error in WorkerSphereFollowing" << std::endl;
+        std::cout << coefficients.toQString().toStdString() << std::endl;
+        std::cout << "critical error in WorkerSphereFollowing" << std::endl;
     }
+
 
 
 

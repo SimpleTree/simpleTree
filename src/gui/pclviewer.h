@@ -270,6 +270,12 @@ public:
 
 public slots:
     void
+    denoisePine();
+    void
+    denoiseEry();
+    void
+    denoiseOak();
+    void
     computeQuercusFast();
     void
     computeQuercus();
@@ -280,6 +286,8 @@ public slots:
     computePine();
     void
     computeEry();
+    void
+    computeAustraliaRandomLoop();
     void
     computeAustralia();
     void

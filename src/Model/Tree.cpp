@@ -41,12 +41,36 @@ namespace simpleTree {
     pcl::PointCloud<PointI>::Ptr cloud_Ptr,
     std::string name,
     boost::weak_ptr<Controller> control , bool computeCrown ) {
+        if(cylinders.size()<=1)
+        {
+            cylinders.clear();
+            {
+            pcl::ModelCoefficients coeff1;
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(1);
+            coeff1.values.push_back(0.1);
+            cylinders.push_back(coeff1);
+            }
+            pcl::ModelCoefficients coeff1;
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(1);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(0);
+            coeff1.values.push_back(1);
+            coeff1.values.push_back(0.1);
+            cylinders.push_back(coeff1);
+        }
         this->control = control;
         this->cloud_Ptr = cloud_Ptr;
         this->name = name;
         QString str;
         str.append ( "Building a tree model for " ).append ( QString::number ( cylinders.size () ) ).append ( " detected cylinders.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+    //    getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
         setCylinders ( cylinders );
 
@@ -72,7 +96,7 @@ namespace simpleTree {
         str = "";
         str.append ( QString::number ( removed_cylinders_size ) ).append ( " cylinders were removed due to bad allocation." ).append ( QString::number ( cylinders_size ) ).append (
                     "  cylinders are still stored in tree structure.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+       // getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
         reorderTree();
         detectStem ();
@@ -90,7 +114,7 @@ namespace simpleTree {
 
         str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+      //  getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
     }
     Tree::Tree () {
@@ -133,7 +157,7 @@ namespace simpleTree {
 
         QString str = "";
         str.append ( "The total volume of the tree is " ).append ( QString::number ( getVolume () ) ).append ( "m^3.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+       // getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
     }
 
@@ -431,7 +455,7 @@ namespace simpleTree {
         QString str;
         // float f = tt.toc () / 1000;
         str.append ( QString::number ( firstCrownSegment->getEnd ().z ) ).append ( "m is the crown height..\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+       // getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
 
     }
@@ -741,12 +765,12 @@ namespace simpleTree {
         }
         QString str;
         str.append ( QString::number ( tt.toc () / 1000 ) ).append ( " seconds for fit improvement.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+       // getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
         str = "";
         str.append ( QString::number ( counterRANSAC ) ).append ( "  cylinders were improved by RANSAC," ).append ( QString::number ( counterMedian ) ).append (
             " cylinders were improved with median method, " ).append ( QString::number ( counterNoImprovement ) ).append ( "cylinders were not improved at all.\n" );
-        getControl ()->getGuiPtr ()->writeConsole ( str );
+     //   getControl ()->getGuiPtr ()->writeConsole ( str );
         QCoreApplication::processEvents ();
     }
 

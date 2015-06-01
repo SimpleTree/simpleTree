@@ -50,6 +50,7 @@ namespace simpleTree {
 class Allometry
 {
 private:
+    float minRad = 0.0025f;
     float fac = 3.0f;
     float coeff_a, coeff_b;
     boost::weak_ptr<Tree> tree;
@@ -84,6 +85,8 @@ public:
     getModelData(std::vector<float> & x, std::vector<float> & y,std::vector<float> & x_model, std::vector<float> & y_model,float max_y, float max_x);
 
 
+    float getMinRad() const;
+    void setMinRad(float value);
 };
 
 }

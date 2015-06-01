@@ -40,7 +40,7 @@ private :
 //    float min_pts_ransac_stem_update = 100;
 
     float min_dist = 0.0001;
-    int max_iterations = 8;
+    int max_iterations = 6;
 
     int seeds_per_voxel = 81;
 
@@ -55,7 +55,7 @@ private :
        generate_coefficients();
 
        std::vector<Method_Coefficients>
-       neighboring_coefficients();
+       neighboring_coefficients(int i);
 
        std::vector<Method_Coefficients>
        generate_seeds(Method_Coefficients const coeff);

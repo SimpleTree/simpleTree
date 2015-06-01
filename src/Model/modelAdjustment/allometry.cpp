@@ -52,9 +52,9 @@ Allometry::improveTree()
         {
         if ( (y>(getYFromX(x)*fac)) || (y<(getYFromX(x)/fac) ) )
         {
-            if(cylinder->values[6] >= std::max(getXFromY(y),0.0025f))
+            if(cylinder->values[6] >= std::max(getXFromY(y),minRad))
             {
-                cylinder->values[6] = std::max(getXFromY(y),0.0025f);
+                cylinder->values[6] = std::max(getXFromY(y),minRad);
             }
         }
         }
@@ -67,6 +67,16 @@ Allometry::setFac(float fac)
     this->fac = fac;
 }
 
+
+float Allometry::getMinRad() const
+{
+    return minRad;
+}
+
+void Allometry::setMinRad(float value)
+{
+    minRad = value;
+}
 float
 Allometry::getYFromX(float x)
 {
@@ -145,3 +155,4 @@ Allometry::setTree(boost::shared_ptr<Tree> tree)
 
 
 }
+

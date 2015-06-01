@@ -117,38 +117,31 @@ void StemPointDetection::resetStemPoints() {
     {
         stem_pts_new.push_back(false);
     }
-    //for (size_t i = 0; i < clusters->size (); i++)
-    boost::shared_ptr<PointCloudI> cloud2(new PointCloudI);
-
-    int max_index = 0;
-
-    for(size_t i = 0; i < clusters->size(); i++)
+    if(clusters->size()>0)
     {
-        if((*clusters)[i].indices.size()>(*clusters)[max_index].indices.size())
+        boost::shared_ptr<PointCloudI> cloud2(new PointCloudI);
+
+        int max_index = 0;
+        for(size_t i = 0; i < clusters->size(); i++)
         {
-            max_index = i;
+            if((*clusters)[i].indices.size()>(*clusters)[max_index].indices.size())
+            {
+                max_index = i;
+            }
         }
 
-    }
-    for (size_t j = 0; j < (*clusters)[max_index].indices.size(); j++)
-    {
-        cloud2->points.push_back(downsampled->points.at((*clusters)[max_index].indices[j]));
-    }
+        for (size_t j = 0; j < (*clusters)[max_index].indices.size(); j++)
+        {
+            cloud2->points.push_back(downsampled->points.at((*clusters)[max_index].indices[j]));
+        }
 
-//    for (size_t i = 0; i < 1; i++)
-//    {
+        BufferPointCloud buffer(cloud2,cloud,0.05);
+        std::vector<int> indices = buffer.getOutPutIndices();
 
-//        for (size_t j = 0; j < (*clusters)[i].indices.size(); j++)
-//        {
-//            cloud2->points.push_back(downsampled->points.at((*clusters)[i].indices[j]));
-//        }
-
-//    }
-    BufferPointCloud buffer(cloud2,cloud,0.05);
-    std::vector<int> indices = buffer.getOutPutIndices();
-    for(size_t j = 0; j < indices.size();j++)
-    {
-        stem_pts_new.at(indices[j]) = true;
+        for(size_t j = 0; j < indices.size();j++)
+        {
+            stem_pts_new.at(indices[j]) = true;
+        }
     }
 }
 

@@ -94,7 +94,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-367</y>
          <width>1918</width>
          <height>1198</height>
         </rect>
@@ -2352,6 +2352,148 @@
               </property>
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset Crown&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Crown.png</normaloff>../resources/Crown.png</iconset>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="cluster_frame_3">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>630</y>
+              <width>231</width>
+              <height>71</height>
+             </rect>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="statusTip">
+             <string>uio</string>
+            </property>
+            <property name="whatsThis">
+             <string>uio</string>
+            </property>
+            <property name="accessibleName">
+             <string>uio</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>uio</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="lineWidth">
+             <number>2</number>
+            </property>
+            <widget class="QGroupBox" name="cluster_box_5">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>0</y>
+               <width>211</width>
+               <height>71</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>Publication</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <widget class="QPushButton" name="ery_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Denoise Ery folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Stem.png</normaloff>../resources/Stem.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="oak_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Denoise Oak Folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Crown.png</normaloff>../resources/Crown.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pine_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Denoise Pine Folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Crown.png</normaloff>../resources/Crown.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="euca_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>160</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Denoise Eucalypt folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="autoFillBackground">
                <bool>false</bool>

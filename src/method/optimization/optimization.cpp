@@ -35,15 +35,15 @@ Optimization::update_sd()
     coefficients_sd.min_radius_sphere_stem = std::abs(coefficients_start.min_radius_sphere_stem-coefficients_end.min_radius_sphere_stem);
     coefficients_sd.min_radius_sphere_branch = std::abs(coefficients_start.min_radius_sphere_branch-coefficients_end.min_radius_sphere_branch);
 
-    coefficients_sd.sphere_radius_multiplier = std::max<float>(coefficients_sd.sphere_radius_multiplier,0.004f);
-    coefficients_sd.epsilon_cluster_branch = std::max<float>(coefficients_sd.epsilon_cluster_branch,0.004f);
-    coefficients_sd.epsilon_cluster_stem = std::max<float>(coefficients_sd.epsilon_cluster_stem,0.004f);
-    coefficients_sd.epsilon_sphere = std::max<float>(coefficients_sd.epsilon_sphere,0.002f);
-    coefficients_sd.minPts_ransac_stem = std::max<int>(coefficients_sd.minPts_ransac_stem,20);
-    coefficients_sd.minPts_cluster_stem = std::max<int>(coefficients_sd.minPts_cluster_stem,2);
-    coefficients_sd.minPts_cluster_branch = std::max<int>(coefficients_sd.minPts_cluster_branch,2);
-    coefficients_sd.min_radius_sphere_stem = std::max<float>(coefficients_sd.min_radius_sphere_stem,0.01f);
-    coefficients_sd.min_radius_sphere_branch = std::max<float>(coefficients_sd.min_radius_sphere_branch,0.01f);
+    coefficients_sd.sphere_radius_multiplier = std::max<float>(coefficients_sd.sphere_radius_multiplier,0.02f);
+    coefficients_sd.epsilon_cluster_branch = std::max<float>(coefficients_sd.epsilon_cluster_branch,0.02f);
+    coefficients_sd.epsilon_cluster_stem = std::max<float>(coefficients_sd.epsilon_cluster_stem,0.02f);
+    coefficients_sd.epsilon_sphere = std::max<float>(coefficients_sd.epsilon_sphere,0.02f);
+    coefficients_sd.minPts_ransac_stem = std::max<int>(coefficients_sd.minPts_ransac_stem,50);
+    coefficients_sd.minPts_cluster_stem = std::max<int>(coefficients_sd.minPts_cluster_stem,10);
+    coefficients_sd.minPts_cluster_branch = std::max<int>(coefficients_sd.minPts_cluster_branch,10);
+    coefficients_sd.min_radius_sphere_stem = std::max<float>(coefficients_sd.min_radius_sphere_stem,0.02f);
+    coefficients_sd.min_radius_sphere_branch = std::max<float>(coefficients_sd.min_radius_sphere_branch,0.02f);
 }
 
 
@@ -89,9 +89,9 @@ Optimization::make_coefficients_positive(Method_Coefficients & coeff)
         coeff.epsilon_cluster_stem = 0.02;
     }
 
-    if(coeff.epsilon_sphere<0.005)
+    if(coeff.epsilon_sphere<0.01)
     {
-        coeff.epsilon_sphere = 0.005;
+        coeff.epsilon_sphere = 0.01;
     }
 
     if(coeff.epsilon_sphere>0.03)
@@ -222,9 +222,149 @@ void Optimization::setA(float value)
     a = value;
 }
 std::vector<Method_Coefficients>
-Optimization::neighboring_coefficients()
+Optimization::neighboring_coefficients(int i)
 {
     std::vector<Method_Coefficients> vec;
+    coefficients_sd = coefficients_end;
+
+    switch (i) {
+    case 0:
+    {
+        float radius = coefficients_sd.sphere_radius_multiplier;
+        coefficients_sd.sphere_radius_multiplier = radius * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.sphere_radius_multiplier = radius * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.sphere_radius_multiplier = radius * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.sphere_radius_multiplier = radius * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.sphere_radius_multiplier = radius * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.sphere_radius_multiplier = radius * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.sphere_radius_multiplier = radius * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    case 1:
+    {
+        float epsilon_cluster_branch = coefficients_sd.epsilon_cluster_branch;
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_branch = epsilon_cluster_branch * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    case 2:
+    {
+        float epsilon_cluster_stem = coefficients_sd.epsilon_cluster_stem;
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_cluster_stem = epsilon_cluster_stem * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    case 3:
+    {
+        float epsilon_sphere = coefficients_sd.epsilon_sphere;
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.epsilon_sphere = epsilon_sphere * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    case 4:
+    {
+        float minPts_ransac_stem = coefficients_sd.minPts_ransac_stem;
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.minPts_ransac_stem = minPts_ransac_stem * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    case 5:
+    {
+        float min_radius_sphere_stem = coefficients_sd.min_radius_sphere_stem;
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_stem = min_radius_sphere_stem * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    case 6:
+    {
+        float min_radius_sphere_branch = coefficients_sd.min_radius_sphere_branch;
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 0.5f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 0.7f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 0.85f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 1;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 1.15f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 1.3f;
+        vec.push_back(coefficients_sd);
+        coefficients_sd.min_radius_sphere_branch = min_radius_sphere_branch * 1.5f;
+        vec.push_back(coefficients_sd);
+        break;
+    }
+    default:
+        break;
+    }
+
 //    for(int i = -1 ; i < 2 ; i++ )
 //    {
 //        for (int j = -1 ; j < 2 ; j++)
@@ -269,24 +409,34 @@ Optimization::optimize()
 
 
         std::cout << "next iteration starts " << current_iteration << std::endl;
-//        std::vector<Method_Coefficients> neighbors = neighboring_coefficients();
-//        for(std::vector<Method_Coefficients>::iterator it = neighbors.begin(); it < neighbors.end(); it++)
-//        {
-//            Method_Coefficients coeff = *it;
-//            make_coefficients_positive(coeff);
 
-//             {
-//                 WorkerSphereFollowing * worker = new WorkerSphereFollowing();
-//                 worker->set_control(this->controller);
-//                 worker->setOptimize(shared_from_this());
-//                 worker->set_coefficients(coeff);
-//                 this->start(worker);
-//             }
+//        for(int i = 0 ; i < 7; i ++)
+//        {
+//            std::vector<Method_Coefficients> seeds = neighboring_coefficients(i);
+//            for(std::vector<Method_Coefficients>::iterator kit = seeds.begin(); kit < seeds.end(); kit++)
+//            {
+//                Method_Coefficients seed = *kit;
+//                make_coefficients_positive(seed);
+//                WorkerSphereFollowing * worker = new WorkerSphereFollowing();
+//                worker->set_control(this->controller);
+//                worker->setOptimize(shared_from_this());
+//                worker->set_coefficients(seed);
+//                worker->setA(a);
+//                worker->setB(b);
+//                worker->setFac(fac);
+//                this->start(worker);
+//            }
+//            this->waitForDone();
+//            end_dist = current_dist;
+
+
+//            dist_update = start_dist-end_dist;
 
 
 //        }
-//        std::cout << "Halve threads started " << std::endl;
-//        this->waitForDone();
+//        std::cout << "All threads ended"  << std::endl;
+//        std::cout << "dist improve : start" << start_dist  << std::endl;
+
         std::vector<Method_Coefficients> seeds = generate_seeds(this->coefficients_end);
         for(std::vector<Method_Coefficients>::iterator kit = seeds.begin(); kit < seeds.end(); kit++)
         {
