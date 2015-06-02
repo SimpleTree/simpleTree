@@ -2821,98 +2821,98 @@ PCLViewer::denoiseEry()
         std::vector<int> histData;
         PointCloudI::Ptr cloud = getControl ()->getCloudPtr ();
 
-        for ( size_t i = 0; i < cloud->points.size (); i++ ) {
-            double d = cloud->points[i].intensity;
-            histData.push_back ( d );
-        }
+//        for ( size_t i = 0; i < cloud->points.size (); i++ ) {
+//            double d = cloud->points[i].intensity;
+//            histData.push_back ( d );
+//        }
 
-        int *b=new int [256];
-        std::fill_n(b,256,0); // Put n times 0 in b
+//        int *b=new int [256];
+//        std::fill_n(b,256,0); // Put n times 0 in b
 
-        for (int i=0;i<histData.size();i++)
-        {
-            b[histData[i]] +=1;
-        }
-        int max_index = -1;
-        int max = std::numeric_limits<int>::min();
-        for(int i = 0; i < 256; i++)
-        {
-            if (b[i]>=max){
-                max = b[i];
-                max_index = i;
-            }
-        }
-        delete[] b;
+//        for (int i=0;i<histData.size();i++)
+//        {
+//            b[histData[i]] +=1;
+//        }
+//        int max_index = -1;
+//        int max = std::numeric_limits<int>::min();
+//        for(int i = 0; i < 256; i++)
+//        {
+//            if (b[i]>=max){
+//                max = b[i];
+//                max_index = i;
+//            }
+//        }
+//        delete[] b;
 
-        if(max_index>-1)
-        {
-            max_index+=15;
-            QString str = "";
-            str.append ( "Intensity outlier removal starts witn minimum Intensity = " ).append ( QString::number ( intensity_outlier_minIntens ) ).append (
-                        " and maximum Intensity = " ).append ( QString::number ( intensity_outlier_maxIntens ) ).append ( "\n" );
-            writeConsole ( str );
-            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+//        if(max_index>-1)
+//        {
+//            max_index+=15;
+//            QString str = "";
+//            str.append ( "Intensity outlier removal starts witn minimum Intensity = " ).append ( QString::number ( intensity_outlier_minIntens ) ).append (
+//                        " and maximum Intensity = " ).append ( QString::number ( intensity_outlier_maxIntens ) ).append ( "\n" );
+//            writeConsole ( str );
+//            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
 
-            pcl::ConditionAnd<PointI>::Ptr intens_cond ( new pcl::ConditionAnd<PointI> () );
-            intens_cond->addComparison (
-                        pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::GT, max_index ) ) );
-            intens_cond->addComparison (
-                        pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::LT, 255 ) ) );
-            // build the filter
-            //		    pcl::ConditionalRemoval<PointI> condrem (intens_cond);
-            pcl::ConditionalRemoval<PointI> condrem;
-            condrem.setCondition ( intens_cond );
-            condrem.setInputCloud ( getControl ()->getCloudPtr () );
-            //condrem.setKeepOrganized(true);
-            // apply filter
-            condrem.filter ( *cloud_filtered );
+//            pcl::ConditionAnd<PointI>::Ptr intens_cond ( new pcl::ConditionAnd<PointI> () );
+//            intens_cond->addComparison (
+//                        pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::GT, max_index ) ) );
+//            intens_cond->addComparison (
+//                        pcl::FieldComparison<PointI>::ConstPtr ( new pcl::FieldComparison<PointI> ( "intensity", pcl::ComparisonOps::LT, 255 ) ) );
+//            // build the filter
+//            //		    pcl::ConditionalRemoval<PointI> condrem (intens_cond);
+//            pcl::ConditionalRemoval<PointI> condrem;
+//            condrem.setCondition ( intens_cond );
+//            condrem.setInputCloud ( getControl ()->getCloudPtr () );
+//            //condrem.setKeepOrganized(true);
+//            // apply filter
+//            condrem.filter ( *cloud_filtered );
 
-            int size_before = getControl ()->getCloudPtr ()->points.size ();
-            int size_after = cloud_filtered->points.size ();
-            float a = size_before;
-            float b = size_after;
-            float percentage = ( 100.0f * b ) / ( a );
-            getControl ()->setCloudPtr ( cloud_filtered );
-            writeConsole (
-                        QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
-                            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
-        }
+//            int size_before = getControl ()->getCloudPtr ()->points.size ();
+//            int size_after = cloud_filtered->points.size ();
+//            float a = size_before;
+//            float b = size_after;
+//            float percentage = ( 100.0f * b ) / ( a );
+//            getControl ()->setCloudPtr ( cloud_filtered );
+//            writeConsole (
+//                        QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+//                            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+//        }
 
 
 
-        curvature.reset(new CurvatureDialog(this));
-        curvature->setViewer(shared_from_this());
-        curvature->init();
-        curvature->dialog->PCA1Max->setValue(55);
-        curvature->dialog->PCA2Min->setValue(0);
-        curvature->dialog->PCA3Max->setValue(100);
-        curvature->save();
-        {
-            QString str = "";
+//        curvature.reset(new CurvatureDialog(this));
+//        curvature->setViewer(shared_from_this());
+//        curvature->init();
+//        curvature->dialog->PCA1Max->setValue(55);
+//        curvature->dialog->PCA2Min->setValue(0);
+//        curvature->dialog->PCA3Max->setValue(100);
+//        curvature->save();
+//        {
+//            QString str = "";
 
-            str.append ( "Statistical outlier removal starts.\n All points whith a mean distance larger than " ).append ( QString::number ( statistical_outlier_stdmult ) ).append (
-                        " times the average distance to its  " ).append ( QString::number ( statistical_outlier_knn ) ).append ( " nearest neighbors are deleted.\n" );
-            writeConsole ( str );
+//            str.append ( "Statistical outlier removal starts.\n All points whith a mean distance larger than " ).append ( QString::number ( statistical_outlier_stdmult ) ).append (
+//                        " times the average distance to its  " ).append ( QString::number ( statistical_outlier_knn ) ).append ( " nearest neighbors are deleted.\n" );
+//            writeConsole ( str );
 
-            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
-            pcl::StatisticalOutlierRemoval<PointI> sor;
-            sor.setInputCloud ( getControl ()->getCloudPtr () );
-            sor.setMeanK ( 30 );
-            sor.setStddevMulThresh ( 4 );
-            sor.filter ( *cloud_filtered );
+//            PointCloudI::Ptr cloud_filtered ( new PointCloudI );
+//            pcl::StatisticalOutlierRemoval<PointI> sor;
+//            sor.setInputCloud ( getControl ()->getCloudPtr () );
+//            sor.setMeanK ( 30 );
+//            sor.setStddevMulThresh ( 4 );
+//            sor.filter ( *cloud_filtered );
 
-            int size_before = getControl ()->getCloudPtr ()->points.size ();
-            int size_after = cloud_filtered->points.size ();
-            float a = size_before;
-            float b = size_after;
-            float percentage = ( 100.0f * b ) / ( a );
-            getControl ()->setCloudPtr ( cloud_filtered );
-            writeConsole (
-                        QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
-                            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
-            getControl ()->getGuiPtr ()->writeConsole (
-                        "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
-        }
+//            int size_before = getControl ()->getCloudPtr ()->points.size ();
+//            int size_after = cloud_filtered->points.size ();
+//            float a = size_before;
+//            float b = size_after;
+//            float percentage = ( 100.0f * b ) / ( a );
+//            getControl ()->setCloudPtr ( cloud_filtered );
+//            writeConsole (
+//                        QString ( "Outlier removal done, " ).append ( QString::number ( size_after ) ).append ( " points left, size reduced to " ).append (
+//                            QString::number ( percentage ).append ( " percent of original cloud.\n" ) ) );
+//            getControl ()->getGuiPtr ()->writeConsole (
+//                        "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
+//        }
 
 
         euclidean_clustering_minsize = 100;
@@ -3001,20 +3001,13 @@ PCLViewer::denoiseEry()
         getControl ()->getGuiPtr ()->writeConsole ( "\n" );
         getControl ()->getGuiPtr ()->writeConsole (
                     "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n" );
-        this->updateProgress ( 0 );
-        QCoreApplication::processEvents ();
-        computeNormals ( getControl ()->getCloudPtr () );
-        getControl ()->getGuiPtr ()->updateProgress ( 40 );
-        QCoreApplication::processEvents ();
-        CurvatureCloud::Ptr principalCurvatures = computeCurvature ( getControl ()->getCloudPtr () );
-        getControl ()->setCurvaturePtr ( principalCurvatures );
-        getControl ()->getGuiPtr ()->updateProgress ( 70 );
+
         QCoreApplication::processEvents ();
         {
             //    std::ostringstream stream;
             //  stream << "../data/" << getControl()->getTreeID() << ".asc";
 
-            QString str ("../data/ery/automatic/");
+            QString str ("../data/ery/manual2/");
             str.append(QString::fromStdString(getControl()->getTreeId()));
             pcl::io::savePCDFileASCII (str.toStdString(), *getControl()->getCloudPtr());
 
@@ -3035,7 +3028,7 @@ PCLViewer::computeEry()
 
     tt.tic ();
     QString error;
-    QDir dir ( "../data/ery/automatic" );
+    QDir dir ( "../data/ery/manual2" );
     std::cout << dir.absolutePath().toStdString();
     QStringList filters;
     filters << "*.pcd" ;
@@ -3048,13 +3041,13 @@ PCLViewer::computeEry()
         method_coefficients.epsilon_cluster_branch = 0.02f;
         method_coefficients.epsilon_cluster_stem = 0.03f;
         method_coefficients.epsilon_sphere = 0.02f;
-        method_coefficients.minPts_ransac_stem = 200;
-        method_coefficients.minPts_ransac_branch = 1111200;
-        method_coefficients.minPts_cluster_stem = 12;
+        method_coefficients.minPts_ransac_stem = 10;//200
+        method_coefficients.minPts_ransac_branch = 10;//11111111
+        method_coefficients.minPts_cluster_stem = 3;
         method_coefficients.minPts_cluster_branch = 3;
         method_coefficients.min_radius_sphere_stem = 0.07f;
         method_coefficients.min_radius_sphere_branch = 0.025f;
-        dir = QString("../data/ery/automatic");
+        dir = QString("../data/ery/manual2");
         QString file_abs = dir.absolutePath().append ( "/" ).append ( files.at ( i ) );
         std::cout << file_abs.toStdString();
         int index = file_abs.lastIndexOf ( "/" );
@@ -3100,7 +3093,7 @@ PCLViewer::computeEry()
             optimize->setCoefficients(method_coefficients);
             optimize->setA(149.3);
             optimize->setB(2.733);
-            optimize->setFac(3);
+            optimize->setFac(30000);
 
 
             optimize->optimize();
@@ -3147,7 +3140,7 @@ PCLViewer::computeEry()
                     //                        allom.setCoefficients(98.34,3.612);
                     //                        allom.setFac(2);
                     allom.setCoefficients(149.3,2.733);
-                    allom.setFac(3);
+                    allom.setFac(3000);//3
                     allom.setMinRad(0.02);
                     allom.improveTree();
 
