@@ -48,7 +48,7 @@ class Controller;
 class Crown
 {
   public:
-        QMutex lock;
+    static    QMutex lock;
     float volume;
     float area;
     float crownProjectionArea;

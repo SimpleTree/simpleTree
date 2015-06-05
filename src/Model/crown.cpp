@@ -34,6 +34,9 @@
 */
 #include "crown.h"
 
+QMutex
+Crown::lock;
+
 Crown::Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,boost::weak_ptr<Controller> control)
 {
      QMutexLocker locker(&lock);
