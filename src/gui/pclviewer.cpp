@@ -511,7 +511,7 @@ PCLViewer::computeAustraliaRandomLoop()
     QDir dir ( "../data/australia/manual/" );
     std::cout << dir.absolutePath().toStdString();
     QStringList filters;
-    filters << "*.pcd" ;
+    filters << "*.asc" ;
     dir.setNameFilters ( filters );
     dir.setFilter ( QDir::Files );
     QStringList files = dir.entryList ();

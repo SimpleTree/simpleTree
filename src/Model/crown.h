@@ -39,11 +39,16 @@
 #include <pcl/surface/convex_hull.h>
 #include <pcl/surface/concave_hull.h>
 #include "../controller.h"
+
+#include <QMutexLocker>
+#include <QMutex>
+
 typedef pcl::PointXYZINormal PointI;
 class Controller;
 class Crown
 {
   public:
+        QMutex lock;
     float volume;
     float area;
     float crownProjectionArea;

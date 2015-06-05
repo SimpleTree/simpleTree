@@ -36,53 +36,57 @@
 
 Crown::Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,boost::weak_ptr<Controller> control)
 {
+     QMutexLocker locker(&lock);
+    if(cloud != 0 && cloud->points.size()>4)
+    {
     this->control = control;
-//  this->cloud = cloud;
-//  pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud (new pcl::PointCloud<pcl::PointXYZ>);
-//  pcl::ConvexHull<pcl::PointXYZ> hull;
-//  hull.setInputCloud (this->cloud);
-//  hull.setComputeAreaVolume (true);
-//  hull.reconstruct (*hull_cloud, polygons);
-//  volume = hull.getTotalVolume ();
-//  area = hull.getTotalArea ();
-//  this->hull_cloud = hull_cloud;
-//  QString str;
-//  	str.append("The volume of the crown is ").append(
-//  			QString::number(volume)).append(" in m^3, the crown surface area is ").append(
-//  		  			QString::number(area)).append("m^2.\n");
-//  	getControl()->getGuiPtr()->writeConsole(str);
-//  	QCoreApplication::processEvents();
+  this->cloud = cloud;
+  pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud (new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::ConvexHull<pcl::PointXYZ> hull;
+  hull.setInputCloud (this->cloud);
+  hull.setComputeAreaVolume (true);
+  hull.reconstruct (*hull_cloud, polygons);
+  volume = hull.getTotalVolume ();
+  area = hull.getTotalArea ();
+  this->hull_cloud = hull_cloud;
+  QString str;
+    str.append("The volume of the crown is ").append(
+            QString::number(volume)).append(" in m^3, the crown surface area is ").append(
+                    QString::number(area)).append("m^2.\n");
+  //  getControl()->getGuiPtr()->writeConsole(str);
+    QCoreApplication::processEvents();
 
 
-//  pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud_concave (new pcl::PointCloud<pcl::PointXYZ>);
-//  pcl::ConcaveHull<pcl::PointXYZ> hull_concave;
-//  hull_concave.setInputCloud (this->cloud);
-//  hull_concave.setAlpha (0.2);
-//  hull_concave.reconstruct (*hull_cloud_concave, polygons_concave);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud_concave (new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::ConcaveHull<pcl::PointXYZ> hull_concave;
+  hull_concave.setInputCloud (this->cloud);
+  hull_concave.setAlpha (0.2);
+  hull_concave.reconstruct (*hull_cloud_concave, polygons_concave);
 
-//  this->hull_cloud_concave = hull_cloud_concave;
+  this->hull_cloud_concave = hull_cloud_concave;
 
-//  //
+  //
 
-//  pcl::PointCloud<pcl::PointXYZ>::Ptr proj_hull_cloud (new pcl::PointCloud<pcl::PointXYZ>);
-//  pcl::PointCloud<pcl::PointXYZ>::Ptr proj_cloud (new pcl::PointCloud<pcl::PointXYZ>);
-//  for (size_t i = 0; i < cloud->size (); i++)
-//  {
-//    pcl::PointXYZ p = cloud->points[i];
-//    pcl::PointXYZ proj (p.x, p.y, 0);
-//    proj_cloud->push_back (proj);
-//  }
+  pcl::PointCloud<pcl::PointXYZ>::Ptr proj_hull_cloud (new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr proj_cloud (new pcl::PointCloud<pcl::PointXYZ>);
+  for (size_t i = 0; i < cloud->size (); i++)
+  {
+    pcl::PointXYZ p = cloud->points[i];
+    pcl::PointXYZ proj (p.x, p.y, 0);
+    proj_cloud->push_back (proj);
+  }
 
-//  pcl::ConvexHull<pcl::PointXYZ> hull2;
-//  hull2.setInputCloud (proj_cloud);
-//  hull2.setComputeAreaVolume (true);
-//  hull2.reconstruct (*proj_hull_cloud, proj_polygons);
-//  crownProjectionArea = hull2.getTotalArea ();
-//  str = "";
-//  str.append("The crown projection area is ").append(
-//    			QString::number(crownProjectionArea)).append("m^2.\n");
-//    	getControl()->getGuiPtr()->writeConsole(str);
-//    	QCoreApplication::processEvents();
+  pcl::ConvexHull<pcl::PointXYZ> hull2;
+  hull2.setInputCloud (proj_cloud);
+  hull2.setComputeAreaVolume (true);
+  hull2.reconstruct (*proj_hull_cloud, proj_polygons);
+  crownProjectionArea = hull2.getTotalArea ();
+  str = "";
+  str.append("The crown projection area is ").append(
+                QString::number(crownProjectionArea)).append("m^2.\n");
+   //     getControl()->getGuiPtr()->writeConsole(str);
+        QCoreApplication::processEvents();
+    }
 }
 
 boost::shared_ptr<Controller> Crown::getControl() {
@@ -92,13 +96,17 @@ boost::shared_ptr<Controller> Crown::getControl() {
 void
 Crown::reset_concave_hull(float r)
 {
-//    pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud_concave (new pcl::PointCloud<pcl::PointXYZ>);
-//    pcl::ConcaveHull<pcl::PointXYZ> hull_concave;
-//    hull_concave.setInputCloud (this->cloud);
-//    hull_concave.setAlpha (r);
-//    hull_concave.reconstruct (*hull_cloud_concave, polygons_concave);
+         QMutexLocker locker(&lock);
+    if(cloud != 0 && cloud->points.size()>4)
+    {
+    pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud_concave (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::ConcaveHull<pcl::PointXYZ> hull_concave;
+    hull_concave.setInputCloud (this->cloud);
+    hull_concave.setAlpha (r);
+    hull_concave.reconstruct (*hull_cloud_concave, polygons_concave);
 
-//    this->hull_cloud_concave = hull_cloud_concave;
+    this->hull_cloud_concave = hull_cloud_concave;
+    }
 }
 
 
