@@ -43,20 +43,32 @@ Allometry::Allometry()
 void
 Allometry::improveTree()
 {
+    std::vector<float> growth_volumina;
+    for(size_t i = 0; i  < cylinders.size(); i++)
+    {
+        boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
+        float y = getTree()->getGrowthVolume ( cylinder );
+        growth_volumina.push_back(y);
+    }
     for(size_t i = 0; i  < cylinders.size(); i++)
     {
         boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
         float x = cylinder->getRadius();
-        float y = getTree()->getGrowthVolume ( cylinder );
+        float y = growth_volumina.at(i);
         if(cylinder->getSegment()->getParent()!= 0)
         {
-        if ( (y>(getYFromX(x)*fac)) || (y<(getYFromX(x)/fac) ) )
-        {
-            if(cylinder->values[6] >= std::max(getXFromY(y),minRad))
+//            if ( (y>(getYFromX(x)*fac)) || (y<(getYFromX(x)/fac) ) )
+//            {
+//                if(cylinder->values[6] >= std::max(getXFromY(y),minRad))
+//                {
+//                    cylinder->values[6] = std::max(getXFromY(y),minRad);
+//                }
+//            }
+ if ( y<(getYFromX(x)/fac) )
             {
-                cylinder->values[6] = std::max(getXFromY(y),minRad);
+
+                    cylinder->values[6] = std::max((getXFromY(y)),minRad);
             }
-        }
         }
     }
 }
@@ -88,6 +100,24 @@ float
 Allometry::getXFromY(float y)
 {
     float log_x = (log(y/coeff_a))/(coeff_b);
+
+    float x = exp(log_x);
+    return x;
+}
+
+float
+Allometry::getLowerXFromY(float y)
+{
+    float log_x = (log(y/(coeff_a/fac)))/(coeff_b);
+
+    float x = exp(log_x);
+    return x;
+}
+
+float
+Allometry::getUpperXFromY(float y)
+{
+    float log_x = (log(y/(coeff_a*fac)))/(coeff_b);
 
     float x = exp(log_x);
     return x;

@@ -63,6 +63,11 @@ private:
     float getYFromX(float x);
     float getXFromY(float y);
 
+    float
+    getLowerXFromY(float y);
+
+    float
+    getUpperXFromY(float y);
 public:
     Allometry();
 

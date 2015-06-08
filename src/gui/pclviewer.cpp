@@ -1654,9 +1654,9 @@ PCLViewer::computeQuercusFast()
 
             optimize->setControl(getControl());
             optimize->setCoefficients(method_coefficients);
-            optimize->setA(2101);
-            optimize->setB(3.775);
-            optimize->setFac(1.6);
+            optimize->setA(240.559);
+            optimize->setB(2.72);
+            optimize->setFac(2.5);
 
 
             optimize->optimize();
@@ -1702,8 +1702,8 @@ PCLViewer::computeQuercusFast()
                     allom.setTree(tree);
                     //                        allom.setCoefficients(98.34,3.612);
                     //                        allom.setFac(2);
-                    allom.setCoefficients(2101,3.775);
-                    allom.setFac(1.6);
+                    allom.setCoefficients(240.559,2.720);
+                    allom.setFac(2.5);
                     allom.improveTree();
 
                     float f = tt.toc () / 1000;
@@ -1810,9 +1810,10 @@ PCLViewer::computePineFast()
 
             optimize->setControl(getControl());
             optimize->setCoefficients(method_coefficients);
-            optimize->setA(87.18);
-            optimize->setB(2.526);
-            optimize->setFac(1.6);
+            optimize->setA(137.498);
+            optimize->setB(2.62);
+            //optimize->setFac(1.6);
+            optimize->setFac(2.5);
 
 
             optimize->optimize();
@@ -1852,8 +1853,8 @@ PCLViewer::computePineFast()
 
                     simpleTree::Allometry allom;
                     allom.setTree(tree);
-                    allom.setCoefficients(87.18,2.526);
-                    allom.setFac(1.6);
+                    allom.setCoefficients(137.498,2.62);
+                    allom.setFac(2.5);
                     allom.improveTree();
 
                     float f = tt.toc () / 1000;
