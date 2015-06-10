@@ -52,7 +52,7 @@
 #include <pcl/filters/passthrough.h>
 
 #include "../method/optimization/optimization.h"
-
+#include <QWebView>
 // Visualization Toolkit (VTK)
 #include <vtkRenderWindow.h>
 #include "../method/SphereFollowing.h"
@@ -75,7 +75,7 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/filters/voxel_grid.h>
 #include <QScrollBar>
-#include <QWebView>
+
 #include <QFile>
 #include <pcl/filters/radius_outlier_removal.h>
 #include <pcl/filters/conditional_removal.h>
@@ -218,7 +218,7 @@ private:
 
 	boost::weak_ptr<Controller> control;
 	QString consoleString;
-	QWebView *qwebview;
+    //QWebView *qwebview;
 	boost::shared_ptr<SetCoefficients> set_coefficients;
 
 public:
