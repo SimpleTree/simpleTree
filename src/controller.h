@@ -35,7 +35,7 @@
 
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
-#include <QCleanlooksStyle>
+
 #include <QApplication>
 
 #include <QMainWindow>

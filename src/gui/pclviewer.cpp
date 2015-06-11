@@ -3609,14 +3609,14 @@ PCLViewer::statisticalOutlierRemoval () {
         //		boost::shared_ptr<QDialog>  radius_dialog (new QDialog(0,0));
         QDialog * statistical_dialog = new QDialog ( this, 0 );
         //TODO solve pointer issue
-        QWebView *  qwebview =new QWebView ( statistical_dialog );
-        qwebview->setObjectName ( QString::fromUtf8 ( "qwebview" ) );
-        qwebview->setGeometry ( QRect ( 20, 140, 431, 192 ) );
-        qwebview->setProperty ( "url", QVariant ( QUrl::fromLocalFile ( QFileInfo ( "../html/tip_stat.html" ).absoluteFilePath() ) ) );
-        QWebView *  qwebview2 =new QWebView ( statistical_dialog );
-        qwebview2->setObjectName ( QString::fromUtf8 ( "qwebview2" ) );
-        qwebview2->setGeometry ( QRect ( 450, 20, 361, 311 ) );
-        qwebview2->setProperty ( "url", QVariant ( QUrl::fromLocalFile ( QFileInfo ( "../html/cite_stat.html" ).absoluteFilePath() ) ) );
+//        QWebView *  qwebview =new QWebView ( statistical_dialog );
+//        qwebview->setObjectName ( QString::fromUtf8 ( "qwebview" ) );
+//        qwebview->setGeometry ( QRect ( 20, 140, 431, 192 ) );
+//        qwebview->setProperty ( "url", QVariant ( QUrl::fromLocalFile ( QFileInfo ( "../html/tip_stat.html" ).absoluteFilePath() ) ) );
+//        QWebView *  qwebview2 =new QWebView ( statistical_dialog );
+//        qwebview2->setObjectName ( QString::fromUtf8 ( "qwebview2" ) );
+//        qwebview2->setGeometry ( QRect ( 450, 20, 361, 311 ) );
+//        qwebview2->setProperty ( "url", QVariant ( QUrl::fromLocalFile ( QFileInfo ( "../html/cite_stat.html" ).absoluteFilePath() ) ) );
         Ui_Dialog_Statistical stat;
         stat.setupUi ( statistical_dialog );
 
