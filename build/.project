@@ -43,7 +43,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.build.arguments</key>
-					<value></value>
+					<value>-j8</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
@@ -91,7 +91,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.core.errorOutputParser</key>
-					<value>org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
+					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
@@ -109,12 +109,602 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>[Source directory]</name>
+			<type>2</type>
+			<location>/home/hackenberg/simpleTree/src</location>
+		</link>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Subprojects]/simpleTree</name>
+			<type>2</type>
+			<location>/home/hackenberg/simpleTree/src</location>
+		</link>
+		<link>
 			<name>[Targets]</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>[Targets]/[exe] simpleTree</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//crop_box_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/cropbox/crop_box_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//crop_sphere_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/cropsphere/crop_sphere_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//reference_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/reference/reference_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//curvature_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/curvature/curvature_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//pclviewer.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/pclviewer.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//eigen_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/eigen_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//allign_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/allign/allign_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//method_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/method_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//radius_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/radius_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//intensity_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/intensity_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//statistical_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/statistical_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//voxel_grid_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/voxel_grid_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//euclidean_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/euclidean_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree//crown_dialog.ui</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/crown_dialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/workerspherefollowing.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/method/optimization/workerspherefollowing.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/optimization.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/method/optimization/optimization.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/childcylinderextraction.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/Model/childcylinderextraction.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/cropboxdialog.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/cropbox/cropboxdialog.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/cropspheredialog.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/cropsphere/cropspheredialog.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/referenceheightdialog.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/reference/referenceheightdialog.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/visustatistics.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/statistics/visustatistics.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/allometry.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/Model/modelAdjustment/allometry.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/bufferpointcloud.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/pointclouds/bufferpointcloud.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/curvaturedialog.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/curvature/curvaturedialog.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/voxelgridfilter.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/pointclouds/voxelgridfilter.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/allignpointcloud.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/pointclouds/allignpointcloud.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/exportply.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/export/exportply.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/writecsv.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/export/writecsv.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/main.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/main.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/controller.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/controller.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/pclviewer.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/pclviewer.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/importpcd.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/import/importpcd.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/SphereFollowing.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/method/SphereFollowing.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/eigenvalueestimator.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/method/eigenvalueestimator.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/StemPointDetection.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/method/StemPointDetection.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/set_coefficients.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/method/set_coefficients.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/crown.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/Model/crown.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/Cylinder.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/Model/Cylinder.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/Segment.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/Model/Segment.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/Tree.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/Model/Tree.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/allign.cpp</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/src/gui/allign/allign.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_workerspherefollowing.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/optimization/moc_workerspherefollowing.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_optimization.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/optimization/moc_optimization.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_childcylinderextraction.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_childcylinderextraction.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_cropboxdialog.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/cropbox/moc_cropboxdialog.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_cropspheredialog.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/cropsphere/moc_cropspheredialog.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_referenceheightdialog.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/reference/moc_referenceheightdialog.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_guisubclass.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/moc_guisubclass.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_visustatistics.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/statistics/moc_visustatistics.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_allometry.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/modelAdjustment/moc_allometry.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_bufferpointcloud.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/pointclouds/moc_bufferpointcloud.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_allignpointcloud.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/pointclouds/moc_allignpointcloud.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_curvaturedialog.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/curvature/moc_curvaturedialog.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_voxelgridfilter.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/pointclouds/moc_voxelgridfilter.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_controller.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/moc_controller.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_allign.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/allign/moc_allign.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_writecsv.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/export/moc_writecsv.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_exportply.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/export/moc_exportply.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_pclviewer.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/moc_pclviewer.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_importpcd.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/import/moc_importpcd.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_SphereFollowing.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_SphereFollowing.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_set_coefficients.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_set_coefficients.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_eigenvalueestimator.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_eigenvalueestimator.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_StemPointDetection.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_StemPointDetection.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_crown.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_crown.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_Cylinder.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_Cylinder.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_Segment.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_Segment.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Source Files/moc_Tree.cxx</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_Tree.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_crop_box_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_crop_box_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_crop_sphere_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_crop_sphere_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_reference_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_reference_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_curvature_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_curvature_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_pclviewer.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_pclviewer.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_eigen_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_eigen_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_allign_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_allign_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_method_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_method_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_radius_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_radius_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_intensity_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_intensity_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_statistical_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_statistical_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_voxel_grid_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_voxel_grid_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_euclidean_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_euclidean_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Header Files/ui_crown_dialog.h</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/ui_crown_dialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_workerspherefollowing.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/optimization/moc_workerspherefollowing.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_optimization.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/optimization/moc_optimization.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_childcylinderextraction.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_childcylinderextraction.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_cropboxdialog.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/cropbox/moc_cropboxdialog.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_cropspheredialog.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/cropsphere/moc_cropspheredialog.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_referenceheightdialog.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/reference/moc_referenceheightdialog.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_guisubclass.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/moc_guisubclass.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_visustatistics.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/statistics/moc_visustatistics.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_allometry.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/modelAdjustment/moc_allometry.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_bufferpointcloud.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/pointclouds/moc_bufferpointcloud.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_allignpointcloud.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/pointclouds/moc_allignpointcloud.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_curvaturedialog.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/curvature/moc_curvaturedialog.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_voxelgridfilter.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/pointclouds/moc_voxelgridfilter.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_controller.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/moc_controller.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_allign.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/allign/moc_allign.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_writecsv.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/export/moc_writecsv.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_exportply.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/export/moc_exportply.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_pclviewer.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/gui/moc_pclviewer.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_importpcd.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/import/moc_importpcd.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_SphereFollowing.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_SphereFollowing.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_set_coefficients.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_set_coefficients.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_eigenvalueestimator.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_eigenvalueestimator.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_StemPointDetection.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/method/moc_StemPointDetection.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_crown.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_crown.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_Cylinder.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_Cylinder.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_Segment.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_Segment.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/CMake Rules/moc_Tree.cxx.rule</name>
+			<type>1</type>
+			<location>/home/hackenberg/simpleTree/build/Model/moc_Tree.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] simpleTree/Object Files</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
