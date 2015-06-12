@@ -269,27 +269,27 @@ public:
     convertPointCloud(PointCloudI::Ptr  cloud, int r, int g, int b);
 
 public slots:
-    void
-    denoisePine();
-    void
-    denoiseEry();
-    void
-    denoiseOak();
-    void
-    computeQuercusFast();
-    void
-    computeQuercus();
+//    void
+//    denoisePine();
+//    void
+//    denoiseEry();
+//    void
+//    denoiseOak();
+//    void
+//    computeQuercusFast();
+//    void
+//    computeQuercus();
 
-    void
-    computePineFast();
-    void
-    computePine();
-    void
-    computeEry();
-    void
-    computeAustraliaRandomLoop();
-    void
-    computeAustralia();
+//    void
+//    computePineFast();
+//    void
+//    computePine();
+//    void
+//    computeEry();
+//    void
+//    computeAustraliaRandomLoop();
+//    void
+//    computeAustralia();
     void
     curvature_dialog();
 
