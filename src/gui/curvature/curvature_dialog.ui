@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>471</width>
-    <height>277</height>
+    <width>961</width>
+    <height>441</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,7 +54,7 @@
     </font>
    </property>
    <property name="text">
-    <string>minimum_PCA_1</string>
+    <string>min1</string>
    </property>
   </widget>
   <widget class="QSlider" name="PCA1Min">
@@ -107,7 +107,7 @@
     </font>
    </property>
    <property name="text">
-    <string>maximum_PCA_1</string>
+    <string>max1</string>
    </property>
   </widget>
   <widget class="QSlider" name="PCA2Max">
@@ -160,7 +160,7 @@
     </font>
    </property>
    <property name="text">
-    <string>minimum_PCA_2</string>
+    <string>min2</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -178,7 +178,7 @@
     </font>
    </property>
    <property name="text">
-    <string>maximum_PCA_2</string>
+    <string>max2</string>
    </property>
   </widget>
   <widget class="QSlider" name="PCA3Max">
@@ -231,7 +231,7 @@
     </font>
    </property>
    <property name="text">
-    <string>minimum_PCA_3</string>
+    <string>min3</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_6">
@@ -249,7 +249,31 @@
     </font>
    </property>
    <property name="text">
-    <string>maximum_PCA_3</string>
+    <string>max3</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>20</y>
+     <width>471</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Curvature Filtering&lt;/span&gt; (&lt;span style=&quot; font-style:italic;&quot;&gt;min1, max1, min2, max2, min3, max3&lt;/span&gt;)&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;A PCA is performed for each point. l1, l2 and l3 denote thenormalized Eigenvalues for each point. For all l1 minimum &lt;span style=&quot; font-style:italic;&quot;&gt;min&lt;/span&gt; and maximum &lt;span style=&quot; font-style:italic;&quot;&gt;max&lt;/span&gt; value are computed. &lt;span style=&quot; font-style:italic;&quot;&gt;min1&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;max1&lt;/span&gt; are percentage numbers. A point is considered an outlier, if its l1 is smaller than &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;min&lt;/span&gt; + (&lt;span style=&quot; font-style:italic;&quot;&gt;max&lt;/span&gt; - &lt;span style=&quot; font-style:italic;&quot;&gt;min&lt;/span&gt;)=100 * &lt;span style=&quot; font-style:italic;&quot;&gt;min1&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;or larger than &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;min&lt;/span&gt; + (&lt;span style=&quot; font-style:italic;&quot;&gt;max&lt;/span&gt; - &lt;span style=&quot; font-style:italic;&quot;&gt;min&lt;/span&gt;)=100 * &lt;span style=&quot; font-style:italic;&quot;&gt;max1&lt;/span&gt;. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;l2 and l3 are processed in the same manner. The thresholds are adjusted with a slider and before the removal-confirmation all noise points are marked via transparency and colorization in real time according to the slider values.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Text taken from &amp;quot;SimpleTree - an efficient open source tool to build tree models from TLS clouds&amp;quot;, submitted to MDPI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>

@@ -28,16 +28,13 @@ private :
 
 
     float a,b,fac;
+    float min_rad = 0.0025;
     float start_dist;
     float end_dist;
     float current_dist;
     float dist_update = 0.1f;
     pcl::console::TicToc tt;
 
-//    float epsilon_cluster_branch_update = 0.01;
-//    float epsilon_cluster_stem_update = 0.01;
-//    float epsilon_sphere_update = 0.005;
-//    float min_pts_ransac_stem_update = 100;
 
     float min_dist = 0.0001;
     int max_iterations = 6;
@@ -47,58 +44,60 @@ private :
     float current_iteration = 0;
 
     int numberThreads;
+    int _max_seeds = 1;
+    int _current_seeds = 0;
 
     QMutex lock;
 
 
-       Method_Coefficients
-       generate_coefficients();
-
-       std::vector<Method_Coefficients>
-       neighboring_coefficients(int i);
-
-       std::vector<Method_Coefficients>
-       generate_seeds(Method_Coefficients const coeff);
 
 
-        boost::shared_ptr<Controller> controller;
 
+    Method_Coefficients
+    generate_coefficients();
 
-        void
-        make_coefficients_positive(Method_Coefficients & coeff);
+    std::vector<Method_Coefficients>
+    neighboring_coefficients(int i);
 
-        void
-        update_sd();
+    std::vector<Method_Coefficients>
+    generate_seeds(Method_Coefficients const coeff);
+
+    PointCloudI::Ptr _cloud_ptr;
+
+    std::string treeID;
+
+    std::vector<bool> isStem;
+
+    void
+    make_coefficients_positive(Method_Coefficients & coeff);
+
+    void
+    update_sd();
 public:
-        Method_Coefficients
-        getCoefficients()
-        {
-            return coefficients_end;
-        }
+
+    Method_Coefficients
+    getCoefficients()
+    {
+        return coefficients_end;
+    }
+
 
     float
     get_current_dist();
 
-    void
-    setControl(boost::shared_ptr<Controller> control);
-
 
     void
-     updateCoeff(Method_Coefficients & coeff, float dist);
-
-
+    updateCoeff(Method_Coefficients & coeff, float dist, float min_radius);
 
     explicit Optimization(QObject *parent = 0);
+
+     Optimization(int iterations, int seeds, float min_dist, QObject *parent = 0);
 
     void
     setCoefficients(Method_Coefficients coeffcients);
 
     void
     optimize();
-
-
-
-
 
     float getFac() const;
     void setFac(float value);
@@ -109,7 +108,44 @@ public:
     float getA() const;
     void setA(float value);
 
+    void
+    setMinRad(float min_rad)
+    {
+        this->min_rad = min_rad;
+    }
+
+    float
+    getMinRad()
+    {
+        return min_rad;
+    }
+
+
+    void
+    setCloudPtr(PointCloudI::Ptr cloud_ptr)
+    {
+        this->_cloud_ptr = cloud_ptr;
+    }
+
+    void
+    setTreeID(std::string ID)
+    {
+        this->treeID = ID;
+    }
+
+    void
+    setIsStem(std::vector<bool> isStem)
+    {
+        this->isStem = isStem;
+    }
+
 signals:
+    /**
+     * @brief emitProgress The progress emitted in a percentage number
+     * @param progress The progress in percentage
+     */
+    void
+    emit_progress(int progress);
 
 public slots:
 

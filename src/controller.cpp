@@ -47,7 +47,7 @@ Controller::~Controller ()
 pcl::PointCloud<pcl::PrincipalCurvatures>::Ptr
 Controller::getCurvaturePtr ()
 {
-  return curvature_ptr;
+    return curvature_ptr;
 }
 
 void
@@ -55,104 +55,128 @@ Controller::init (int argc,
                   char *argv[])
 {
 
-  QApplication a (argc, argv);
-  QRect screenres = QApplication::desktop ()->screenGeometry (1/*screenNumber*/);
+    QApplication a (argc, argv);
+    QRect screenres = QApplication::desktop ()->screenGeometry (1/*screenNumber*/);
 
-  this->gui_ptr.reset (new PCLViewer);
-  this->gui_ptr->move (QPoint (screenres.x (), screenres.y ()));
-  this->gui_ptr->resize (screenres.width (), screenres.height ());
-  this->gui_ptr->init();
+    this->gui_ptr.reset (new PCLViewer);
+    this->gui_ptr->move (QPoint (screenres.x (), screenres.y ()));
+    this->gui_ptr->resize (screenres.width (), screenres.height ());
+    this->gui_ptr->init();
 
 
 
-  this->gui_ptr->show ();
-  this->gui_ptr->connectToController (shared_from_this ());
-  a.exec ();
+    this->gui_ptr->show ();
+    this->gui_ptr->connectToController (shared_from_this ());
+    a.exec ();
 }
 
 std::string
 Controller::getTreeID ()
 {
-  return treeID;
+    return treeID;
 }
 
 void
 Controller::setTreeID (std::string treeID)
 {
-  this->treeID = treeID;
+    this->treeID = treeID;
+}
+
+void
+Controller::setTreeID (QString treeID)
+{
+    this->treeID = treeID.toStdString();
 }
 
 PointCloudI::Ptr
 Controller::getCloudPtr ()
 {
-  return this->cloud_ptr;
+    return this->cloud_ptr;
 }
 
 void
 Controller::setCloudPtr (pcl::PointCloud<PointI>::Ptr cloud_ptr, bool changeView )
 {
-  this->cloud_ptr = cloud_ptr;
-  this->cloud_ptr->width = cloud_ptr->points.size();
+    this->cloud_ptr = cloud_ptr;
+    this->cloud_ptr->width = cloud_ptr->points.size();
     this->cloud_ptr->height = 1;
     this->tree_ptr = 0;
-//    this->tree_ptr.reset(new simpleTree::Tree);
     this->e1.clear();
-      this->e2.clear();
-      this->e3.clear();
-      this->isStem.clear();
+    this->e2.clear();
+    this->e3.clear();
+    this->isStem.clear();
     this->curvature_ptr.reset(new CurvatureCloud);
     if(changeView)
     {
-        this->gui_ptr->setCloudPtr (cloud_ptr, true );
+        this->gui_ptr->setCloudPtr (cloud_ptr, false );
     } else {
         this->gui_ptr->setCloudPtr (cloud_ptr, false );
     }
-
-
 }
 
 void
 Controller::setCloudPtr (PointCloudI::Ptr cloud_ptr,
                          CurvatureCloud::Ptr curvature_ptr)
 {
-  this->cloud_ptr = cloud_ptr;
-  this->cloud_ptr->width = cloud_ptr->points.size();
-  this->cloud_ptr->height = 1;
-  this->curvature_ptr = curvature_ptr;
-      this->tree_ptr = 0;
-//  this->tree_ptr.reset (new simpleTree::Tree);
-  this->e1.clear();
+    this->cloud_ptr = cloud_ptr;
+    this->cloud_ptr->width = cloud_ptr->points.size();
+    this->cloud_ptr->height = 1;
+    this->curvature_ptr = curvature_ptr;
+    this->tree_ptr = 0;
+    this->e1.clear();
     this->e2.clear();
     this->e3.clear();
     this->isStem.clear();
-  this->gui_ptr->setCloudPtr (cloud_ptr);
+    this->gui_ptr->setCloudPtr (cloud_ptr);
 }
 
 
 void
 Controller::setCurvaturePtr (CurvatureCloud::Ptr curvature_ptr)
 {
-  this->curvature_ptr = curvature_ptr;
-//  this->tree_ptr.reset (new simpleTree::Tree);
-  this->gui_ptr->setCloudPtr (cloud_ptr);
+    this->curvature_ptr = curvature_ptr;
+    this->gui_ptr->setCloudPtr (cloud_ptr);
 }
 
 boost::shared_ptr<PCLViewer>
 Controller::getGuiPtr ()
 {
-  return this->gui_ptr;
+    return this->gui_ptr;
 }
 
 boost::shared_ptr<simpleTree::Tree>
 Controller::getTreePtr ()
 {
-  return this->tree_ptr;
+    return this->tree_ptr;
 }
 
 void
 Controller::setTreePtr (boost::shared_ptr<simpleTree::Tree> tree_ptr)
 {
-  this->tree_ptr = tree_ptr;    
+    this->tree_ptr = tree_ptr;
     this->gui_ptr->setCloudPtr(cloud_ptr);
-  this->gui_ptr->setTreePtr (tree_ptr);
+    this->gui_ptr->setTreePtr (tree_ptr);
+}
+
+void
+Controller::setE1 ( std::vector<float> e1)
+{
+    this->e1 = e1;
+}
+
+void
+Controller::setE2 ( std::vector<float> e2)
+{
+    this->e2 = e2;
+}
+
+void
+Controller::setE3 ( std::vector<float> e3)
+{
+    this->e3 = e3;
+}
+
+void
+Controller::setIsStem(const std::vector<bool>& isStem) {
+    this->isStem = isStem;
 }

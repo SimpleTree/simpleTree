@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>509</width>
+    <width>1166</width>
     <height>605</height>
    </rect>
   </property>
@@ -44,7 +44,7 @@
   <widget class="QPushButton" name="abort">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>80</x>
      <y>530</y>
      <width>87</width>
      <height>27</height>
@@ -57,14 +57,14 @@
   <widget class="QPushButton" name="compute">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>320</x>
      <y>530</y>
-     <width>201</width>
+     <width>91</width>
      <height>27</height>
     </rect>
    </property>
    <property name="text">
-    <string>Save Settings and Compute</string>
+    <string> Compute </string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -82,7 +82,7 @@
     </font>
    </property>
    <property name="text">
-    <string>sphere radius multiplier</string>
+    <string>sphereMultiplier</string>
    </property>
   </widget>
   <widget class="QDoubleSpinBox" name="sphere_radius_multiplier">
@@ -156,7 +156,7 @@
     </font>
    </property>
    <property name="text">
-    <string>epsilon cluster stem</string>
+    <string>epsClusterStem</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -174,7 +174,7 @@
     </font>
    </property>
    <property name="text">
-    <string>epsilon cluster branch</string>
+    <string>epsClusterBranch</string>
    </property>
   </widget>
   <widget class="QDoubleSpinBox" name="epsilon_sphere">
@@ -276,7 +276,7 @@
     </font>
    </property>
    <property name="text">
-    <string>epsilon sphere</string>
+    <string>epsSphere</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_5">
@@ -294,7 +294,7 @@
     </font>
    </property>
    <property name="text">
-    <string>min radius sphere branch</string>
+    <string>minRadiusSphereBranch</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -315,7 +315,7 @@
     </font>
    </property>
    <property name="text">
-    <string>min Pts ransac stem</string>
+    <string>minPtsRansacStem</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="name">
@@ -359,7 +359,7 @@
   <widget class="QPushButton" name="delete_2">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>190</x>
      <y>530</y>
      <width>111</width>
      <height>27</height>
@@ -460,7 +460,7 @@
     </font>
    </property>
    <property name="text">
-    <string>min Pts ransac branch </string>
+    <string>minPtsRansacBranch</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_9">
@@ -478,7 +478,7 @@
     </font>
    </property>
    <property name="text">
-    <string>min Pts cluster stem</string>
+    <string>minPtsclusterStem</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -496,7 +496,7 @@
     </font>
    </property>
    <property name="text">
-    <string>min Pts cluster branch</string>
+    <string>minPtsClusterBranch</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_11">
@@ -514,7 +514,35 @@
     </font>
    </property>
    <property name="text">
-    <string>min radius sphere stem</string>
+    <string>minRadiusSphereStem</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>10</y>
+     <width>541</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Spherefollowing Method&lt;/span&gt;  (&lt;span style=&quot; font-style:italic;&quot;&gt;sphereMultiplier, epsClusterStem, epsClusterBranch, epsSphere,minPtsRansacStem, minPtsRansacBranch, minPtsClusterStem, minPtsClusterBranch, minRadiusSpher-&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;eStem, minRadiusSphereBranch&lt;/span&gt;)&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The method used to fit cylinders into a de-noised point cloud and to build the tree model. Stem points should be detected before running this method. Spheres are utilized to follow the branching structure of&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;the tree from the root to its tips.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;A sphere with a center point on a skeleton axis cuts the point cloud. All points within a distance of &lt;span style=&quot; font-style:italic;&quot;&gt;epsSphere&lt;/span&gt; to the sphere-surface are considered to be used to detect the next sphere and are put into a&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;sub point cloud P&lt;span style=&quot; vertical-align:sub;&quot;&gt;sub&lt;/span&gt; . P&lt;span style=&quot; vertical-align:sub;&quot;&gt;sub&lt;/span&gt; is subdivided into P&lt;span style=&quot; vertical-align:sub;&quot;&gt;Stem&lt;/span&gt; and P&lt;span style=&quot; vertical-align:sub;&quot;&gt;Branch&lt;/span&gt; . P&lt;span style=&quot; vertical-align:sub;&quot;&gt;Stem&lt;/span&gt; (P&lt;span style=&quot; vertical-align:sub;&quot;&gt;Branch&lt;/span&gt; is processed in same manner) is clustered then with &lt;span style=&quot; font-weight:600;&quot;&gt;Euclidean Clustering&lt;/span&gt; (&lt;span style=&quot; font-style:italic;&quot;&gt;epsClusterStem, &amp;gt;=5 ,minPtsClusterStem&lt;/span&gt;) (See description of clustering button) into i clusters P&lt;span style=&quot; vertical-align:sub;&quot;&gt;i&lt;/span&gt; . Each cluster represents a cross-sectional area of the stem/branch. A circle is fitted with RANSAC  algorithm into P&lt;span style=&quot; vertical-align:sub;&quot;&gt;i&lt;/span&gt; , if the number of points in P&lt;span style=&quot; vertical-align:sub;&quot;&gt; i &lt;/span&gt;exceeds &lt;span style=&quot; font-style:italic;&quot;&gt;minPtsRansacStem&lt;/span&gt;, and with the more robust but less accurate median method  otherwise. The center point of the circle, the center point of the sphere and the circle radius are chosen as cylinder parameters. The circle is enlarged with &lt;span style=&quot; font-style:italic;&quot;&gt;sphereMultiplier&lt;/span&gt; and transformed to a three dimensional sphere. The procedure is repeated recursively until no more cross sectional areas can be found.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The detected cylinders are improved with RANSAC algorithm. More details on the method itself and further post-processing steps on the detected&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;cylinders are given in Hackenberg et al. (2014, 2015).&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Text taken from &amp;quot;SimpleTree - an efficient open source tool to build tree models from TLS clouds&amp;quot;, submitted to MDPI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>

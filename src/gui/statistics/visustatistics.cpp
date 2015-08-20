@@ -62,8 +62,8 @@ void
 VisuStatistics::plotAllometryPoints () {
 
     std::vector<boost::shared_ptr<simpleTree::Cylinder> > cylinders = getViewer()->getControl()->getTreePtr ()->getCylinders ();
-    double radii[cylinders.size ()];
-    double volumes[cylinders.size ()];
+    double *radii = new double[cylinders.size ()];
+    double *volumes = new double[cylinders.size ()];
     double max_volume = std::numeric_limits<double>::min ();
     double max_diameter = std::numeric_limits<double>::min ();
     for ( size_t i = 0; i < cylinders.size (); i++ ) {
@@ -90,4 +90,6 @@ VisuStatistics::plotAllometryPoints () {
     getViewer()->plotter->setXRange ( 0, max_diameter );
     getViewer()->plotter->setYRange ( 0, max_volume );
     getViewer()->ui->qvtkWidget2->update ();
+    delete[] radii;
+    delete[] volumes;
 }

@@ -36,6 +36,7 @@
 #ifndef IMPORTPCD_H
 #define IMPORTPCD_H
 #include <iostream>
+#define PCL_NO_PRECOMPILE
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/console/time.h>
@@ -57,29 +58,30 @@ typedef pcl::PointCloud<PointI> PointCloudI;
 typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 
 class Controller;
-class ImportPCD
+class ImportPCD : public QObject
 {
+    Q_OBJECT
+    std::string _fileName;
 
-    std::string path;
     pcl::console::TicToc tt;
-    PointCloudI::Ptr cloud_intens;
-    CurvatureCloud::Ptr principalCurvatures;
-    void
-    computeNormals (PointCloudI::Ptr points);
-    CurvatureCloud::Ptr
-    computeCurvature ();
-//     void
-//     init ();
+
+    PointCloudI::Ptr _cloud_intens;
+
     void
     setRGB ();
+
     boost::shared_ptr<Controller>
     getControl ();
-    boost::weak_ptr<Controller> control;
 
-  public:
-    std::string fileName;
-    ImportPCD (std::string fileName,
-               boost::weak_ptr<Controller> control);
+    boost::weak_ptr<Controller> _control;
+
+public:
+
+    ImportPCD (QString _fileName);
+
+    ImportPCD (std::string _fileName,
+               boost::weak_ptr<Controller> _control);
+
     virtual
     ~ImportPCD ();
 
@@ -95,14 +97,35 @@ class ImportPCD
     PointCloudI::Ptr
     getCloud ()
     {
-      return cloud_intens;
+        return _cloud_intens;
     }
 
-    CurvatureCloud::Ptr
-    getCurvatures ()
-    {
-      return principalCurvatures;
-    }
+    void compute();
+
+
+signals:
+    /**
+     * @brief emitProgress emits the percentage of progress
+     * @param percentage the progress
+     */
+    void
+    emitProgress(int percentage);
+
+    /**
+     * @brief emitCloud emits the point cloud
+     * @param cloud the cloud
+     */
+    void
+    emitCloud(PointCloudI::Ptr cloud, bool = false);
+
+    /**
+     * @brief emitQString emits A QString
+     * @param str the emitted String
+     * @param firstLine set true if you want to print a line above str
+     * @param secondLine set true if you want to print a line below str
+     */
+    void
+    emitQString(QString str = "", bool firstLine = false, bool secondLine = false);
 };
 
 #endif // IMPORTPCD_H

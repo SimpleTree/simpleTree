@@ -36,47 +36,43 @@
 namespace simpleTree {
 Allometry::Allometry()
 {
-    coeff_a = 123.6;
-    coeff_b = 2.656;
+	coeff_a = 123.6;
+	coeff_b = 2.656;
 }
 
 void
 Allometry::improveTree()
 {
-    std::vector<float> growth_volumina;
-    for(size_t i = 0; i  < cylinders.size(); i++)
-    {
-        boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
-        float y = getTree()->getGrowthVolume ( cylinder );
-        growth_volumina.push_back(y);
-    }
-    for(size_t i = 0; i  < cylinders.size(); i++)
-    {
-        boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
-        float x = cylinder->getRadius();
-        float y = growth_volumina.at(i);
-        if(cylinder->getSegment()->getParent()!= 0)
-        {
-//            if ( (y>(getYFromX(x)*fac)) || (y<(getYFromX(x)/fac) ) )
-//            {
-//                if(cylinder->values[6] >= std::max(getXFromY(y),minRad))
-//                {
-//                    cylinder->values[6] = std::max(getXFromY(y),minRad);
-//                }
-//            }
- if ( y<(getYFromX(x)/fac) )
-            {
-
-                    cylinder->values[6] = std::max((getXFromY(y)),minRad);
-            }
-        }
-    }
+	std::vector<float> growth_volumina;
+	for(size_t i = 0; i  < cylinders.size(); i++)
+	{
+		boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
+		float y = getTree()->getGrowthVolume ( cylinder );
+		growth_volumina.push_back(y);
+	}
+	for(size_t i = 0; i  < cylinders.size(); i++)
+	{
+		boost::shared_ptr<Cylinder> cylinder = cylinders.at(i);
+		float x = cylinder->getRadius();
+		float y = growth_volumina.at(i);
+		if(cylinder->getSegment()->getParent()!= 0)
+		{
+			if ( y<(getYFromX(x)/fac) )
+			{
+				cylinder->values[6] = getXFromY(y);
+			}
+			if (cylinder->values[6]<minRad)
+			{
+				cylinder->values[6] = minRad;
+			}
+		}
+	}
 }
 
 void
 Allometry::setFac(float fac)
 {
-    this->fac = fac;
+	this->fac = fac;
 }
 
 

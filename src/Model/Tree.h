@@ -63,12 +63,10 @@
 #include <fstream>
 #include "crown.h"
 #include <QString>
-#include "../controller.h"
 #include "childcylinderextraction.h"
 typedef pcl::PointXYZINormal PointI;
 typedef pcl::PointCloud<PointI> PointCloudI;
 typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
-class Controller;
 class Crown;
 class ChildCylinderExtraction;
 namespace simpleTree
@@ -92,9 +90,6 @@ namespace simpleTree
        float minPtsForCylinderImprovement =  3;
        float radius = std::numeric_limits<float>::min();
 
-       boost::weak_ptr<Controller> control;
-       boost::shared_ptr<Controller>
-           getControl ();
 
       boost::shared_ptr<Segment> topStemSegment;
       boost::shared_ptr<Segment> rootSegment;
@@ -197,8 +192,7 @@ namespace simpleTree
       boost::shared_ptr<Crown> crown;
       std::string name;
       Tree (std::vector<pcl::ModelCoefficients> cylinders,
-            pcl::PointCloud<PointI>::Ptr cloud_Ptr,
-            std::string name,boost::weak_ptr<Controller> control, bool computeCrown = true);
+            pcl::PointCloud<PointI>::Ptr cloud_Ptr, std::string name, bool computeCrown = true);
       Tree ();
       virtual
       ~Tree ();

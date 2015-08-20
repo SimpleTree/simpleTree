@@ -79,6 +79,7 @@ public:
 
     void
     setUi(Ui::PCLViewer * ui);
+    
     void
     setGuiPtr(boost::shared_ptr<PCLViewer> guiPtr);
 

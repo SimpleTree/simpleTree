@@ -72,14 +72,15 @@ class Controller;
 
 class SphereFollowing
 {
+	std::vector<bool> isStem;
     std::vector<pcl::ModelCoefficients> spheres;
     std::vector<pcl::ModelCoefficients> cylinders;
-    PointCloudI::Ptr treeCloud;
+    PointCloudI::Ptr cloud;
     std::vector<int>
     indexOfPointsNearCylinder (pcl::octree::OctreePointCloudSearch<PointI> &octree,
                                boost::shared_ptr<simpleTree::Cylinder> &cylinder,
                                float factorEnLarge = 1);
-    int maxIterations;
+    int max_iterations;
     int iteration = 0;
     int maxDistToModel = 30;
     bool use_ransac_for_sphere = true;
@@ -90,11 +91,17 @@ class SphereFollowing
                            PointCloudI::Ptr points);
     void
     addConnectionCylinder (pcl::ModelCoefficients startSphere, float start_radius);
-    boost::weak_ptr<Controller> control;
+    //boost::weak_ptr<Controller> control;
+
+
+    pcl::ModelCoefficients
+    generateCylinder(pcl::ModelCoefficients& sphere1,
+    				 pcl::ModelCoefficients& sphere2,
+    				 float radius);
 
   public:
-    boost::shared_ptr<Controller>
-    getControl ();
+
+
     float epsilon = 0.02;
     float sphereRadiusMultiplier = 1.8f;
     float epsilon_cluster_stem = 0.02;
@@ -108,12 +115,12 @@ class SphereFollowing
     float min_radius_sphere_stem = 0.035;
     float min_radius_sphere_branch = 0.025;
     SphereFollowing (PointCloudI::Ptr treeCloud,
-                     boost::weak_ptr<Controller> control);
+    		std::vector<bool> isStem);
     SphereFollowing (PointCloudI::Ptr treeCloud,
-                     boost::weak_ptr<Controller> control,
+    		std::vector<bool> isStem,
                      int maxIterations);
     SphereFollowing (PointCloudI::Ptr treeCloud,
-                         boost::weak_ptr<Controller> control,
+    		std::vector<bool> isStem,
                          int maxIterations, Method_Coefficients coeff);
     virtual
     ~SphereFollowing ();
@@ -121,11 +128,11 @@ class SphereFollowing
     clusterPoints (PointCloudI::Ptr points_in, bool isStem);
     std::vector<PointCloudI::Ptr>
     intersectionSphereSurface (pcl::octree::OctreePointCloudSearch<PointI>& octree,
-                               pcl::ModelCoefficients sphere,
+                               pcl::ModelCoefficients& sphere,
                                PointCloudI::Ptr &cloud_in);
     bool
-    lowestZCluster (PointCloudI cloud_in,
-                    PointCloudI& cloud_out);
+    lowestZCluster (PointCloudI::Ptr cloud_in,
+                    PointCloudI::Ptr cloud_out);
     void
     computeCylindersFromTree (PointCloudI::Ptr& treeCloud);
     void

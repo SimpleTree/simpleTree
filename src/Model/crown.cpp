@@ -37,12 +37,11 @@
 QMutex
 Crown::lock;
 
-Crown::Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,boost::weak_ptr<Controller> control)
+Crown::Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
      QMutexLocker locker(&lock);
     if(cloud != 0 && cloud->points.size()>4)
     {
-    this->control = control;
   this->cloud = cloud;
   pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud (new pcl::PointCloud<pcl::PointXYZ>);
   pcl::ConvexHull<pcl::PointXYZ> hull;
@@ -56,7 +55,6 @@ Crown::Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,boost::weak_ptr<Controll
     str.append("The volume of the crown is ").append(
             QString::number(volume)).append(" in m^3, the crown surface area is ").append(
                     QString::number(area)).append("m^2.\n");
-  //  getControl()->getGuiPtr()->writeConsole(str);
     QCoreApplication::processEvents();
 
 
@@ -87,14 +85,11 @@ Crown::Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,boost::weak_ptr<Controll
   str = "";
   str.append("The crown projection area is ").append(
                 QString::number(crownProjectionArea)).append("m^2.\n");
-   //     getControl()->getGuiPtr()->writeConsole(str);
         QCoreApplication::processEvents();
     }
 }
 
-boost::shared_ptr<Controller> Crown::getControl() {
-	return this->control.lock();
-}
+
 
 void
 Crown::reset_concave_hull(float r)

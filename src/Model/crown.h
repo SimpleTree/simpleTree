@@ -38,13 +38,13 @@
 #include <pcl/point_cloud.h>
 #include <pcl/surface/convex_hull.h>
 #include <pcl/surface/concave_hull.h>
-#include "../controller.h"
 
 #include <QMutexLocker>
 #include <QMutex>
+#include <QString>
+#include <QCoreApplication>
 
 typedef pcl::PointXYZINormal PointI;
-class Controller;
 class Crown
 {
   public:
@@ -65,12 +65,9 @@ class Crown
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
     pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud;
     pcl::PointCloud<pcl::PointXYZ>::Ptr hull_cloud_concave;
-    Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,boost::weak_ptr<Controller> control);
+    Crown (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     ~Crown ();
   private:
-    boost::weak_ptr<Controller> control;
-           boost::shared_ptr<Controller>
-               getControl ();
 };
 
 #endif // CROWN_H

@@ -69,9 +69,27 @@
      </disabled>
     </palette>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <layout class="QHBoxLayout" stretch="0">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="sizeConstraint">
      <enum>QLayout::SetMaximumSize</enum>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
     </property>
     <item>
      <widget class="QScrollArea" name="scrollArea">
@@ -302,7 +320,7 @@
               <x>10</x>
               <y>10</y>
               <width>181</width>
-              <height>131</height>
+              <height>171</height>
              </rect>
             </property>
             <property name="toolTip">
@@ -483,12 +501,58 @@
               </property>
              </widget>
             </widget>
+            <widget class="QPushButton" name="save_camera_button">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>120</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Saves a certain camera position to a file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/ccCamera.png</normaloff>../resources/ccCamera.png</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="load_camera_button">
+             <property name="geometry">
+              <rect>
+               <x>70</x>
+               <y>120</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Loads a certain camera position from a file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/ccCamera.png</normaloff>../resources/ccCamera.png</iconset>
+             </property>
+            </widget>
            </widget>
            <widget class="QFrame" name="points_frame">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>150</y>
+              <y>260</y>
               <width>181</width>
               <height>131</height>
              </rect>
@@ -630,8 +694,8 @@
            <widget class="QFrame" name="tree_frame">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>290</y>
+              <x>200</x>
+              <y>220</y>
               <width>181</width>
               <height>101</height>
              </rect>
@@ -727,7 +791,7 @@
               <x>200</x>
               <y>10</y>
               <width>181</width>
-              <height>101</height>
+              <height>61</height>
              </rect>
             </property>
             <property name="frameShape">
@@ -800,28 +864,15 @@
                <number>1</number>
               </property>
              </widget>
-             <widget class="QPushButton" name="stem_color_button">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>50</y>
-                <width>141</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Switch Color</string>
-              </property>
-             </widget>
             </widget>
            </widget>
            <widget class="QFrame" name="crown_frame">
             <property name="geometry">
              <rect>
               <x>200</x>
-              <y>120</y>
+              <y>80</y>
               <width>181</width>
-              <height>101</height>
+              <height>61</height>
              </rect>
             </property>
             <property name="frameShape">
@@ -894,28 +945,15 @@
                <number>1</number>
               </property>
              </widget>
-             <widget class="QPushButton" name="crown_color_button">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>50</y>
-                <width>141</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Switch Color</string>
-              </property>
-             </widget>
             </widget>
            </widget>
            <widget class="QFrame" name="leave_frame">
             <property name="geometry">
              <rect>
               <x>200</x>
-              <y>230</y>
+              <y>150</y>
               <width>181</width>
-              <height>91</height>
+              <height>61</height>
              </rect>
             </property>
             <property name="frameShape">
@@ -988,19 +1026,6 @@
                <number>1</number>
               </property>
              </widget>
-             <widget class="QPushButton" name="leave_color_button">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>50</y>
-                <width>141</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Switch Color</string>
-              </property>
-             </widget>
             </widget>
            </widget>
            <widget class="QFrame" name="plot_frame">
@@ -1071,6 +1096,29 @@
              <property name="geometry">
               <rect>
                <x>60</x>
+               <y>10</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set BackgroundColor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/background.png</normaloff>../resources/background.png</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="branch_button">
+             <property name="geometry">
+              <rect>
+               <x>110</x>
                <y>10</y>
                <width>40</width>
                <height>40</height>
@@ -1383,7 +1431,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>10</y>
+              <y>0</y>
               <width>231</width>
               <height>71</height>
              </rect>
@@ -1525,7 +1573,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>90</y>
+              <y>70</y>
               <width>231</width>
               <height>121</height>
              </rect>
@@ -1572,7 +1620,7 @@
              <widget class="QPushButton" name="method_hackenberg">
               <property name="geometry">
                <rect>
-                <x>10</x>
+                <x>60</x>
                 <y>20</y>
                 <width>40</width>
                 <height>40</height>
@@ -1595,14 +1643,14 @@
              <widget class="QPushButton" name="complete_folder_button">
               <property name="geometry">
                <rect>
-                <x>60</x>
+                <x>110</x>
                 <y>20</y>
                 <width>40</width>
                 <height>40</height>
                </rect>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tree detection based on Hackenberg et al, run on all clouds in data folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tree detection based on Hackenberg et al, run on all clouds in data folder. Will be implemented in next release with full functionality.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="autoFillBackground">
                <bool>false</bool>
@@ -1613,6 +1661,29 @@
               <property name="icon">
                <iconset>
                 <normaloff>../resources/ccOpen.png</normaloff>../resources/ccOpen.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="compute_normal_button">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Computes normals, eigenvalues and detects stem&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/normal.png</normaloff>../resources/normal.png</iconset>
               </property>
              </widget>
             </widget>
@@ -1650,7 +1721,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>220</y>
+              <y>190</y>
               <width>231</width>
               <height>121</height>
              </rect>
@@ -1852,7 +1923,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>350</y>
+              <y>310</y>
               <width>231</width>
               <height>71</height>
              </rect>
@@ -1925,7 +1996,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>430</y>
+              <y>380</y>
               <width>231</width>
               <height>121</height>
              </rect>
@@ -2015,29 +2086,6 @@
                 <normaloff>../resources/primSphere.png</normaloff>../resources/primSphere.png</iconset>
               </property>
              </widget>
-             <widget class="QPushButton" name="compute_normal_button">
-              <property name="geometry">
-               <rect>
-                <x>60</x>
-                <y>20</y>
-                <width>40</width>
-                <height>40</height>
-               </rect>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Computes normals and principal curvature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>../resources/normal.png</normaloff>../resources/normal.png</iconset>
-              </property>
-             </widget>
              <widget class="QPushButton" name="box_deletion_button">
               <property name="geometry">
                <rect>
@@ -2088,13 +2136,13 @@
               <property name="geometry">
                <rect>
                 <x>60</x>
-                <y>70</y>
+                <y>20</y>
                 <width>40</width>
                 <height>40</height>
                </rect>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Alligns Cloud 2 to Cloud 1 with ICP&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Alligns Cloud 1 to coordinate system of Cloud 2 with ICP&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="autoFillBackground">
                <bool>false</bool>
@@ -2113,7 +2161,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>560</y>
+              <y>500</y>
               <width>231</width>
               <height>71</height>
              </rect>
@@ -2226,6 +2274,263 @@
                 <normaloff>../resources/Crown.png</normaloff>../resources/Crown.png</iconset>
               </property>
              </widget>
+             <widget class="QPushButton" name="allometry_button">
+              <property name="geometry">
+               <rect>
+                <x>160</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;allometry improvment&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Allom.png</normaloff>../resources/Allom.png</iconset>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="cluster_frame_3">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>570</y>
+              <width>231</width>
+              <height>131</height>
+             </rect>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="statusTip">
+             <string>uio</string>
+            </property>
+            <property name="whatsThis">
+             <string>uio</string>
+            </property>
+            <property name="accessibleName">
+             <string>uio</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>uio</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="lineWidth">
+             <number>2</number>
+            </property>
+            <widget class="QGroupBox" name="cluster_box_5">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>0</y>
+               <width>211</width>
+               <height>71</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>Publication</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <widget class="QPushButton" name="ery_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button calls the automatic pipeline to denoise Erythrophleum fordii clouds used in Hackenberg et al. 2015b.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Ery1.png</normaloff>../resources/Ery1.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="oak_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button calls the automatic pipeline to denoise Quercus petraea clouds used in Hackenberg et al. 2015b.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Oak1.png</normaloff>../resources/Oak1.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pine_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button calls the automatic pipeline to denoise Pinus massoniana clouds used in Hackenberg et al. 2015b.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Pine1.png</normaloff>../resources/Pine1.png</iconset>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="euca_denoise_button">
+              <property name="geometry">
+               <rect>
+                <x>160</x>
+                <y>20</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button calls the automatic pipeline to denoise Eucalyptus spp. clouds used in Hackenberg et al. 2015b.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../resources/Euca1.png</normaloff>../resources/Euca1.png</iconset>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QPushButton" name="australia_button">
+             <property name="geometry">
+              <rect>
+               <x>170</x>
+               <y>70</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button builds Eucalyptus spp. models from denoised clouds utilizing the automatic parameter search with the allometric radii adjustment included.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/Euca1.png</normaloff>../resources/Euca1.png</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="ery_button">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>70</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button builds Erythrophleum fordii models from denoised clouds utilizing the automatic parameter search with the allometric radii adjustment included.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/Ery1.png</normaloff>../resources/Ery1.png</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pine_button_fast">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>70</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button builds Pinus massoniana models from denoised clouds utilizing the automatic parameter search with the allometric radii adjustment included.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/Pine1.png</normaloff>../resources/Pine1.png</iconset>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="quercus_fast">
+             <property name="geometry">
+              <rect>
+               <x>70</x>
+               <y>70</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button builds Quercus petraea models from denoised clouds utilizing the automatic parameter search with the allometric radii adjustment included.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../resources/Oak1.png</normaloff>../resources/Oak1.png</iconset>
+             </property>
             </widget>
            </widget>
           </widget>

@@ -35,7 +35,7 @@
 
 #ifndef CYLINDER_H_
 #define CYLINDER_H_
-
+#define PCL_NO_PRECOMPILE
 #include <pcl/ModelCoefficients.h>
 #include "Segment.h"
 #include <assert.h>

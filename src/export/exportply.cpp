@@ -76,6 +76,25 @@ ExportPly::writePly ()
   myfile << "property list uchar int vertex_index" << std::endl;
   myfile << "end_header" << std::endl;
 
+
+  int maxBranchID = 0;
+  for (size_t i = 0; i < cylinders.size (); i++)
+    {
+	  	  if(cylinders.at(i)->getSegment()->branchID>maxBranchID)
+	  	  {
+	  		  maxBranchID = cylinders.at(i)->getSegment()->branchID;
+	  	  }
+
+    }
+
+  std::vector<int> r,g,b;
+  for(size_t i = 0 ; i < maxBranchID + 1; i++)
+  {
+	  r.push_back(rand()%255);
+	  g.push_back(rand()%255);
+	  b.push_back(rand()%255);
+  }
+
   for (size_t i = 0; i < cylinders.size (); i++)
   {
     /**
@@ -83,46 +102,63 @@ ExportPly::writePly ()
      */
     boost::shared_ptr<simpleTree::Cylinder> cyl = cylinders[i];
     //Cylinder3D cyl = cylinders.get(i);
-    float height = cyl->getLength ();
-    Eigen::Vector3f zAxis (0, 0, 1);
+    double height = cyl->getLength ();
+    Eigen::Vector3d zAxis (0, 0, 1);
     zAxis.normalize ();
-    Eigen::Vector3f axis (cyl->values[3], cyl->values[4], cyl->values[5]);
+    Eigen::Vector3d axis (cyl->values[3], cyl->values[4], cyl->values[5]);
     axis.normalize ();
-    Eigen::Vector3f rotationAxis = zAxis.cross (axis);
-    float rotationAngle = acos (zAxis.dot (axis));
+    Eigen::Vector3d rotationAxis = zAxis.cross (axis);
+    double rotationAngle = acos (zAxis.dot (axis));
 
-    std::vector<Eigen::Vector3f> points;
+    std::vector<Eigen::Vector3d> points;
     pcl::PointCloud<pcl::PointXYZ> cloud;
+    pcl::PointCloud<pcl::PointXYZRGB> cloud2;
     pcl::PointCloud<pcl::PointXYZ> cloud_transformed;
     for (int j = 0; j < 8; j++)
     {
-      float x = cos (boost::math::constants::pi<float> () / 180 * 45 * j) * cyl->values[6];
-      float y = sin (boost::math::constants::pi<float> () / 180 * 45 * j) * cyl->values[6];
-      float z = height / 2;
-      Eigen::Vector3f pt (x, y, z);
+    	double x = cos (boost::math::constants::pi<double> () / 180 * 45 * j) * cyl->values[6];
+    	double y = sin (boost::math::constants::pi<double> () / 180 * 45 * j) * cyl->values[6];
+    	double z = height / 2;
+      Eigen::Vector3d pt (x, y, z);
       points.push_back (pt);
       pcl::PointXYZ p (x, y, z);
+      pcl::PointXYZRGB p2 (x, y, z);
+      p2.r = r.at(cyl->getSegment()->branchID);
+      p2.g = g.at(cyl->getSegment()->branchID);
+      p2.b = b.at(cyl->getSegment()->branchID);
+      cloud2.push_back(p2);
       cloud.push_back (p);
     }
     for (int j = 0; j < 8; j++)
     {
-      float x = cos (boost::math::constants::pi<float> () / 180 * 45 * j) * cyl->values[6];
-      float y = sin (boost::math::constants::pi<float> () / 180 * 45 * j) * cyl->values[6];
-      float z = -height / 2;
-      Eigen::Vector3f pt (x, y, z);
+    	double x = cos (boost::math::constants::pi<double> () / 180 * 45 * j) * cyl->values[6];
+    	double y = sin (boost::math::constants::pi<double> () / 180 * 45 * j) * cyl->values[6];
+    	double z = -height / 2;
+      Eigen::Vector3d pt (x, y, z);
       points.push_back (pt);
       pcl::PointXYZ p (x, y, z);
+
+      pcl::PointXYZRGB p2 (x, y, z);
+      p2.r = r.at(cyl->getSegment()->branchID);
+      p2.g = g.at(cyl->getSegment()->branchID);
+      p2.b = b.at(cyl->getSegment()->branchID);
+      cloud2.push_back(p2);
       cloud.push_back (p);
     }
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity ();
+    Eigen::Affine3d transform = Eigen::Affine3d::Identity ();
     transform.translation () << (cyl->values[0] + cyl->values[3] / 2), (cyl->values[1] + cyl->values[4] / 2), (cyl->values[2] + cyl->values[5] / 2);
-    transform.rotate (Eigen::AngleAxis<float> (rotationAngle, rotationAxis));
+    transform.rotate (Eigen::AngleAxis<double> (rotationAngle, rotationAxis));
     pcl::transformPointCloud<pcl::PointXYZ> (cloud, cloud_transformed, transform);
 
     for (size_t j = 0; j < cloud_transformed.size (); j++)
     {
       pcl::PointXYZ p = cloud_transformed.points[j];
-      myfile << std::setprecision (10) << p.x << " " << p.y << " " << p.z << " 204 0 55" << std::endl;
+      pcl::PointXYZRGB p2 = cloud2.points[j];
+      int r = p2.r;
+      int g = p2.g;
+      int b = p2.g;
+//      myfile << std::setprecision (10) << p.x << " " << p.y << " " << p.z << " 204 0 55" << std::endl;
+      myfile << std::setprecision (10) << p.x << " " << p.y << " " << p.z << " " << r << " " << g << " " << b << std::endl;
     }
 
   }

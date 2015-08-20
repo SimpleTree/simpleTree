@@ -35,6 +35,7 @@
 
 #ifndef STEMPOINTDETECTION_H_
 #define STEMPOINTDETECTION_H_
+#define PCL_NO_PRECOMPILE
 #include <pcl/segmentation/conditional_euclidean_clustering.h>
 #include <pcl/common/common_headers.h>
 #include <pcl/point_types.h>

@@ -227,8 +227,8 @@ void WriteCSV::exportAll() {
         for ( std::vector<boost::shared_ptr<simpleTree::Segment> >::iterator it = allSegments.begin (); it != allSegments.end (); it++ ) {
             boost::shared_ptr<simpleTree::Segment> segment = *it;
             QString str = segment->toString().append(",");
-            str.append(QString::number( this->tree->getGrowthVolume( segment->getCylinders().at(0)))).append(QString("\n"));
-            myfile << qPrintable( segment->toString());
+            str.append(QString::number( this->tree->getGrowthVolume( segment->getCylinders().at(0))));
+            myfile << qPrintable( segment->toString()) << std::endl;
         }
         myfile.close ();
     }

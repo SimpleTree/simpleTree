@@ -30,8 +30,9 @@ void WorkerSphereFollowing::setFac(float value)
 {
     fac = value;
 }
-WorkerSphereFollowing::WorkerSphereFollowing(QObject *parent)
+WorkerSphereFollowing::WorkerSphereFollowing(int i,QObject *parent)
 {
+	this->i = i;
 }
 
 void
@@ -39,32 +40,29 @@ WorkerSphereFollowing::run()
 {
 
     try {
-        SphereFollowing sphereFollowing ( this->control->getCloudPtr (), control, 1, coefficients );
-        boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), control->getCloudPtr (),
-                                                                                         control->getTreeID (), this->control ,false);
+        SphereFollowing sphereFollowing ( _cloud_ptr, isStem, 1, coefficients );
+        boost::shared_ptr<simpleTree::Tree> tree = boost::make_shared<simpleTree::Tree> ( sphereFollowing.getCylinders (), _cloud_ptr,
+                                                                                         treeID ,false);
 
         simpleTree::Allometry allom;
         allom.setTree(tree);
         allom.setCoefficients(a,b);
         allom.setFac(fac);
 
-        allom.setMinRad(0.02);
-    //    allom.setCoefficients(2101,3.775);
-    //    allom.setFac(1.6);
+        allom.setMinRad(minRad);
         allom.improveTree();
-        //control ->setTreePtr ( tree );
 
 
         std::vector<float> distances = tree->distancesToModel ();
-        meanDist = control->getGuiPtr()->average(distances);
+        std::vector<float> distances_abs = getAbsDistances(distances);
+        meanDist = mean(distances_abs);
+
+
+        optimize->updateCoeff(coefficients, meanDist, minRad);
 
 
 
-        if(optimize->get_current_dist()>meanDist)
-        {
-            optimize->updateCoeff(this->coefficients, meanDist);
-            //control->setTreePtr(tree);
-        }
+
     } catch (...) {
         std::cout << "critical error in WorkerSphereFollowing" << std::endl;
         std::cout << coefficients.toQString().toStdString() << std::endl;
@@ -76,6 +74,18 @@ WorkerSphereFollowing::run()
 
 }
 
+std::vector<float>
+WorkerSphereFollowing::getAbsDistances(std::vector<float> distances)
+{
+	std::vector<float> abs_distances;
+	abs_distances.resize(distances.size());
+	for(size_t i = 0; i < distances.size(); i++)
+	{
+		abs_distances.at(i) = std::abs(distances.at(i));
+	}
+	return abs_distances;
+}
+
 
 void
 WorkerSphereFollowing::setOptimize(boost::shared_ptr<Optimization> optimize)
@@ -83,14 +93,42 @@ WorkerSphereFollowing::setOptimize(boost::shared_ptr<Optimization> optimize)
     this->optimize = optimize;
 }
 
-void
-WorkerSphereFollowing::set_control(boost::shared_ptr<Controller> control)
-{
-    this->control = control;
-}
+
 
 void
 WorkerSphereFollowing::set_coefficients(Method_Coefficients coefficients)
 {
     this->coefficients = coefficients;
 }
+
+float
+WorkerSphereFollowing::median(std::vector<float> values)
+{
+    float median;
+    size_t size = values.size();
+
+    sort(values.begin(), values.end());
+
+    if (size  % 2 == 0)
+    {
+        median = (values[size / 2 - 1] + values[size / 2]) / 2;
+    }
+    else
+    {
+        median = values[size / 2];
+    }
+
+    return median;
+}
+
+float
+WorkerSphereFollowing::mean(std::vector<float> const &v)
+{
+    std::vector<float>::size_type taille = v.size();
+    float sum = 0;
+    for(std::vector<float>::const_iterator i = v.begin(); i != v.end(); ++i)
+        sum += *i;
+    return sum/taille;
+}
+
+

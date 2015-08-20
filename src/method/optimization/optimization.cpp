@@ -1,11 +1,11 @@
 #include "optimization.h"
 
-Optimization::Optimization(QObject *parent) :
+Optimization::Optimization(  QObject *parent) :
     QThreadPool(parent)
 {
     numberThreads = QThread::idealThreadCount()-1;
-    std::cout << "Optimization Constructor : number of threads :" << numberThreads << std::endl;
     this->setMaxThreadCount(std::max<int>(numberThreads,1));
+
 
 
     coefficients_sd.sphere_radius_multiplier = 0.3f;
@@ -18,9 +18,36 @@ Optimization::Optimization(QObject *parent) :
     coefficients_sd.minPts_cluster_branch = 1;
     coefficients_sd.min_radius_sphere_stem = 0.0055f;
     coefficients_sd.min_radius_sphere_branch = 0.005f;
-
-
 }
+
+
+Optimization::Optimization(int iterations, int seeds, float min_dist, QObject *parent)
+{
+    numberThreads = QThread::idealThreadCount()-1;
+    this->setMaxThreadCount(std::max<int>(numberThreads,1));
+
+    this->max_iterations = iterations;
+    this->seeds_per_voxel = seeds;
+    if(max_iterations*seeds_per_voxel>1)
+    {
+        _max_seeds = max_iterations*seeds_per_voxel;
+    }
+    this->min_dist = min_dist;
+
+
+
+    coefficients_sd.sphere_radius_multiplier = 0.3f;
+    coefficients_sd.epsilon_cluster_branch = 0.01f;
+    coefficients_sd.epsilon_cluster_stem = 0.01f;
+    coefficients_sd.epsilon_sphere = 0.005f;
+    coefficients_sd.minPts_ransac_stem = 100;
+    coefficients_sd.minPts_ransac_branch = 1;
+    coefficients_sd.minPts_cluster_stem = 1;
+    coefficients_sd.minPts_cluster_branch = 1;
+    coefficients_sd.min_radius_sphere_stem = 0.0055f;
+    coefficients_sd.min_radius_sphere_branch = 0.005f;
+}
+
 
 void
 Optimization::update_sd()
@@ -58,16 +85,28 @@ Optimization::setCoefficients(Method_Coefficients coeffcients)
 
 
 void
-Optimization::updateCoeff(Method_Coefficients & coeff, float dist)
+Optimization::updateCoeff(Method_Coefficients & coeff, float dist, float minRadius)
 {
     QMutexLocker locker(&lock);
-
-    if(dist < current_dist)
+    _current_seeds++;
+    int i = 0;
+    if(_max_seeds>0)
     {
-        std::cout << "update mit " << dist << std::endl;
+        i = (_current_seeds*100)/_max_seeds;
+    }
+    if(std::abs(dist) < std::abs(current_dist))
+    {
         coefficients_end = coeff;
         current_dist = dist;
+        coefficients_end.minRad = minRadius;
+        this->min_rad = minRadius;
     }
+    if(i!=0)
+    {
+        emit emit_progress(i);
+        QCoreApplication::processEvents();
+    }
+
 }
 
 void
@@ -125,36 +164,30 @@ Optimization::make_coefficients_positive(Method_Coefficients & coeff)
     }
 }
 
+
+
 std::vector<Method_Coefficients>
 Optimization::generate_seeds(Method_Coefficients const coeff)
 {
-
-
-
-
-
-
-
-
     std::vector<Method_Coefficients> vec;
     for(int i = 0; i < seeds_per_voxel; i++)
     {
 
 
-            Method_Coefficients temp = coeff;
+        Method_Coefficients temp = coeff;
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-      std::default_random_engine generator (seed);
-      std::normal_distribution<float> distribution_sphere_radius_multiplier (0,coefficients_sd.sphere_radius_multiplier/2);
+        std::default_random_engine generator (seed);
+        std::normal_distribution<float> distribution_sphere_radius_multiplier (0,coefficients_sd.sphere_radius_multiplier/2);
 
-      std::normal_distribution<float> distribution_epsilon_cluster_branch (0,coefficients_sd.epsilon_cluster_branch/2);
-      std::normal_distribution<float> distribution_epsilon_cluster_stem (0,coefficients_sd.epsilon_cluster_stem/2);
-      std::normal_distribution<float> distribution_epsilon_sphere (0,coefficients_sd.epsilon_sphere/2);
-      std::normal_distribution<float> distribution_min_Pts_Ransac_Stem (0,coefficients_sd.minPts_ransac_stem/2);
+        std::normal_distribution<float> distribution_epsilon_cluster_branch (0,coefficients_sd.epsilon_cluster_branch/2);
+        std::normal_distribution<float> distribution_epsilon_cluster_stem (0,coefficients_sd.epsilon_cluster_stem/2);
+        std::normal_distribution<float> distribution_epsilon_sphere (0,coefficients_sd.epsilon_sphere/2);
+        std::normal_distribution<float> distribution_min_Pts_Ransac_Stem (0,coefficients_sd.minPts_ransac_stem/2);
 
-      std::normal_distribution<float> distribution_minPts_cluster_stem (0,coefficients_sd.minPts_cluster_stem/2);
-      std::normal_distribution<float> distribution_minPts_cluster_branch (0,coefficients_sd.minPts_cluster_branch/2);
-      std::normal_distribution<float> distribution_min_radius_sphere_stem (0,coefficients_sd.min_radius_sphere_stem/2);
-      std::normal_distribution<float> distribution_min_radius_sphere_branch (0,coefficients_sd.min_radius_sphere_branch/2);
+        std::normal_distribution<float> distribution_minPts_cluster_stem (0,coefficients_sd.minPts_cluster_stem/2);
+        std::normal_distribution<float> distribution_minPts_cluster_branch (0,coefficients_sd.minPts_cluster_branch/2);
+        std::normal_distribution<float> distribution_min_radius_sphere_stem (0,coefficients_sd.min_radius_sphere_stem/2);
+        std::normal_distribution<float> distribution_min_radius_sphere_branch (0,coefficients_sd.min_radius_sphere_branch/2);
 
 
         float update = distribution_epsilon_cluster_branch(generator);
@@ -172,12 +205,6 @@ Optimization::generate_seeds(Method_Coefficients const coeff)
 
         int update_2 = distribution_min_Pts_Ransac_Stem(generator);
         temp.minPts_ransac_stem += update_2;
-
-        update_2 = distribution_minPts_cluster_stem(generator);
-        temp.minPts_cluster_stem += update_2;
-
-        update_2 = distribution_minPts_cluster_branch(generator);
-        temp.minPts_cluster_branch += update_2;
 
         update = distribution_min_radius_sphere_stem(generator);
         temp.min_radius_sphere_stem +=update;
@@ -365,32 +392,10 @@ Optimization::neighboring_coefficients(int i)
         break;
     }
 
-//    for(int i = -1 ; i < 2 ; i++ )
-//    {
-//        for (int j = -1 ; j < 2 ; j++)
-//        {
-//            for(int k = -1; k < 2; k++)
-//            {
-//                for(int l = -1; l < 2; l++)
-//                {
-//                    Method_Coefficients coeff = coefficients_start;
-//                    coeff.epsilon_cluster_branch += i*epsilon_cluster_branch_update;
-//                    coeff.epsilon_cluster_stem   += j*epsilon_cluster_stem_update;
-//                    coeff.epsilon_sphere         += k*epsilon_sphere_update;
-//                    coeff.minPts_ransac_stem     += l*min_pts_ransac_stem_update;
-//                    vec.push_back(coeff);
-//                }
-//            }
-//        }
-//    }
+
     return vec;
 }
 
-void
-Optimization::setControl(boost::shared_ptr<Controller> control)
-{
-    this->controller = control;
-}
 
 float
 Optimization::get_current_dist()
@@ -405,80 +410,73 @@ Optimization::optimize()
     current_iteration = 0;
     start_dist = 0.1;
     current_dist = start_dist;
+    _current_seeds = 0;
     while (max_iterations>current_iteration&&min_dist<dist_update) {
-
-
-        std::cout << "next iteration starts " << current_iteration << std::endl;
-
-//        for(int i = 0 ; i < 7; i ++)
-//        {
-//            std::vector<Method_Coefficients> seeds = neighboring_coefficients(i);
-//            for(std::vector<Method_Coefficients>::iterator kit = seeds.begin(); kit < seeds.end(); kit++)
-//            {
-//                Method_Coefficients seed = *kit;
-//                make_coefficients_positive(seed);
-//                WorkerSphereFollowing * worker = new WorkerSphereFollowing();
-//                worker->set_control(this->controller);
-//                worker->setOptimize(shared_from_this());
-//                worker->set_coefficients(seed);
-//                worker->setA(a);
-//                worker->setB(b);
-//                worker->setFac(fac);
-//                this->start(worker);
-//            }
-//            this->waitForDone();
-//            end_dist = current_dist;
-
-
-//            dist_update = start_dist-end_dist;
-
-
-//        }
-//        std::cout << "All threads ended"  << std::endl;
-//        std::cout << "dist improve : start" << start_dist  << std::endl;
+        //emit emit_progress(0);
 
         std::vector<Method_Coefficients> seeds = generate_seeds(this->coefficients_end);
         for(std::vector<Method_Coefficients>::iterator kit = seeds.begin(); kit < seeds.end(); kit++)
         {
             Method_Coefficients seed = *kit;
             make_coefficients_positive(seed);
-            WorkerSphereFollowing * worker = new WorkerSphereFollowing();
-            worker->set_control(this->controller);
+            WorkerSphereFollowing * worker = new WorkerSphereFollowing(1);
+            // worker->set_control(this->controller);
             worker->setOptimize(shared_from_this());
             worker->set_coefficients(seed);
-            worker->setA(a);
-            worker->setB(b);
-            worker->setFac(fac);
+            worker->setA(coefficients_end.a);
+            worker->setB(coefficients_end.b);
+            worker->setFac(coefficients_end.fact);
+            worker->setMinRad(coefficients_end.minRad);
+            worker->setCloudPtr(_cloud_ptr);
+            worker->setTreeID(treeID);
+            worker->setIsStem(isStem);
             this->start(worker);
         }
         current_iteration ++;
-        std::cout << "All threads started " << std::endl;
         this->waitForDone();
         end_dist = current_dist;
-
-        std::cout << "All threads ended"  << std::endl;
-            std::cout << "dist improve : start" << start_dist  << std::endl;
-            dist_update = start_dist-end_dist;
         start_dist = end_dist;
 
-
-        std::cout << "             : end  " << end_dist  << std::endl;
-
         update_sd();
-
-
-
-
-
         coefficients_start = coefficients_end;
-        std::cout << "too" << std::endl;
-        std::cout << coefficients_end.toQString().toStdString() << std::endl;
-
-        std::cout << "took " << tt.toc()/1000 << " seconds" << std::endl;
-
 
 
     }
+    std::vector<float>
+            minRadii;
+    minRadii.push_back(0.015);
+    minRadii.push_back(0.02);
+    minRadii.push_back(0.025);
+    minRadii.push_back(0.03);
+    minRadii.push_back(0.035);
+    minRadii.push_back(0.04);
+    minRadii.push_back(0.045);
+
+    if(!qFuzzyCompare(coefficients_start.minRad,0.0025f))
+    {
+        for(std::vector<float>::iterator f_it = minRadii.begin(); f_it < minRadii.end(); f_it++)
+        {
+            float radius = *f_it;
+            WorkerSphereFollowing * worker = new WorkerSphereFollowing(1);
+            // worker->set_control(this->controller);
+
+            worker->setOptimize(shared_from_this());
+            worker->set_coefficients(coefficients_start);
+            worker->setA(coefficients_end.a);
+            worker->setB(coefficients_end.b);
+            worker->setFac(coefficients_end.fact);
+            worker->setMinRad(radius);
+            worker->setCloudPtr(_cloud_ptr);
+            worker->setTreeID(treeID);
+            worker->setIsStem(isStem);
+            this->start(worker);
+        }
+    }
+    this->waitForDone();
+    end_dist = current_dist;
+    start_dist = end_dist;
+    update_sd();
+    coefficients_start = coefficients_end;
 
 
 

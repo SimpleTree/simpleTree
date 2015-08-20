@@ -38,285 +38,191 @@ ImportPCD::ImportPCD (std::string fileName,
                       boost::weak_ptr<Controller> control)
 {
 
-  this->control = control;
-  this->path = fileName;
-  if (fileName.length () > 4)
-  {
-    std::string ext = fileName.substr (fileName.length () - 3, 3);
-    if (ext == "pcd")
+    this->_control = control;
+    this->_fileName = fileName;
+    if (fileName.length () > 4)
     {
-      getControl ()->getGuiPtr ()->updateProgress (0);
-      QCoreApplication::processEvents ();
-      cloud_intens = importPCD ();
-//      getControl ()->getGuiPtr ()->updateProgress (30);
-//      QCoreApplication::processEvents ();
-//      computeNormals (cloud_intens);
-//      getControl ()->getGuiPtr ()->updateProgress (40);
-//      QCoreApplication::processEvents ();
-//      principalCurvatures = computeCurvature ();
-//      getControl ()->getGuiPtr ()->updateProgress (70);
-//      QCoreApplication::processEvents ();
-//      std::vector<float> e1;
-//      std::vector<float> e2;
-//      std::vector<float> e3;
-//
-//      EigenValueEstimator es (cloud_intens, e1, e2, e3, 0.035f);
-//      getControl()->setE1(e1);
-//      getControl()->setE2(e2);
-//      getControl()->setE3(e3);
-      getControl ()->getGuiPtr ()->updateProgress (100);
-      QCoreApplication::processEvents ();
-
-//       setRGB ();
-    }
-    else if (ext == "asc"||ext == "txt")
-    {
-      getControl ()->getGuiPtr ()->updateProgress (0);
-      QCoreApplication::processEvents ();
-      cloud_intens = importASC ();
-//      getControl ()->getGuiPtr ()->updateProgress (30);
-//      QCoreApplication::processEvents ();
-//      computeNormals (cloud_intens);
-//      getControl ()->getGuiPtr ()->updateProgress (40);
-//      QCoreApplication::processEvents ();
-//      principalCurvatures = computeCurvature ();
-//      getControl ()->getGuiPtr ()->updateProgress (70);
-//      QCoreApplication::processEvents ();
-//      std::vector<float> e1;
-//            std::vector<float> e2;
-//            std::vector<float> e3;
-//
-//            EigenValueEstimator es (cloud_intens, e1, e2, e3, 0.035f);
-//            getControl()->setE1(e1);
-//            getControl()->setE2(e2);
-//            getControl()->setE3(e3);
+        std::string ext = fileName.substr (fileName.length () - 3, 3);
+        if (ext == "pcd")
+        {
+            getControl ()->getGuiPtr ()->updateProgress (0);
+            QCoreApplication::processEvents ();
+            _cloud_intens = importPCD ();
             getControl ()->getGuiPtr ()->updateProgress (100);
             QCoreApplication::processEvents ();
+        }
+        else if (ext == "asc"||ext == "txt")
+        {
+            getControl ()->getGuiPtr ()->updateProgress (0);
+            QCoreApplication::processEvents ();
+            _cloud_intens = importASC ();
+            getControl ()->getGuiPtr ()->updateProgress (100);
+            QCoreApplication::processEvents ();
+        }
     }
-  }
+}
+
+ImportPCD::ImportPCD (QString fileName)
+{
+
+    this->_fileName = fileName.toStdString();
+}
+
+void
+ImportPCD::compute()
+  {
+    if (_fileName.length () > 4)
+    {
+        std::string ext = _fileName.substr (_fileName.length () - 3, 3);
+        if (ext == "pcd")
+        {
+            emit emitProgress(0);
+            _cloud_intens = importPCD ();
+            emit emitProgress(100);
+        }
+        else if (ext == "asc"||ext == "txt")
+        {
+            emit emitProgress(0);
+            _cloud_intens = importASC ();
+            emit emitProgress(100);
+        }
+    }
+    emit emitCloud(_cloud_intens,true);
 }
 
 boost::shared_ptr<Controller>
 ImportPCD::getControl ()
 {
-  return this->control.lock ();
+    return this->_control.lock ();
 }
 
 ImportPCD::~ImportPCD ()
 {
-  // TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
-// void
-// ImportPCD::init ()
-// {
-//   path = "../data/" + fileName;
-// }
 
-// void
-// ImportPCD::setRGB ()
-// {
-//   for (int i = 0; i < cloud_intens->points.size (); ++i)
-//   {
-//     cloud_intens->points[i].r = (cloud_intens->points[i].curvature * 255 * 20);
-//     cloud_intens->points[i].g = 255 - (cloud_intens->points[i].curvature * 255 * 20);
-//     cloud_intens->points[i].b = 0;  //cloudRGB->points[i].curvature*255;
-//   }
-// }
 
 pcl::PointCloud<PointI>::Ptr
 ImportPCD::importASC ()
 {
-//   std::cout << "importASC\n";
-//   tt.tic ();
-//   pcl::console::setVerbosityLevel (pcl::console::L_ALWAYS);
-//   PointCloudI::Ptr temp (new PointCloudI);
-// //   QFile file(QString::fromStdString(path));
-//   QFile file ("/home/hackenberg/simple/data/Q6-d.asc");
-//   QTextStream in(&file);
-//   while(!in.atEnd()){
-//     std::cout << "schleife\n";
-//     QString line = in.readLine();
-//     QStringList fields = line.split(" ");
-//     PointI p = toPoint(fields);
-//     temp->push_back(p);
-//   }
-//    getControl()->getGuiPtr()->writeConsole("--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-//     QString str;
-//     float f = tt.toc()/1000;
-//     str.append("Imported ").append(QString::fromStdString(getControl()->getTreeID())).append(" with ").append(QString::number(temp->points.size())).append(" points in  ").append(QString::number(f)).append(" seconds.\n");
-//     getControl()->getGuiPtr()->writeConsole(str);
 
- // std::cout << "importASC\n";
-  tt.tic ();
-  pcl::console::setVerbosityLevel (pcl::console::L_ALWAYS);
-  PointCloudI::Ptr temp (new PointCloudI);
-//   QFile file(QString::fromStdString(path));
-  std::ifstream file (path.c_str ());
-  std::string line;
-  if (file.is_open ())
-  {
-    while (std::getline (file, line))
+    tt.tic ();
+    pcl::console::setVerbosityLevel (pcl::console::L_ALWAYS);
+    PointCloudI::Ptr temp (new PointCloudI);
+    std::ifstream file (_fileName.c_str ());
+    std::string line;
+    if (file.is_open ())
     {
-      QString qLine = QString::fromStdString (line);
-      //std::cout << qLine.toStdString();
-      qLine.replace(QRegExp("[\\s]+"), " ");
-      //std::cout << qLine.toStdString();
-      if(qLine.endsWith(" "))
-      {
-          qLine.chop(1);
-      }
-      QStringList fields = qLine.split (" ");
-      PointI p = toPoint (fields);
-      //std::cout<< p << "\n";
-      temp->push_back (p);
+        while (std::getline (file, line))
+        {
+            QString qLine = QString::fromStdString (line);
+            qLine.replace(QRegExp("[\\s]+"), " ");
+            if(qLine.endsWith(" "))
+            {
+                qLine.chop(1);
+            }
+            QStringList fields = qLine.split (" ");
+            PointI p = toPoint (fields);
+            temp->push_back (p);
+        }
     }
-  }
 
-  getControl ()->getGuiPtr ()->writeConsole (
-      "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-  QString str;
-  float f = tt.toc () / 1000;
-  str.append ("Imported ").append (QString::fromStdString (getControl ()->getTreeID ())).append (" with ").append (QString::number (temp->points.size ())).append (
-      " points in  ").append (QString::number (f)).append (" seconds.\n");
-  getControl ()->getGuiPtr ()->writeConsole (str);
 
-  return temp;
+    QString str;
+    float f = tt.toc () / 1000;
+    str.append ("Imported ").append (QString::fromStdString (_fileName)).append (" with ").append (QString::number (temp->points.size ())).append (
+                " points in  ").append (QString::number (f)).append (" seconds.\n");
+    emit emitQString(str,true,true);
+    return temp;
 }
 
 PointI
 ImportPCD::toPoint (QStringList fields)
 {
-  PointI p;
-  if (fields.size () == 3)
-  {
-    float x, y, z;
-    int i = 120;
-    QString str = fields.at (0);
-    x = str.toFloat ();
-    str = fields.at (1);
-    y = str.toFloat ();
-    str = fields.at (2);
-    z = str.toFloat ();
-    p.x = x;
-    p.y = y;
-    p.z = z;
-    p.intensity = i;
-  }
-  else if (fields.size () == 4)
-  {
-    float x, y, z;
-    int i = 120;
-    QString str = fields.at (0);
-    x = str.toFloat ();
-    str = fields.at (1);
-    y = str.toFloat ();
-    str = fields.at (2);
-    z = str.toFloat ();
-    str = fields.at (3);
-    i = str.toInt ();
-    p.x = x;
-    p.y = y;
-    p.z = z;
-    p.intensity = i;
+    PointI p;
+    if (fields.size () == 3)
+    {
+        float x, y, z;
+        int i = 120;
+        QString str = fields.at (0);
+        x = str.toFloat ();
+        str = fields.at (1);
+        y = str.toFloat ();
+        str = fields.at (2);
+        z = str.toFloat ();
+        p.x = x;
+        p.y = y;
+        p.z = z;
+        p.intensity = i;
+    }
+    else if (fields.size () == 4)
+    {
+        float x, y, z;
+        int i = 120;
+        QString str = fields.at (0);
+        x = str.toFloat ();
+        str = fields.at (1);
+        y = str.toFloat ();
+        str = fields.at (2);
+        z = str.toFloat ();
+        str = fields.at (3);
+        i = str.toInt ();
+        p.x = x;
+        p.y = y;
+        p.z = z;
+        p.intensity = i;
 
-  }
-  else if (fields.size () == 6)
-  {
-    float x, y, z;
-    int i, r, g, b;
-    QString str = fields.at (0);
-    x = str.toFloat ();
-    str = fields.at (1);
-    y = str.toFloat ();
-    str = fields.at (2);
-    z = str.toFloat ();
-    str = fields.at (3);
-    r = str.toInt ();
-    str = fields.at (4);
-    g = str.toInt ();
-    str = fields.at (5);
-    b = str.toInt ();
-    i = std::min<int> (255, ( (r + g + b) / 3));
-    p.x = x;
-    p.y = y;
-    p.z = z;
-    p.intensity = i;
+    }
+    else if (fields.size () == 6)
+    {
+        float x, y, z;
+        int i, r, g, b;
+        QString str = fields.at (0);
+        x = str.toFloat ();
+        str = fields.at (1);
+        y = str.toFloat ();
+        str = fields.at (2);
+        z = str.toFloat ();
+        str = fields.at (3);
+        r = str.toInt ();
+        str = fields.at (4);
+        g = str.toInt ();
+        str = fields.at (5);
+        b = str.toInt ();
+        i = std::min<int> (255, ( (r + g + b) / 3));
+        p.x = x;
+        p.y = y;
+        p.z = z;
+        p.intensity = i;
 
-  }
-  return p;
+    }
+    return p;
 }
 
 PointCloudI::Ptr
 ImportPCD::importPCD ()
 {
-  tt.tic ();
-  pcl::console::setVerbosityLevel (pcl::console::L_ALWAYS);
-  PointCloudI::Ptr temp (new PointCloudI);
+    tt.tic ();
+    pcl::console::setVerbosityLevel (pcl::console::L_ALWAYS);
+    PointCloudI::Ptr temp (new PointCloudI);
 
-  if (pcl::io::loadPCDFile<PointI> (path, *temp) == -1)
-  {
-    PCL_ERROR("Couldn't read pcd input file. \n");
+    if (pcl::io::loadPCDFile<PointI> (_fileName, *temp) == -1)
+    {
+        PCL_ERROR("Couldn't read pcd input file. \n");
 
-  }
-  else
-  {
-    getControl ()->getGuiPtr ()->writeConsole (
-        "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-    QString str;
-    float f = tt.toc () / 1000;
-    str.append ("Imported ").append (QString::fromStdString (getControl ()->getTreeID ())).append (" with ").append (QString::number (temp->points.size ())).append (
-        " points in  ").append (QString::number (f)).append (" seconds.\n");
-    getControl ()->getGuiPtr ()->writeConsole (str);
-   // std::cout << "Imported " << fileName << " with " << temp->points.size () << " points in  " << tt.toc () / 1000 << " seconds." << std::endl;
+    }
+    else
+    {
+        QString str;
+        float f = tt.toc () / 1000;
+        str.append ("Imported ").append (QString::fromStdString (_fileName)).append (" with ").append (QString::number (temp->points.size ())).append (
+                    " points in  ").append (QString::number (f)).append (" seconds.\n");
+        emit emitQString(str,true,true);
 
-  }
-  return temp;
+    }
+    return temp;
 }
 
-void
-ImportPCD::computeNormals (PointCloudI::Ptr cloud)
-{
-  tt.tic ();
-  pcl::NormalEstimationOMP<PointI, PointI> ne (0);
-  ne.setInputCloud (cloud);
-  pcl::search::KdTree<PointI>::Ptr tree (new pcl::search::KdTree<PointI> ());
-  ne.setSearchMethod (tree);
 
-  ne.setKSearch (75);
-  ne.compute (*cloud);
-  QString str;
-  float f = tt.toc () / 1000;
-  str.append ("Computed normals in  ").append (QString::number (f)).append (" seconds.\n");
-  getControl ()->getGuiPtr ()->writeConsole (str);
-  QCoreApplication::processEvents ();
-}
-
-CurvatureCloud::Ptr
-ImportPCD::computeCurvature ()
-{
-  tt.tic ();
-  //std::cout << "computing curvatures" << "\n", tt.tic();
-  pcl::PrincipalCurvaturesEstimation<PointI, PointI, pcl::PrincipalCurvatures> principalCurvaturesEstimation;
-  principalCurvaturesEstimation.setInputCloud (cloud_intens);
-  principalCurvaturesEstimation.setInputNormals (cloud_intens);
-  pcl::search::KdTree<PointI>::Ptr tree_normal (new pcl::search::KdTree<PointI> ());
-  principalCurvaturesEstimation.setSearchMethod (tree_normal);
-  principalCurvaturesEstimation.setRadiusSearch (0.03);
-  //principalCurvatures = new pcl::PointCloud<pcl::PrincipalCurvatures>;
-  CurvatureCloud::Ptr principalCurvatures (new CurvatureCloud);
-  principalCurvaturesEstimation.compute (*principalCurvatures);
-//	std::cout << "output points.size (): " << principalCurvatures->points.size()
-//			<< std::endl;
-  // Display and retrieve the shape context descriptor vector for the 0th point.
-//   pcl::PrincipalCurvatures descriptor = principalCurvatures->points[0];
-  QString str;
-  float f = tt.toc () / 1000;
-  str.append ("Computed principal curvatures in  ").append (QString::number (f)).append (" seconds.\n");
-  getControl ()->getGuiPtr ()->writeConsole (str);
-  getControl ()->getGuiPtr ()->writeConsole (
-      "--------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-  getControl ()->getGuiPtr ()->writeConsole ("\n");
-  return principalCurvatures;
-}
 

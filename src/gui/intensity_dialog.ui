@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
-    <height>130</height>
+    <width>697</width>
+    <height>136</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -82,7 +82,7 @@
     </font>
    </property>
    <property name="text">
-    <string>minIntens</string>
+    <string>min</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -100,7 +100,7 @@
     </font>
    </property>
    <property name="text">
-    <string>maxIntens</string>
+    <string>max</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -132,6 +132,25 @@
    </property>
    <property name="value">
     <double>0.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>20</y>
+     <width>441</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Intensity Filtering &lt;/span&gt;(&lt;span style=&quot; font-style:italic;&quot;&gt;min, max&lt;/span&gt;)&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;All points with an intensity value (0-255) smaller than &lt;span style=&quot; font-style:italic;&quot;&gt;min&lt;/span&gt; or larger than &lt;span style=&quot; font-style:italic;&quot;&gt;max&lt;/span&gt; are considered outliers and are removed from the cloud.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>

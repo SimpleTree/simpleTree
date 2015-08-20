@@ -39,6 +39,7 @@
 #include <QApplication>
 
 #include <QMainWindow>
+#include <QString>
 #include <qdesktopwidget.h>
 
 #include "Model/Tree.h"
@@ -56,107 +57,127 @@ typedef pcl::PointCloud<pcl::PrincipalCurvatures> CurvatureCloud;
 class PCLViewer;
 namespace simpleTree
 {
-	class Tree;
+class Tree;
 
 }
 
-class Controller : public boost::enable_shared_from_this<Controller>
+class Controller : public QObject, public boost::enable_shared_from_this<Controller>
 {
-  private:
+    Q_OBJECT
+private:
     boost::shared_ptr<simpleTree::Tree> tree_ptr;
+
     boost::shared_ptr<PCLViewer> gui_ptr;
+
     std::vector<float> e1,e2,e3;
+
     std::vector<bool> isStem;
+
     PointCloudI::Ptr cloud_ptr;
+
     CurvatureCloud::Ptr curvature_ptr;
+
     std::string treeID = "test cloud";
-  public:
+
+public:
     Controller ();
+
     ~Controller ();
+
     void
     init (int argc,
           char *argv[]);
+
     boost::shared_ptr<simpleTree::Tree>
     getTreePtr ();
-    void
-    setTreePtr (boost::shared_ptr<simpleTree::Tree>);
+
+
     PointCloudI::Ptr
     getCloudPtr ();
+
     CurvatureCloud::Ptr
     getCurvaturePtr ();
-    void
-    setCloudPtr (PointCloudI::Ptr cloud_ptr,
-                 CurvatureCloud::Ptr curvature_ptr);
-    void
-        setCurvaturePtr (CurvatureCloud::Ptr curvature_ptr);
-    void
-    setCloudPtr (PointCloudI::Ptr cloud_ptr, bool changeView = false);
+
+
     boost::shared_ptr<PCLViewer>
     getGuiPtr ();
+
     std::string
     getTreeID ();
-    void
-    setTreeID (std::string);
 
-//   void setGuiPtr(boost::shared_ptr<PCLViewer>);
+
 
     std::vector<float>&
     getE1 ()
     {
-      return e1;
+        return e1;
     }
 
-    void
-    setE1 ( std::vector<float>& e1)
-    {
-      this->e1 = e1;
-    }
 
     std::vector<float>&
     getE2 ()
     {
-      return e2;
+        return e2;
     }
 
-    void
-    setE2 ( std::vector<float>& e2)
-    {
-      this->e2 = e2;
-    }
 
-     std::vector<float>&
+
+    std::vector<float>&
     getE3 ()
     {
-      return e3;
+        return e3;
+    }
+
+
+
+    const std::vector<bool>& getIsStem() const {
+        return isStem;
+    }
+
+
+
+    const std::string& getTreeId() const {
+        return treeID;
     }
 
     void
-    setE3 ( std::vector<float>& e3)
-    {
-      this->e3 = e3;
-    }
+    setTreeID(std::string treeId = "test cloud");
 
-	const std::vector<bool>& getIsStem() const {
-		return isStem;
-	}
 
-	void setIsStem(const std::vector<bool>& isStem) {
-		this->isStem = isStem;
-// 		for(size_t i = 0 ; i < isStem.size(); i++)
-// 		{
-// 		  if(isStem.at(i)){
-// 		  std::cout << isStem.at(i) << "\n";
-// 		  }
-// 		}
-	}
+public slots:
 
-	const std::string& getTreeId() const {
-		return treeID;
-	}
+    void
+    setCloudPtr (PointCloudI::Ptr cloud_ptr,
+                 CurvatureCloud::Ptr curvature_ptr);
 
-	void setTreeId(const std::string& treeId = "test cloud") {
-		treeID = treeId;
-	}
+    void
+    setCloudPtr (PointCloudI::Ptr cloud_ptr, bool changeView = false);
+
+    void
+    setCurvaturePtr (CurvatureCloud::Ptr curvature_ptr);
+
+    void
+    setE1 ( std::vector<float> e1);
+
+    void
+    setE2 ( std::vector<float> e2);
+
+    void
+    setE3 ( std::vector<float> e3);
+
+    void setIsStem(const std::vector<bool>& isStem);
+
+
+
+
+    void
+    setTreeID(QString treeId);
+
+    void
+    setTreePtr (boost::shared_ptr<simpleTree::Tree>);
+
+
+
 };
 
 #endif // CONTROLLER_H
