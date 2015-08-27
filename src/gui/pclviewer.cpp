@@ -197,7 +197,7 @@ PCLViewer::PCLViewer ( QWidget *parent ) :
     connect ( ui->load_camera_button, SIGNAL ( clicked() ), this, SLOT ( load_camera_position()  ) );
     connect ( ui->save_camera_button, SIGNAL ( clicked() ), this, SLOT ( save_camera_position()));
 
-    connect (ui->branch_button, SIGNAL ( clicked() ), this, SLOT ( visualize_branch() ) );
+    //connect (ui->branch_button, SIGNAL ( clicked() ), this, SLOT ( visualize_branch() ) );
 
 
     viewer->resetCamera ();
