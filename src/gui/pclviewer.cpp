@@ -2652,6 +2652,7 @@ void
 PCLViewer::set_allom_fact()
 {
     _method_coefficients.fact=100000;
+    allometry_dialog_ptr->fact->setValue ( _method_coefficients.fact );
 }
 void
 PCLViewer::setProgress(int percentage = 0)
