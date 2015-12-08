@@ -13,7 +13,7 @@ Stem_fit::compute()
 {
     float lower_height = 0.0f;
     float upper_height = lower_height + _bin_width;
-    while(lower_height < _min_height)
+    while((lower_height+upper_height)/2 < _min_height)
     {
         _temp_cloud.reset(new PointCloudI);
         pcl::PassThrough<PointI> pass;
@@ -29,6 +29,38 @@ Stem_fit::compute()
         upper_height += _bin_width;
     }
     _upper_cloud.reset(new PointCloudI);
+    pcl::PassThrough<PointI> pass;
+    pass.setInputCloud (_cloud);
+    pass.setFilterFieldName ("z");
+    pass.setFilterLimits ((lower_height+upper_height)/2, 100);
+    pass.filter (*_upper_cloud);
+
+    if(circles.size()>1)
+    {
+        for(size_t i = 0; i < circles.size()-1; i++ )
+        {
+            pcl::ModelCoefficients circle_1 = circles.at(i);
+            float x1 = circle_1.values.at(0);
+            float y1 = circle_1.values.at(1);
+            float z1 = circle_1.values.at(2);
+            float r1 = circle_1.values.at(3);
+            pcl::ModelCoefficients circle_2 = circles.at(i+1);
+            float x2 = circle_2.values.at(0);
+            float y2 = circle_2.values.at(1);
+            float z2 = circle_2.values.at(2);
+            float r2 = circle_2.values.at(3);
+            pcl::ModelCoefficients cylinder;
+            cylinder.values.resize(7);
+            cylinder.values.at(0) = x1;
+            cylinder.values.at(1) = y1;
+            cylinder.values.at(2) = z1;
+            cylinder.values.at(3) = x2-x1;
+            cylinder.values.at(4) = y2-y1;
+            cylinder.values.at(5) = z2-z1;
+            cylinder.values.at(6) = (r1+r2)/2;
+            cylinders.push_back(cylinder);
+        }
+    }
 
 }
 
@@ -47,7 +79,7 @@ Stem_fit::fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_hei
         PointI p;
         p.x =x;
         p.y =y;
-        p.z = 0;
+        p.z = z;
         cloud_2d->points.at(i) = p;
     }
 
@@ -77,8 +109,6 @@ Stem_fit::fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_hei
 
     // Obtain the cylinder inliers and coefficients
     seg.segment(*inliers_cylinder, *coefficients_circle3d);
-    std::cout << "foo" << std::endl;
-    std::cout << *coefficients_circle3d << std::endl;
     circles.push_back(*coefficients_circle3d);
 
 

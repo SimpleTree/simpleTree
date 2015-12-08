@@ -59,6 +59,18 @@ public:
     void
     compute();
 
+    PointCloudI::Ptr
+    get_cloud()
+    {
+        return _upper_cloud;
+    }
+
+    pcl::ModelCoefficients&
+    get_start_sphere()
+    {
+        return circles.at(circles.size()-1);
+    }
+
     std::vector<pcl::ModelCoefficients>&
     getCylinders ()
     {

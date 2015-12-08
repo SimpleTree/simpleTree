@@ -1458,7 +1458,7 @@ PCLViewer::compute_final_model()
     updateProgress ( 0 );
     QString str2 = coeff_ptr->struct_to_qstring ( _method_coefficients );
     plot_qstring ( str2 ,true,true);
-    SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), getControl()->getIsStem(), 3, _method_coefficients, 10, 1 );
+    SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), getControl()->getIsStem(), 3, _method_coefficients, 10, 3);
 
     updateProgress ( 50 );
 
