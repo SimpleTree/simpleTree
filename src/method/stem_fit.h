@@ -46,7 +46,7 @@ private:
      float _min_height;
      float _bin_width;
 
-     pcl::ModelCoefficients
+     void
      fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_height);
 
 

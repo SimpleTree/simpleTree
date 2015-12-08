@@ -470,7 +470,7 @@ void SphereFollowing::computeCylindersFromCluster(
     pcl::ModelCoefficients startSphere;
     if(isFirstRun&&_min_height > 0.01)
     {
-        Stem_fit stem = new Stem_fit(pointCluster, _min_height, _bin_width);
+        Stem_fit stem =  Stem_fit(pointCluster, _min_height, _bin_width);
         startSphere = fitSphereToCluster(startCloud,
                                                                 start_radius,true);
     } else

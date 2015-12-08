@@ -21,7 +21,7 @@ Stem_fit::compute()
         pass.setFilterFieldName ("z");
         pass.setFilterLimits (lower_height, upper_height);
         pass.filter (*_temp_cloud);
-        pcl::ModelCoefficients cylinder = fit_circle(_temp_cloud, lower_height,upper_height);
+        fit_circle(_temp_cloud, lower_height,upper_height);
 
 
 
@@ -32,7 +32,7 @@ Stem_fit::compute()
 
 }
 
-pcl::ModelCoefficients
+void
 Stem_fit::fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_height)
 {
     pcl::PointCloud<PointI>::Ptr cloud_2d (new pcl::PointCloud<PointI>);
