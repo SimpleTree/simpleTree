@@ -51,12 +51,15 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,std::vector<bool> is
 			" seconds.\n");
 }
 
-SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud,std::vector<bool> isStem, int iterations,Method_Coefficients coeff) {
+SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud, std::vector<bool> isStem, int iterations, Method_Coefficients coeff, float min_height, float bin_width) {
+
 	this->cloud = treeCloud;
 	this->isStem = isStem;
+    this->_min_height = min_height;
+    this->_bin_width = bin_width;
 
 
-     sphereRadiusMultiplier = coeff.sphere_radius_multiplier;
+    sphereRadiusMultiplier = coeff.sphere_radius_multiplier;
     epsilon_cluster_stem = coeff.epsilon_cluster_stem;
     epsilon_cluster_branch = coeff.epsilon_cluster_branch;
     epsilon_sphere = coeff.epsilon_sphere;
@@ -464,8 +467,18 @@ void SphereFollowing::computeCylindersFromCluster(
 
 
     float start_radius = 0.5;
-	pcl::ModelCoefficients startSphere = fitSphereToCluster(startCloud,
+    pcl::ModelCoefficients startSphere;
+    if(isFirstRun&&_min_height > 0.01)
+    {
+        Stem_fit stem = new Stem_fit(pointCluster, _min_height, _bin_width);
+        startSphere = fitSphereToCluster(startCloud,
+                                                                start_radius,true);
+    } else
+    {
+
+    startSphere = fitSphereToCluster(startCloud,
 	                                                        start_radius,true);
+    }
 
 	nextLevelSpheres.push_back(startSphere);
 	if (!isFirstRun) {
