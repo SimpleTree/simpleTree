@@ -103,12 +103,15 @@ SphereFollowing::~SphereFollowing() {
 
 PointCloudI::Ptr SphereFollowing::extractUnfittedPoints(
         std::vector<float> distances, PointCloudI::Ptr points) {
+
     PointCloudI::Ptr unfittedPoints(new PointCloudI);
     for (size_t i = 0; i < distances.size(); i++) {
         if (std::abs(distances[i]) > maxDistToModel) {
             unfittedPoints->push_back(points->points[i]);
+            std::cout << distances.at(i) << " dist" << std::endl;
         }
     }
+    std::cout << unfittedPoints->points.size() << " size" << std::endl;
     return unfittedPoints;
 }
 
@@ -150,7 +153,7 @@ std::vector<float> SphereFollowing::distancesToModel(PointCloudI::Ptr cloud) {
         for (size_t i = 0; i < indices.size(); i++) {
             PointI point = cloud->points[indices[i]];
             float dist = cylinder->distToPoint(point);
-            if (std::abs(dist) < std::abs(distances[indices[i]])) {
+            if ( std::abs(dist) < std::abs(distances[indices[i]])) {
                 distances[indices[i]] = dist;
             }
         }
@@ -171,19 +174,26 @@ void SphereFollowing::computeCylindersFromTree(PointCloudI::Ptr& treeCloud) {
                         QString::number(cylinders.size())).append(
                         " cylinders were detected.\n");;
         } else {
-            std::vector<float> distances = distancesToModel(treeCloud);
+            std::vector<float> distances = distancesToModel(this->cloud);
             PointCloudI::Ptr remainingPoints = extractUnfittedPoints(distances,
-                                                                     treeCloud);
+                                                                     this->cloud);
             QString str;
             str.append("Not fitted by cylinders were ").append(
                         QString::number(remainingPoints->size())).append(
                         " points.\n");
+            std::cout << str.toStdString() << std::endl;
             std::vector<PointCloudI::Ptr> clusters = clusterPoints(
                         remainingPoints,true);
             for (size_t i = 0; i < clusters.size(); i++) {
-                if (clusters[i]->size() > 100) {
+
+                std::cout << "before" << std::endl;
+                std::cout << cylinders.size() << std::endl;
+                if (clusters[i]->size() > 20) {
                     computeCylindersFromCluster(clusters[i], false);
                 }
+                std::cout << clusters[i]->points.size() << std::endl;
+                std::cout << "after" << std::endl;
+                std::cout << cylinders.size() << std::endl;
             }
         }
         iteration++;
@@ -480,6 +490,7 @@ void SphereFollowing::computeCylindersFromCluster(
 
 
         pointCluster = stem.get_cloud();
+        this->cloud = stem.get_cloud();
 
         octree.setInputCloud(pointCluster);
         octree.addPointsFromInputCloud();

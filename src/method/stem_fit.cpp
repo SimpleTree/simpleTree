@@ -32,7 +32,7 @@ Stem_fit::compute()
     pcl::PassThrough<PointI> pass;
     pass.setInputCloud (_cloud);
     pass.setFilterFieldName ("z");
-    pass.setFilterLimits ((lower_height+upper_height)/2, 100);
+    pass.setFilterLimits ((lower_height+upper_height)/2-_bin_width, 100);
     pass.filter (*_upper_cloud);
 
     if(circles.size()>1)
