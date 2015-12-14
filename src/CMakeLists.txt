@@ -48,7 +48,8 @@ set (project_SOURCES gui/color_palette/color_factory.cpp
                      Model/Segment.cpp
                      Model/Tree.cpp
                      gui/allign/allign.cpp
-                     method/stem_fit.cpp)
+                     method/stem_fit.cpp
+                     method/optimization/optimization_stem.cpp)
 
 
 set (project_HEADERS
@@ -90,7 +91,8 @@ set (project_HEADERS
                      Model/Cylinder.h
                      Model/Segment.h
                      Model/Tree.h
-                     method/stem_fit.h)
+                     method/stem_fit.h
+                     method/optimization/optimization_stem.h)
 
 set (project_FORMS
                      gui/cropbox/crop_box_dialog.ui
