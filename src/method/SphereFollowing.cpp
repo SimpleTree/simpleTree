@@ -69,7 +69,11 @@ SphereFollowing::SphereFollowing(PointCloudI::Ptr treeCloud, std::vector<bool> i
     minPts_cluster_branch = coeff.minPts_cluster_branch;
     min_radius_sphere_stem = coeff.min_radius_sphere_stem;
     min_radius_sphere_branch = coeff.min_radius_sphere_branch;
+    _epsilon = coeff.circle_epsilon;
+    _bin_width = coeff.bin_width;
+    _min_height = coeff.stem_min_height;
     max_iterations = iterations;
+
 
     pcl::console::TicToc tt;
     tt.tic();
@@ -479,7 +483,7 @@ void SphereFollowing::computeCylindersFromCluster(
     pcl::ModelCoefficients startSphere;
     if(isFirstRun&&_min_height > 0.01)
     {
-        Stem_fit stem =  Stem_fit(pointCluster, _min_height, _bin_width);
+        Stem_fit stem (pointCluster, _min_height, _bin_width, _epsilon);
         this->cylinders = stem.getCylinders();
         pcl::ModelCoefficients temp =stem.get_start_sphere();
         startSphere.values.push_back(temp.values.at(0));

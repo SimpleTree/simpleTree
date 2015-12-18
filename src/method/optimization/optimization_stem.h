@@ -7,7 +7,9 @@
 #endif
 
 
-
+#include <QThreadPool>
+#include <QMutexLocker>
+#include <QMutex>
 #include <pcl/console/time.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/filters/project_inliers.h>
@@ -23,6 +25,7 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/passthrough.h>
 #include "../../method/set_coefficients.h"
+#include "workerstemfit.h"
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -34,15 +37,44 @@ typedef pcl::PointXYZINormal PointI;
 typedef pcl::PointCloud<PointI> PointCloudI;
 
 
-class optimization_stem
+class optimization_stem : public QThreadPool,  public boost::enable_shared_from_this<optimization_stem>
 {
 private:
+    int numberThreads = 1;
     float _min_height;
     float _bin_width;
+    float _epsilon;
+    float _best_dist = 100;
+    float _best_binwidth = 1;
+    float _best_epsilon = 0.1;
     PointCloudI::Ptr _cloud;
+
+    void
+    reduce_cloud();
+
 public:
-    optimization_stem(float min_height, float bin_width, PointCloudI::Ptr cloud);
+    optimization_stem(float min_height, float bin_width, float epsilon, PointCloudI::Ptr cloud);
     ~optimization_stem();
+
+
+    void
+    updateCoeff(float dist, float bin_width, float epsilon);
+
+    void
+    optimize();
+
+    float
+    get_bin_width()
+    {
+        return _best_binwidth;
+    }
+
+    float
+    get_epsilon ()
+    {
+        return _best_epsilon;
+    }
+
 };
 
 #endif // OPTIMIZATION_STEM_H

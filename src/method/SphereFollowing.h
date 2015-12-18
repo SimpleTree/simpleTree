@@ -81,8 +81,7 @@ class SphereFollowing
     indexOfPointsNearCylinder (pcl::octree::OctreePointCloudSearch<PointI> &octree,
                                boost::shared_ptr<simpleTree::Cylinder> &cylinder,
                                float factorEnLarge = 1);
-    float _min_height;
-    float _bin_width;
+
 
     int max_iterations;
     int iteration = 0;
@@ -118,6 +117,9 @@ class SphereFollowing
     int minPts_cluster_branch = 3;
     float min_radius_sphere_stem = 0.035;
     float min_radius_sphere_branch = 0.025;
+    float _min_height;
+    float _bin_width;
+    float _epsilon;
     SphereFollowing (PointCloudI::Ptr treeCloud,
     		std::vector<bool> isStem);
     SphereFollowing (PointCloudI::Ptr treeCloud,

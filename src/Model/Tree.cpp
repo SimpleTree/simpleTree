@@ -932,7 +932,10 @@ Tree::setCylinders ( std::vector<pcl::ModelCoefficients> coeff_cylinders ) {
     for ( std::vector<pcl::ModelCoefficients>::iterator it = coeff_cylinders.begin (); it != coeff_cylinders.end (); ++it ) {
 
         Cylinder cylinder ( *it );
+        if(cylinder.getVolume()>0.00001)
+        {
         cylinders.push_back ( cylinder );
+        }
     }
     this->cylinders = cylinders;
 }

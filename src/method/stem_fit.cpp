@@ -1,10 +1,11 @@
 #include "stem_fit.h"
 
-Stem_fit::Stem_fit(PointCloudI::Ptr treeCloud, float min_height, float bin_width)
+Stem_fit::Stem_fit(PointCloudI::Ptr treeCloud, float min_height, float bin_width, float epsilon)
 {
     this->_bin_width = bin_width;
     this->_min_height = min_height;
     this->_cloud = treeCloud;
+    this->_epsilon = epsilon;
     compute();
 }
 
@@ -21,7 +22,7 @@ Stem_fit::compute()
         pass.setFilterFieldName ("z");
         pass.setFilterLimits (lower_height, upper_height);
         pass.filter (*_temp_cloud);
-        fit_circle(_temp_cloud, lower_height,upper_height);
+        fit_circle(_temp_cloud, lower_height,upper_height, _epsilon);
 
 
 
@@ -65,7 +66,7 @@ Stem_fit::compute()
 }
 
 void
-Stem_fit::fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_height)
+Stem_fit::fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_height, float epsilon)
 {
     pcl::PointCloud<PointI>::Ptr cloud_2d (new pcl::PointCloud<PointI>);
     cloud_2d->points.resize(cloud->points.size());
@@ -103,7 +104,7 @@ Stem_fit::fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_hei
     seg.setModelType(pcl::SACMODEL_CIRCLE3D);
     seg.setMethodType(pcl::SAC_MLESAC);
     seg.setMaxIterations(100);
-    seg.setDistanceThreshold(0.1);
+    seg.setDistanceThreshold(epsilon);
     seg.setInputCloud(cloud_2d);
     seg.setInputNormals(cloud_2d);
 

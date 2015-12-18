@@ -45,16 +45,17 @@ private:
      PointCloudI::Ptr _cloud;
      float _min_height;
      float _bin_width;
+     float _epsilon;
 
      void
-     fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_height);
+     fit_circle(PointCloudI::Ptr cloud, float lower_height, float upper_height, float epsilon);
 
 
 
 
 
 public:
-    Stem_fit(PointCloudI::Ptr treeCloud, float min_height, float bin_width);
+    Stem_fit(PointCloudI::Ptr treeCloud, float min_height, float bin_width, float epsilon);
 
     void
     compute();

@@ -115,6 +115,7 @@
 #include "../../build/ui_crown_dialog.h"
 #include "../../build/ui_allometry_dialog.h"
 #include "../../build/ui_optimize_dialog.h"
+#include "../method/optimization/optimization_stem.h"
 #include "color_palette/color_factory.h"
 
 
