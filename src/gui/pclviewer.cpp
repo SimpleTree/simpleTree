@@ -358,7 +358,11 @@ PCLViewer::build_model1 () {
     method_dialog_ptr->minPts_cluster_branch->setValue ( _method_coefficients.minPts_cluster_branch );
     method_dialog_ptr->min_radius_sphere_stem->setValue ( _method_coefficients.min_radius_sphere_stem );
     method_dialog_ptr->min_radius_sphere_branch->setValue ( _method_coefficients.min_radius_sphere_branch );
-
+    method_dialog_ptr->do_iterative->setChecked(_method_coefficients.find_more);
+    method_dialog_ptr->do_stem_optimization->setChecked(_method_coefficients.do_stem_optimization);
+    method_dialog_ptr->min_height->setValue(_method_coefficients.stem_min_height);
+    method_dialog_ptr->bin_width->setValue(_method_coefficients.bin_width);
+    method_dialog_ptr->sphere_epsilon->setValue(_method_coefficients.circle_epsilon);
     connect ( method_dialog_ptr->comboBox, SIGNAL ( currentIndexChanged ( int ) ), this, SLOT ( set_method ( int ) ) );
 
     connect ( method_dialog_ptr->compute, SIGNAL ( clicked() ), this, SLOT ( set_method_coeff_wdout_compute() ) );
@@ -400,6 +404,11 @@ PCLViewer::build_model () {
         method_dialog_ptr->minPts_cluster_branch->setValue ( _method_coefficients.minPts_cluster_branch );
         method_dialog_ptr->min_radius_sphere_stem->setValue ( _method_coefficients.min_radius_sphere_stem );
         method_dialog_ptr->min_radius_sphere_branch->setValue ( _method_coefficients.min_radius_sphere_branch );
+        method_dialog_ptr->do_iterative->setChecked(_method_coefficients.find_more);
+        method_dialog_ptr->do_stem_optimization->setChecked(_method_coefficients.do_stem_optimization);
+        method_dialog_ptr->min_height->setValue(_method_coefficients.stem_min_height);
+        method_dialog_ptr->bin_width->setValue(_method_coefficients.bin_width);
+        method_dialog_ptr->sphere_epsilon->setValue(_method_coefficients.circle_epsilon);
 
         connect ( method_dialog_ptr->comboBox, SIGNAL ( currentIndexChanged ( int ) ), this, SLOT ( set_method ( int ) ) );
         connect ( method_dialog_ptr->compute, SIGNAL ( clicked() ), this, SLOT ( set_method_coeff_wdout_compute() ) );
@@ -1433,6 +1442,23 @@ PCLViewer::compute_final_model()
     pcl::console::TicToc tt;
     tt.tic ();
 
+    if(_method_coefficients.stem_min_height>0)
+    {
+        if (_method_coefficients.do_stem_optimization)
+        {
+            boost::shared_ptr<optimization_stem> optim (new optimization_stem(_method_coefficients.stem_min_height,_method_coefficients.bin_width,_method_coefficients.circle_epsilon, getControl()->getCloudPtr()));
+            optim->optimize();
+            _method_coefficients.bin_width = optim->get_bin_width();
+            _method_coefficients.circle_epsilon = optim->get_epsilon();
+
+            plot_qstring(QString("Opimization of stem parameters : \n ").append(QString::number((tt.toc()/100))).append(" seconds."));
+            tt.tic();
+            plot_qstring(QString("epsilon ").append(QString::number(_method_coefficients.circle_epsilon)).append(". \n"));
+                    plot_qstring(QString("bin width ").append(QString::number(_method_coefficients.bin_width)).append(". \n"));
+        }
+
+    }
+
     if(_method_coefficients.max_iterations>0)
     {
         boost::shared_ptr<Optimization> optimize (new Optimization(_method_coefficients.max_iterations,_method_coefficients.seeds_per_voxel,
@@ -1458,7 +1484,12 @@ PCLViewer::compute_final_model()
     updateProgress ( 0 );
     QString str2 = coeff_ptr->struct_to_qstring ( _method_coefficients );
     plot_qstring ( str2 ,true,true);
-    SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), getControl()->getIsStem(), 1, _method_coefficients );
+    int iterations = 1;
+    if(_method_coefficients.find_more)
+    {
+        iterations  = 3;
+    }
+    SphereFollowing sphereFollowing ( this->getControl ()->getCloudPtr (), getControl()->getIsStem(), iterations, _method_coefficients, _method_coefficients.stem_min_height, _method_coefficients.bin_width);
 
     updateProgress ( 50 );
 
@@ -1904,8 +1935,8 @@ void
 PCLViewer::load_camera_position()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "../config/position1.cam",
-                                                    tr("Camera File (*.cam)"));
+                                                "../config/position1.cam",
+                                                tr("Camera File (*.cam)"));
     std::string camera_path = path.toStdString();
     if(!this->viewer->loadCameraParameters(camera_path))
     {
@@ -2255,9 +2286,9 @@ void
 PCLViewer::save_camera_position()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                               "../config/position1.cam",
-                               tr("Camera File (*.cam)"));
-//    qDebug() << fileName << "\n";
+                                                    "../config/position1.cam",
+                                                    tr("Camera File (*.cam)"));
+    //    qDebug() << fileName << "\n";
     std::string camera_path = fileName.toStdString();
     this->viewer->saveCameraParameters(camera_path);
 }
@@ -2594,6 +2625,12 @@ PCLViewer::set_method_coeff_wdout_compute () {
         _method_coefficients.minPts_cluster_branch = method_dialog_ptr->minPts_cluster_branch->value ();
         _method_coefficients.min_radius_sphere_stem = method_dialog_ptr->min_radius_sphere_stem->value ();
         _method_coefficients.min_radius_sphere_branch = method_dialog_ptr->min_radius_sphere_branch->value ();
+        _method_coefficients.bin_width = method_dialog_ptr->bin_width->value();
+        _method_coefficients.stem_min_height = method_dialog_ptr->min_height->value();
+        _method_coefficients.circle_epsilon = method_dialog_ptr->sphere_epsilon->value();
+        _method_coefficients.do_stem_optimization = method_dialog_ptr->do_stem_optimization->isChecked();
+        _method_coefficients.find_more = method_dialog_ptr->do_iterative->isChecked();
+
     }
     if (allometry_dialog_ptr!=0){
         _method_coefficients.a = allometry_dialog_ptr->a->value ();

@@ -56,6 +56,7 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include "../method/set_coefficients.h"
+#include "stem_fit.h"
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -80,9 +81,11 @@ class SphereFollowing
     indexOfPointsNearCylinder (pcl::octree::OctreePointCloudSearch<PointI> &octree,
                                boost::shared_ptr<simpleTree::Cylinder> &cylinder,
                                float factorEnLarge = 1);
+
+
     int max_iterations;
     int iteration = 0;
-    int maxDistToModel = 30;
+    float maxDistToModel = 0.1;
     bool use_ransac_for_sphere = true;
     std::vector<float>
     distancesToModel (PointCloudI::Ptr treeCloud);
@@ -114,6 +117,9 @@ class SphereFollowing
     int minPts_cluster_branch = 3;
     float min_radius_sphere_stem = 0.035;
     float min_radius_sphere_branch = 0.025;
+    float _min_height;
+    float _bin_width;
+    float _epsilon;
     SphereFollowing (PointCloudI::Ptr treeCloud,
     		std::vector<bool> isStem);
     SphereFollowing (PointCloudI::Ptr treeCloud,
@@ -121,7 +127,7 @@ class SphereFollowing
                      int maxIterations);
     SphereFollowing (PointCloudI::Ptr treeCloud,
     		std::vector<bool> isStem,
-                         int maxIterations, Method_Coefficients coeff);
+                         int maxIterations, Method_Coefficients coeff, float min_height = -1.0f, float bin_width = 1.0f);
     virtual
     ~SphereFollowing ();
     std::vector<PointCloudI::Ptr>

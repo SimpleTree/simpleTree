@@ -54,11 +54,11 @@ public:
             , float max_distance =0.05, float max_intens =0.5f);
 	virtual ~StemPointDetection();
 
-	const std::vector<bool>& getStemPtsNew() const {
+    std::vector<bool>& getStemPtsNew() {
 		return stem_pts_new;
 	}
 
-	void setStemPtsNew(const std::vector<bool>& stemPtsNew) {
+    void setStemPtsNew(std::vector<bool>& stemPtsNew) {
 		stem_pts_new = stemPtsNew;
 	}
     QString result;

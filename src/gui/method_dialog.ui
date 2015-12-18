@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1166</width>
-    <height>605</height>
+    <width>1161</width>
+    <height>902</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -523,7 +523,7 @@
      <x>610</x>
      <y>10</y>
      <width>541</width>
-     <height>581</height>
+     <height>531</height>
     </rect>
    </property>
    <property name="html">
@@ -542,7 +542,198 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The detected cylinders are improved with RANSAC algorithm. More details on the method itself and further post-processing steps on the detected&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;cylinders are given in Hackenberg et al. (2014, 2015).&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Text taken from &amp;quot;SimpleTree - an efficient open source tool to build tree models from TLS clouds&amp;quot;, submitted to MDPI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Text taken from &amp;quot;SimpleTree - an efficient open source tool to build tree models from TLS clouds&amp;quot;, published at MDPI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="sphere_epsilon">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>700</y>
+     <width>101</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::PlusMinus</enum>
+   </property>
+   <property name="decimals">
+    <number>3</number>
+   </property>
+   <property name="minimum">
+    <double>0.001000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>100.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.001000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.005000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_15">
+   <property name="geometry">
+    <rect>
+     <x>189</x>
+     <y>630</y>
+     <width>211</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>min height for stem modelling</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="min_height">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>620</y>
+     <width>101</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::PlusMinus</enum>
+   </property>
+   <property name="decimals">
+    <number>1</number>
+   </property>
+   <property name="minimum">
+    <double>0.000000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>100.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.100000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_16">
+   <property name="geometry">
+    <rect>
+     <x>189</x>
+     <y>670</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>bin width</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="bin_width">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>660</y>
+     <width>101</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::PlusMinus</enum>
+   </property>
+   <property name="decimals">
+    <number>3</number>
+   </property>
+   <property name="minimum">
+    <double>0.001000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>100.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.001000000000000</double>
+   </property>
+   <property name="value">
+    <double>0.005000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_17">
+   <property name="geometry">
+    <rect>
+     <x>189</x>
+     <y>710</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>epsilon neighborhood</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="do_stem_optimization">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>740</y>
+     <width>341</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>optimize stem parameters</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser_2">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>610</y>
+     <width>541</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;extended Stem Method&lt;/span&gt;  (&lt;span style=&quot; font-style:italic;&quot;&gt;min_height, bin_width, epsilon_neighborhood&lt;/span&gt;)&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;In case the stem has to be modelled seperately, select a &lt;span style=&quot; font-style:italic;&quot;&gt;min_height&lt;/span&gt; larger 0. Up to this height, The point cloud will be cut into horizontal slices of height &lt;span style=&quot; font-style:italic;&quot;&gt;bin_width&lt;/span&gt;.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Into each slice a 2D circle is fitted and neighboring circles are connected to cylinders. &lt;span style=&quot; font-style:italic;&quot;&gt;epsilon_neighborhood &lt;/span&gt;is the maximum distance of a point to a RANSAC fitted circle to be counted as represented by the circle (RANSAC fit criterion). &lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Above &lt;span style=&quot; font-style:italic;&quot;&gt;min_height  &lt;/span&gt; the normal SphereFollowing method is applied and all fitted cylinders are connected.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This extension is a lot more robust and was developed to model stems of buttress trees with the lower stem covered with a lot of undergrowth.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Use checkbox to acitave an automatic parameter search for &lt;span style=&quot; font-style:italic;&quot;&gt;bin_width &lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;epsilon_neighborhood&lt;/span&gt;. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="do_iterative">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>500</y>
+     <width>341</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>find more</string>
    </property>
   </widget>
  </widget>

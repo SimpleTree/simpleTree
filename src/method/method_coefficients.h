@@ -30,6 +30,11 @@ struct Method_Coefficients{
         float min_dist=0.0001;
         float max_iterations=2;
         float seeds_per_voxel=81;
+	float stem_min_height = 0;
+	float bin_width = 1;
+	float circle_epsilon = 0.05;
+        bool do_stem_optimization = true;
+        bool find_more = false;
 
 
         QString
@@ -56,6 +61,25 @@ struct Method_Coefficients{
                 str.append("min_dist : ").append(QString::number(min_dist)).append("\n");
                 str.append("max_iterations : ").append(QString::number(max_iterations)).append("\n");
                 str.append("seeds_per_voxel : ").append(QString::number(seeds_per_voxel)).append("\n");
+                str.append("stem_min_height : ").append(QString::number(stem_min_height)).append("\n");
+                str.append("bin_width : ").append(QString::number(bin_width)).append("\n");
+                str.append("circle_epsilon : ").append(QString::number(circle_epsilon)).append("\n");
+                if(find_more)
+                {
+                    str.append("Iterative search for spherefollowing was activated").append("\n");
+                }
+                else
+                {
+                    str.append("Iterative search for spherefollowing was de-activated").append("\n");
+                }
+                if(do_stem_optimization)
+                {
+                    str.append("Stem modelling parameters were automatically searched for").append("\n");
+                }
+                else
+                {
+                    str.append("Stem modelling parameters have been set manually.").append("\n");
+                }
           return str;
         }
 

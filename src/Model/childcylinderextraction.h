@@ -6,6 +6,8 @@
 
 #include <pcl/common/common.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <QString>
+
 
 #include "Tree.h"
 #include "Cylinder.h"
@@ -32,6 +34,8 @@ private:
     fillKdTree();
 
     float radius = std::numeric_limits<float>::min();
+
+    std::vector<bool> _indices;
 
 
 

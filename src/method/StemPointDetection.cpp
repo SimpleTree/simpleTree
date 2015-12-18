@@ -65,7 +65,7 @@ StemPointDetection::StemPointDetection(PointCloudI::Ptr cloud,
     cec.setClusterTolerance(max_distance);
     cec.setMinClusterSize(100);
     cec.segment(*clusters);
-    //  std::cout << clusters->size() << std::endl;
+   //  std::cout << clusters->size() << std::endl;
 
     resetStemPoints();
     result.append(QString("Stem point detected in ")).append(QString::number(tt.toc()/1000)).append(QString(" seconds.\n"));
